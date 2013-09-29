@@ -197,22 +197,13 @@ Private Sub Nyerjunk_Click()
     ' Debug (Hibakeresés vége)
 
     For jcs = LBound(OtosSzamok) To UBound(OtosSzamok)
-        Allj = False
-
-        Do While Not Allj
-            ' Megnézzük van-e azonos szám a mi általunk megadott számokkal.
-            For mgx = LBound(VeletlenOtosSzamok) To UBound(VeletlenOtosSzamok)
-                If OtosSzamok(jcs) = VeletlenOtosSzamok(mgx) Then
-                    Nyertel = Nyertel + 1 ' Ha van azonos akkor növeljük ezt a változót.
-                    Allj = True           ' Leállítjuk a while ciklust.
-                    Exit For              ' Kilépünk a for ciklusból.
-                End If
-            Next mgx
-
-            If mgx = UBound(VeletlenOtosSzamok) + 1 Then
-                Allj = True               ' Leállítjuk a while ciklust.
+        ' Megnézzük van-e azonos szám a mi általunk megadott számokkal.
+        For mgx = LBound(VeletlenOtosSzamok) To UBound(VeletlenOtosSzamok)
+            If OtosSzamok(jcs) = VeletlenOtosSzamok(mgx) Then
+                Nyertel = Nyertel + 1 ' Ha van azonos akkor növeljük ezt a változót.
+                Exit For              ' Kilépünk a for ciklusból.
             End If
-        Loop
+        Next mgx
     Next jcs
 
     If Nyertel = UBound(OtosSzamok) - LBound(OtosSzamok) + 1 Then ' Ha 5 akkor nyertünk.
