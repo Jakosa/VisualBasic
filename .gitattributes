@@ -1,5 +1,25 @@
+# NOTE: this file is for git 1.6.6 (and possibly older)
+# Post-1.7.2 there is eol and text, and crlf is deprecated
+# but we can't depend on an unreleased version...
+
+# This file mainly controls line ending conversion behaviour, if
+# the user has the setting core.autocrlf true.
+
+# The meaning of the attributes is a little odd
+# -crlf means DO NOT convert line endings
+# crlf means CONVERT to lf in the repo & Linux/Mac, crlf on Windows
+
+# First, turn off git line ending handling except on a case-by-case basis
+# because our repo isn't normalized, in general.
+# There are even files with mixed line endings.
+*	-crlf
+
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# These files can be converted, since they're new
+.gitattributes	crlf
+.gitignore	crlf
 
 # Custom for Visual Studio
 *.cs     diff=csharp
@@ -8,16 +28,15 @@
 *.vbproj merge=union
 *.fsproj merge=union
 *.dbproj merge=union
-*.frm	crlf
 
 # Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
+*.doc  diff=astextplain
+*.DOC  diff=astextplain
 *.docx diff=astextplain
 *.DOCX diff=astextplain
 *.dot  diff=astextplain
 *.DOT  diff=astextplain
 *.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+*.PDF  diff=astextplain
+*.rtf  diff=astextplain
+*.RTF  diff=astextplain
