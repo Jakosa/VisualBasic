@@ -1,0 +1,17 @@
+Több időzítőhőz:
+
+Public WithEvents Timer1 as Timer
+Then in Class_Initialize()
+
+Timer1.Interval = 100 ' or what ever you wish
+Timer1.Enabled = True
+
+variable is declared withevents so you can now call and handle Timer event.
+
+Private Sub Timer1_Timer()
+
+' Your Code Goes Here
+
+End Sub
+
+
