@@ -1,18 +1,10 @@
-Több időzítőhőz:
-
-Public WithEvents Timer1 as Timer
-Then in Class_Initialize()
-
-Timer1.Interval = 100 ' or what ever you wish
-Timer1.Enabled = True
-
-variable is declared withevents so you can now call and handle Timer event.
-
-Private Sub Timer1_Timer()
-
-' Your Code Goes Here
-
-End Sub
-
-https://www.allegro.cc/forums/thread/589720
-http://www.gamedev.net/topic/337652-2d-point-line-distance/
+- több autó lehetősége (max 4 de a számuk változtatható legyen)
+- 1 autó amit írányíthat a felhasználó (5.-ik autó)
+- az autók sebessége változzon.
+- a húzott csík be-ki kapcsolható legyen (Menüpontban)
+- pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
+- start és célvonal létrehozása (a befutokat jelezni)
+- köridő mérése
+- lapok számának mérése (ha lenne több lap is)
+- pálya elhagyását nézni (ha lehetséges)
+- kocsik helyzetének jelzése (melyik van előbbre)

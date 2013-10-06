@@ -1,5 +1,5 @@
 VERSION 5.00
-Begin VB.Form Form1 
+Begin VB.Form Palya 
    AutoRedraw      =   -1  'True
    Caption         =   "Form1"
    ClientHeight    =   9600
@@ -17,11 +17,6 @@ Begin VB.Form Form1
       TabIndex        =   3
       Top             =   8880
       Width           =   1095
-   End
-   Begin VB.Timer Timer1 
-      Interval        =   80
-      Left            =   0
-      Top             =   9120
    End
    Begin VB.CommandButton Command2 
       Caption         =   "Jobbra"
@@ -464,22 +459,23 @@ Begin VB.Form Form1
       Y2              =   8880
    End
 End
-Attribute VB_Name = "Form1"
+Attribute VB_Name = "Palya"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim i As Long, j As Long
+Dim i As Long
 Dim x0 As Double
 Dim y0 As Double
 Dim ex As Double
 Dim ey As Double
-Dim A(1 To 30) As Double
-Dim XV(1 To 10000) As Double, YV(1 To 10000) As Double
-Const xhossz = 80
-Const yhossz = 60
-Const MaxPontok = 10
+Dim VSzogTomb(1 To 30) As Double
+Const xhossz = 80           ' Kocsi hossza.
+Const yhossz = 60           ' Kocsi szélessége.
+Const PontosabbKor = True   ' Ha "true" akkor tökéletesebben középen van az autó. "false" esetén viszont szerintem élethübb.
+Dim WithEvents Timer1 As SelfTimer
+Attribute Timer1.VB_VarHelpID = -1
 
 Private Sub Command1_Click()
     NextCoordinate True, False
@@ -497,66 +493,100 @@ Private Sub Form_Load()
     ey = -1
     x0 = 1100
     y0 = 4000
-    
+
+    Set Timer1 = New SelfTimer
+    Timer1.Interval = 100
+
     For ciklus = 1 To 30
-        A(ciklus) = Rnd * 0.1
+        VSzogTomb(ciklus) = Rnd * 0.1
     Next ciklus
-
-    For vonal = Line5.LBound To Line5.UBound
-        For ciklus = 0 To MaxPontok
-            pontok = pontok + 1
-            XV(pontok) = (Line5(vonal).X1 * ciklus + Line5(vonal).X2 * (MaxPontok - ciklus)) / MaxPontok
-            YV(pontok) = (Line5(vonal).Y1 * ciklus + Line5(vonal).Y2 * (MaxPontok - ciklus)) / MaxPontok
-        Next ciklus
-    Next vonal
 End Sub
 
-Private Sub OLE1_Updated(Code As Integer)
-
+Private Sub Form_Terminate()
+    Set Timer1 = Nothing
 End Sub
 
-Private Sub Timer1_Timer()
-    Dim xb As Double, yb As Double, xj As Double, yj As Double
-    Dim mb As Double, mj As Double, ciklus As Long
+Private Sub Timer1_Timer(ByVal Seconds As Currency)
     i = i + 1
-    j = j + 1
 
     If i > 30 Then
         i = 1
     End If
 
     NextCoordinate True, True
-    
-    xb = x0 + 400 * ex - 300 * ey
-    yb = y0 + 400 * ey + 300 * ex
-    xj = x0 + 400 * ex + 300 * ey
-    yj = y0 + 400 * ey - 300 * ex
 
-    mb = 10000000
-    mj = 10000000
+    Dim xb As Single, yb As Single, xj As Single, yj As Single
+    ' Ideálisan középen van a jármû ha 400*300-as a méret.
+    If PontosabbKor Then
+        xb = x0 + 400 * ex - 300 * ey
+        yb = y0 + 400 * ey + 300 * ex
+        xj = x0 + 400 * ex + 300 * ey
+        yj = y0 + 400 * ey - 300 * ex
+    Else
+        xb = x0 + xhossz * ex - yhossz * ey
+        yb = y0 + xhossz * ey + yhossz * ex
+        xj = x0 + xhossz * ex + yhossz * ey
+        yj = y0 + xhossz * ey - yhossz * ex
+    End If
 
-    For ciklus = LBound(XV) To UBound(XV)
-        If mb > (xb - XV(ciklus)) ^ 2 + (yb - YV(ciklus)) ^ 2 Then
-            mb = (xb - XV(ciklus)) ^ 2 + (yb - YV(ciklus)) ^ 2
+    Dim dist As Single, ciklus As Integer
+    dist = 1000000
+
+    For ciklus = Line5.LBound To Line5.UBound
+        Dim AA As Single, BB As Single, CC As Single, DD As Single
+        Dim dot As Single, len_sq As Single, param As Single
+        Dim xx As Single, yy As Single
+        AA = xb - Line5(ciklus).x1
+        BB = yb - Line5(ciklus).y1
+        CC = Line5(ciklus).x2 - Line5(ciklus).x1
+        DD = Line5(ciklus).y2 - Line5(ciklus).y1
+
+        dot = AA * CC + BB * DD
+        len_sq = CC * CC + DD * DD
+        param = dot / len_sq
+
+        If param < 0 Then
+            xx = Line5(ciklus).x1
+            yy = Line5(ciklus).y1
+        ElseIf param > 1 Then
+            xx = Line5(ciklus).x2
+            yy = Line5(ciklus).y2
+        Else
+            xx = Line5(ciklus).x1 + param * CC
+            yy = Line5(ciklus).y1 + param * DD
         End If
 
-        If mj > (xj - XV(ciklus)) ^ 2 + (yj - YV(ciklus)) ^ 2 Then
-            mj = (xj - XV(ciklus)) ^ 2 + (yj - YV(ciklus)) ^ 2
+        Dim d As Single
+        d = Distance(xb, yb, xx, yy)
+
+        If dist > d Then
+            dist = d
         End If
     Next ciklus
 
-    Debug.Print mb - mj
-    
-    If mb - mj > 20000 Then
-        NextCoordinate False, False
-        NextMove
-
-    ElseIf mb - mj < -20000 Then
-        NextCoordinate True, False
-        NextMove
+    ' Ideálisan középen van a jármû ha 400*300-as a méret.
+    If PontosabbKor Then
+        If dist < 200 Then
+            NextCoordinate True, False
+            NextMove
+        ElseIf dist > 200 Then
+            NextCoordinate False, False
+            NextMove
+        Else
+            x0 = x0 - 55 * ex
+            y0 = y0 - 55 * ey
+        End If
     Else
-        x0 = x0 - 55 * ex
-        y0 = y0 - 55 * ey
+        If dist < 270 Then
+            NextCoordinate True, False
+            NextMove
+        ElseIf dist > 270 Then
+            NextCoordinate False, False
+            NextMove
+        Else
+            x0 = x0 - 55 * ex
+            y0 = y0 - 55 * ey
+        End If
     End If
     
     NextMove
@@ -565,10 +595,14 @@ Private Sub Timer1_Timer()
     y0 = y0 + 50 * ey
     NextMove
 
-    Me.Circle (x0, y0), 20, vbRed
+    Me.Circle (x0, y0), 10, vbRed
 End Sub
 
-Private Sub NextCoordinate(BIrany As Boolean, ismeretlen As Boolean)
+Private Function Distance(x1 As Single, y1 As Single, x2 As Single, y2 As Single) As Single
+    Distance = Sqr(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
+End Function
+
+Private Sub NextCoordinate(BIrany As Boolean, VSzog As Boolean)
     Dim bj As Double
 
     If BIrany Then
@@ -577,9 +611,9 @@ Private Sub NextCoordinate(BIrany As Boolean, ismeretlen As Boolean)
         bj = 0.15
     End If
 
-    If ismeretlen Then
-        ex = Cos(A(i)) * ex - Sin(A(i)) * ey
-        ey = Cos(A(i)) * ey + Sin(A(i)) * ex
+    If VSzog Then
+        ex = Cos(VSzogTomb(i)) * ex - Sin(VSzogTomb(i)) * ey
+        ey = Cos(VSzogTomb(i)) * ey + Sin(VSzogTomb(i)) * ex
     Else
         ex = Cos(bj) * ex - Sin(bj) * ey
         ey = Cos(bj) * ey + Sin(bj) * ex
@@ -590,23 +624,23 @@ Private Sub NextCoordinate(BIrany As Boolean, ismeretlen As Boolean)
 End Sub
 
 Private Sub NextMove()
-    Line1.X1 = x0 + xhossz * ex - yhossz * ey
-    Line1.Y1 = y0 + xhossz * ey + yhossz * ex
-    Line1.X2 = x0 - xhossz * ex - yhossz * ey
-    Line1.Y2 = y0 - xhossz * ey + yhossz * ex
+    Line1.x1 = x0 + xhossz * ex - yhossz * ey
+    Line1.y1 = y0 + xhossz * ey + yhossz * ex
+    Line1.x2 = x0 - xhossz * ex - yhossz * ey
+    Line1.y2 = y0 - xhossz * ey + yhossz * ex
 
-    Line2.X1 = x0 + xhossz * ex + yhossz * ey
-    Line2.Y1 = y0 + xhossz * ey - yhossz * ex
-    Line2.X2 = x0 - xhossz * ex + yhossz * ey
-    Line2.Y2 = y0 - xhossz * ey - yhossz * ex
+    Line2.x1 = x0 + xhossz * ex + yhossz * ey
+    Line2.y1 = y0 + xhossz * ey - yhossz * ex
+    Line2.x2 = x0 - xhossz * ex + yhossz * ey
+    Line2.y2 = y0 - xhossz * ey - yhossz * ex
 
-    Line3.X1 = Line1.X1
-    Line3.X2 = Line2.X1
-    Line3.Y1 = Line1.Y1
-    Line3.Y2 = Line2.Y1
+    Line3.x1 = Line1.x1
+    Line3.x2 = Line2.x1
+    Line3.y1 = Line1.y1
+    Line3.y2 = Line2.y1
 
-    Line4.X1 = Line1.X2
-    Line4.X2 = Line2.X2
-    Line4.Y1 = Line1.Y2
-    Line4.Y2 = Line2.Y2
+    Line4.x1 = Line1.x2
+    Line4.x2 = Line2.x2
+    Line4.y1 = Line1.y2
+    Line4.y2 = Line2.y2
 End Sub
