@@ -7,3 +7,11 @@
 - pálya elhagyását nézni (ha lehetséges)
 - kocsik helyzetének jelzése (melyik van előbbre)
 - kezdőkör ne a 0-a legyen hanem az 1
+- 3 szektor létrehozása.
+- szektoridők mérése és kiírása.
+- autók egyes adatai között lehessen váltani (itt lehetne legjóbb köridő, rangsor stb, persze ezek csak akkor ha arra a kiírásra van beállítva.)
+- pálya hosszának megmérése az első kör utána és a közelítő érték kiírása.
+- teljes megtett távolság mérése.
+- távolságot méterben kéne mérni valami szabály alapján.
+- ha lehetséges az autók sebességét a fordulások (kanyarok) és egyenesek alapján kéne meghatározni.
+- ha lehetséges ne csak a baloldali xy kordináták alapján legyen mérve a faltol való távolság.
