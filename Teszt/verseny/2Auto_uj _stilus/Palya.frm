@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form Palya 
    AutoRedraw      =   -1  'True
    BackColor       =   &H8000000E&
-   Caption         =   "Palya"
+   Caption         =   "Form1"
    ClientHeight    =   9600
    ClientLeft      =   165
    ClientTop       =   735
@@ -11,62 +11,39 @@ Begin VB.Form Palya
    ScaleHeight     =   9600
    ScaleWidth      =   11880
    StartUpPosition =   3  'Windows Default
-   Begin VB.Timer Timer_Korok 
-      Interval        =   50
-      Left            =   120
-      Top             =   8880
-   End
-   Begin VB.ListBox List1 
-      Height          =   2595
-      Left            =   9000
-      TabIndex        =   2
-      Top             =   3720
-      Width           =   2175
-   End
-   Begin VB.Label KorKiiras 
-      AutoSize        =   -1  'True
-      BackColor       =   &H8000000E&
-      Caption         =   "Körök száma: 0/0"
-      BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   12
-         Charset         =   238
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   300
-      Left            =   7320
+   Begin VB.CommandButton Command1 
+      Caption         =   "Balra"
+      Height          =   615
+      Left            =   9120
       TabIndex        =   3
-      Top             =   120
-      Width           =   2190
+      Top             =   8880
+      Width           =   1095
    End
-   Begin VB.Line CelVonal 
-      X1              =   480
-      X2              =   1920
-      Y1              =   4680
-      Y2              =   4680
+   Begin VB.CommandButton Command2 
+      Caption         =   "Jobbra"
+      Height          =   615
+      Left            =   10560
+      TabIndex        =   0
+      Top             =   8880
+      Width           =   1215
    End
    Begin VB.Label Label2 
       AutoSize        =   -1  'True
-      BackColor       =   &H8000000E&
       Caption         =   "Cél"
       Height          =   195
-      Left            =   2040
-      TabIndex        =   1
-      Top             =   4560
+      Left            =   360
+      TabIndex        =   2
+      Top             =   4320
       UseMnemonic     =   0   'False
       Width           =   225
    End
    Begin VB.Label Label1 
       AutoSize        =   -1  'True
-      BackColor       =   &H8000000E&
       Caption         =   "Start"
       Height          =   195
-      Left            =   120
-      TabIndex        =   0
-      Top             =   4560
+      Left            =   1680
+      TabIndex        =   1
+      Top             =   3840
       UseMnemonic     =   0   'False
       Width           =   330
    End
@@ -435,15 +412,6 @@ Begin VB.Form Palya
       Begin VB.Menu gamebar1 
          Caption         =   "-"
       End
-      Begin VB.Menu NewGame 
-         Caption         =   "Új játék"
-      End
-      Begin VB.Menu SaveResult 
-         Caption         =   "Végeredmény mentése"
-      End
-      Begin VB.Menu gamebar2 
-         Caption         =   "-"
-      End
       Begin VB.Menu Exit 
          Caption         =   "Kilpés"
          Shortcut        =   ^Q
@@ -471,19 +439,27 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim Autok(1 To 4) As New Auto
-Dim AutokSzama As Byte ' Autók száma
-Dim Korok As Byte
-Dim MKorokSzama As Byte
+Dim AutokSzama As Byte
 Const BorderWidth = 2
 Const ex = 0.6
 Const ey = -1
+Const Version = "0.0.5"
+
+Private Sub Command1_Click()
+    ' TODO: Játékos autó
+    'NextCoordinate True, False
+    'NextMove
+End Sub
+
+Private Sub Command2_Click()
+    ' TODO: Játékos autó
+    'NextCoordinate False, False
+    'NextMove
+End Sub
 
 Private Sub Form_Load()
     Dim i As Byte
     i = 1
-    Korok = 0
-    MKorokSzama = 5
-    SetKorokSzama Korok
 
     Autok(i).Load i ' Betöltjük újként a vonalat
     Autok(i).SetEX ex
@@ -543,25 +519,4 @@ End Sub
 
 Private Sub Exit_Click()
     Unload Me
-End Sub
-
-Private Sub SetKorokSzama(KorSz As Byte)
-    KorKiiras.Caption = "Körök száma: " & KorSz & "/" & MKorokSzama
-End Sub
-
-Private Sub Timer_Korok_Timer()
-    Dim i As Byte
-    For i = LBound(Autok) To AutokSzama
-        If Korok < Autok(i).GetKorokSzama Then
-            Korok = Autok(i).GetKorokSzama
-
-            If Korok > MKorokSzama Then
-                Stop_Click
-                MsgBox "Vége a játéknak! Nyertes autó száma: " & i
-                Exit Sub
-            End If
-
-            SetKorokSzama Korok
-        End If
-    Next i
 End Sub

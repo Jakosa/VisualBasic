@@ -12,7 +12,7 @@ Begin VB.Form Palya
    ScaleWidth      =   11880
    StartUpPosition =   3  'Windows Default
    Begin VB.Timer Timer_Korok 
-      Interval        =   50
+      Interval        =   100
       Left            =   120
       Top             =   8880
    End

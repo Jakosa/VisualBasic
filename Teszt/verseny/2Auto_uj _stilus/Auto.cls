@@ -34,12 +34,6 @@ Dim i As Long
 Const PontosabbKor = True   ' Ha "true" akkor tökéletesebben középen van az autó. "false" esetén viszont szerintem élethübb.
 Const xhossz = 80           ' Kocsi hossza.
 Const yhossz = 60           ' Kocsi szélessége.
-Dim ACelvonal As Boolean       ' Átment a célvonalon vagy sem.
-Dim KorokSzama As Byte
-
-Public Property Get GetKorokSzama() As Byte
-    GetKorokSzama = KorokSzama
-End Property
 
 Public Sub SetX0(X As Double)
     x0 = X
@@ -105,7 +99,7 @@ Public Sub Load(Szam As Byte)
 
     Set Timer0 = Palya.Controls.Add("VB.Timer", "Timer" & Szam & "1", Palya)
     Timer0.Enabled = False
-    Timer0.Interval = 1
+    Timer0.Interval = 100
 
     Dim ciklus As Long
     For ciklus = 1 To 30
@@ -136,9 +130,7 @@ Private Sub Class_Initialize()
     ey = -1
     x0 = 1100
     y0 = 4000
-    KorokSzama = 0
     SetNyomvonal True
-    ACelvonal = False
 End Sub
 
 Private Sub Class_Terminate()
@@ -171,9 +163,32 @@ Private Sub Timer0_Timer()
     Dim dist As Single, ciklus As Integer
     dist = 1000000
 
-    For ciklus = Palya.Line5.LBound To Palya.Line5.UBound
+    For ciklus = Palya.Line5.LBound To Palya.Line5.ubound
+        Dim AA As Single, BB As Single, CC As Single, DD As Single
+        Dim dot As Single, len_sq As Single, param As Single
+        Dim xx As Single, yy As Single
+        AA = xb - Palya.Line5(ciklus).x1
+        BB = yb - Palya.Line5(ciklus).y1
+        CC = Palya.Line5(ciklus).x2 - Palya.Line5(ciklus).x1
+        DD = Palya.Line5(ciklus).y2 - Palya.Line5(ciklus).y1
+
+        dot = AA * CC + BB * DD
+        len_sq = CC * CC + DD * DD
+        param = dot / len_sq
+
+        If param < 0 Then
+            xx = Palya.Line5(ciklus).x1
+            yy = Palya.Line5(ciklus).y1
+        ElseIf param > 1 Then
+            xx = Palya.Line5(ciklus).x2
+            yy = Palya.Line5(ciklus).y2
+        Else
+            xx = Palya.Line5(ciklus).x1 + param * CC
+            yy = Palya.Line5(ciklus).y1 + param * DD
+        End If
+
         Dim d As Single
-        d = Distance(xb, yb, Palya.Line5(ciklus).X1, Palya.Line5(ciklus).X2, Palya.Line5(ciklus).Y1, Palya.Line5(ciklus).Y2)
+        d = Distance(xb, yb, xx, yy)
 
         If dist > d Then
             dist = d
@@ -211,46 +226,13 @@ Private Sub Timer0_Timer()
     y0 = y0 + 50 * ey
     NextMove
 
-    dist = Distance(x0, y0, Palya.CelVonal.X1, Palya.CelVonal.X2, Palya.CelVonal.Y1, Palya.CelVonal.Y2)
-
-    If dist < 100 And Not ACelvonal Then
-        ACelvonal = True
-        KorokSzama = KorokSzama + 1
-        Palya.List1.AddItem "Beértem a célba: " & Color & " Korok száma: " & KorokSzama
-    ElseIf dist > 100 And ACelvonal Then
-        ACelvonal = False
-    End If
-
     If Nyomvonal Then
         Palya.Circle (x0, y0), 10, Color
     End If
 End Sub
 
-Private Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal LineX1 As Single, ByVal LineX2 As Single, ByVal LineY1 As Single, ByVal LineY2 As Single) As Single
-    Dim AA As Single, BB As Single, CC As Single, DD As Single
-    Dim dot As Single, len_sq As Single, param As Single
-    Dim xx As Single, yy As Single
-    AA = PointX - LineX1
-    BB = PointY - LineY1
-    CC = LineX2 - LineX1
-    DD = LineY2 - LineY1
-
-    dot = AA * CC + BB * DD
-    len_sq = CC * CC + DD * DD
-    param = dot / len_sq
-
-    If param < 0 Then
-        xx = LineX1
-        yy = LineY1
-    ElseIf param > 1 Then
-        xx = LineX2
-        yy = LineY2
-    Else
-        xx = LineX1 + param * CC
-        yy = LineY1 + param * DD
-    End If
-
-    Distance = Sqr(((PointX - xx) * (PointX - xx)) + ((PointY - yy) * (PointY - yy)))
+Private Function Distance(x1 As Single, y1 As Single, x2 As Single, y2 As Single) As Single
+    Distance = Sqr(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)))
 End Function
 
 Private Sub NextCoordinate(BIrany As Boolean, VSzog As Boolean)
@@ -275,23 +257,23 @@ Private Sub NextCoordinate(BIrany As Boolean, VSzog As Boolean)
 End Sub
 
 Private Sub NextMove()
-    KVonal1.X1 = x0 + xhossz * ex - yhossz * ey
-    KVonal1.Y1 = y0 + xhossz * ey + yhossz * ex
-    KVonal1.X2 = x0 - xhossz * ex - yhossz * ey
-    KVonal1.Y2 = y0 - xhossz * ey + yhossz * ex
+    KVonal1.x1 = x0 + xhossz * ex - yhossz * ey
+    KVonal1.y1 = y0 + xhossz * ey + yhossz * ex
+    KVonal1.x2 = x0 - xhossz * ex - yhossz * ey
+    KVonal1.y2 = y0 - xhossz * ey + yhossz * ex
 
-    KVonal2.X1 = x0 + xhossz * ex + yhossz * ey
-    KVonal2.Y1 = y0 + xhossz * ey - yhossz * ex
-    KVonal2.X2 = x0 - xhossz * ex + yhossz * ey
-    KVonal2.Y2 = y0 - xhossz * ey - yhossz * ex
+    KVonal2.x1 = x0 + xhossz * ex + yhossz * ey
+    KVonal2.y1 = y0 + xhossz * ey - yhossz * ex
+    KVonal2.x2 = x0 - xhossz * ex + yhossz * ey
+    KVonal2.y2 = y0 - xhossz * ey - yhossz * ex
 
-    KVonal3.X1 = KVonal1.X1
-    KVonal3.X2 = KVonal2.X1
-    KVonal3.Y1 = KVonal1.Y1
-    KVonal3.Y2 = KVonal2.Y1
+    KVonal3.x1 = KVonal1.x1
+    KVonal3.x2 = KVonal2.x1
+    KVonal3.y1 = KVonal1.y1
+    KVonal3.y2 = KVonal2.y1
 
-    KVonal4.X1 = KVonal1.X2
-    KVonal4.X2 = KVonal2.X2
-    KVonal4.Y1 = KVonal1.Y2
-    KVonal4.Y2 = KVonal2.Y2
+    KVonal4.x1 = KVonal1.x2
+    KVonal4.x2 = KVonal2.x2
+    KVonal4.y1 = KVonal1.y2
+    KVonal4.y2 = KVonal2.y2
 End Sub

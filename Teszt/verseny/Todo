@@ -1,10 +1,9 @@
 - több autó lehetősége (max 4 de a számuk változtatható legyen)
 - 1 autó amit írányíthat a felhasználó (5.-ik autó)
 - az autók sebessége változzon.
-- a húzott csík be-ki kapcsolható legyen (Menüpontban)
 - pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
 - start és célvonal létrehozása (a befutokat jelezni)
 - köridő mérése
-- lapok számának mérése (ha lenne több lap is)
 - pálya elhagyását nézni (ha lehetséges)
 - kocsik helyzetének jelzése (melyik van előbbre)
+- kezdőkör ne a 0-a legyen hanem az 1

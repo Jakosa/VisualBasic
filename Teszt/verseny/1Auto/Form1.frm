@@ -511,10 +511,6 @@ Private Sub Form_Load()
     Next vonal
 End Sub
 
-Private Sub OLE1_Updated(Code As Integer)
-
-End Sub
-
 Private Sub Timer1_Timer()
     Dim xb As Double, yb As Double, xj As Double, yj As Double
     Dim mb As Double, mj As Double, ciklus As Long
