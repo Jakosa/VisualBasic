@@ -3,30 +3,14 @@ Begin VB.Form Palya
    AutoRedraw      =   -1  'True
    BackColor       =   &H8000000E&
    Caption         =   "Palya"
-   ClientHeight    =   9810
+   ClientHeight    =   9600
    ClientLeft      =   165
    ClientTop       =   735
-   ClientWidth     =   14550
+   ClientWidth     =   11880
    LinkTopic       =   "Form1"
-   ScaleHeight     =   9810
-   ScaleWidth      =   14550
+   ScaleHeight     =   9600
+   ScaleWidth      =   11880
    StartUpPosition =   3  'Windows Default
-   Begin VB.Timer Timer_VersenyAdatok 
-      Interval        =   500
-      Left            =   720
-      Top             =   8880
-   End
-   Begin VB.ComboBox VersenyAdatok 
-      Height          =   315
-      ItemData        =   "Palya.frx":0000
-      Left            =   9720
-      List            =   "Palya.frx":0016
-      Sorted          =   -1  'True
-      Style           =   2  'Dropdown List
-      TabIndex        =   6
-      Top             =   6360
-      Width           =   4575
-   End
    Begin VB.Timer Timer_Korok 
       Interval        =   50
       Left            =   120
@@ -34,9 +18,9 @@ Begin VB.Form Palya
    End
    Begin VB.ListBox List1 
       Height          =   2790
-      Left            =   9720
+      Left            =   7200
       TabIndex        =   2
-      Top             =   6840
+      Top             =   6120
       Width           =   4575
    End
    Begin VB.Label Label4 
@@ -93,7 +77,7 @@ Begin VB.Form Palya
          Strikethrough   =   0   'False
       EndProperty
       Height          =   300
-      Left            =   5880
+      Left            =   7320
       TabIndex        =   3
       Top             =   120
       Width           =   2190
@@ -563,7 +547,6 @@ Private Sub Form_Load()
     Autok(i).SetBorderWidth BorderWidth
 
     AutokSzama = i
-    VersenyAdatok.ListIndex = 0
 End Sub
 
 Private Sub Form_Terminate()
@@ -624,67 +607,4 @@ Private Sub Timer_Korok_Timer()
             SetKorokSzama Korok
         End If
     Next i
-End Sub
-
-Private Sub Timer_VersenyAdatok_Timer()
-    Dim i As Byte, szam As Single, szin As String
-
-    Select Case VersenyAdatok.List(VersenyAdatok.ListIndex)
-        Case "Autók"
-            List1.Clear
-
-            For i = LBound(Autok) To AutokSzama
-                List1.AddItem i & ". Autó. Színe: " & Autok(i).GetColor()
-            Next i
-        Case "Legjobb 1. szektor"
-            SzektoridoKiiras 1
-        Case "Legjobb 2. szektor"
-            SzektoridoKiiras 2
-        Case "Legjobb 3. szektor"
-            SzektoridoKiiras 3
-        Case "Legjobb köridõ"
-            Dim lkor As Byte
-            List1.Clear
-
-            If Korok = KezdokorErteke Then
-                List1.AddItem "Nincs még mért köridõ!"
-                Exit Sub
-            End If
-
-            For i = LBound(Autok) To AutokSzama
-                If szam < Autok(i).GetLegjobbKorido Then
-                    szin = Autok(i).GetColor
-                    szam = Autok(i).GetLegjobbKorido
-                    lkor = Autok(i).GetLegjobbKoridoSzama
-                End If
-            Next i
-
-            List1.AddItem "Legjobb kör ideje ideje: " & szam & " másodperc"
-            List1.AddItem "A(z) idõt beállította " & lkor & ". körben."
-            List1.AddItem "Az idõt beállította a " & szin & " szinû autó."
-        Case "Autók sorrendje"
-            List1.Clear
-        Case Else
-            List1.AddItem "Hiba!"
-    End Select
-End Sub
-
-Private Sub SzektoridoKiiras(a As Integer)
-    Dim i As Byte, szam As Single, szin As String
-    List1.Clear
-
-    For i = LBound(Autok) To AutokSzama
-        If szam < Autok(i).GetLegjobbSzektoridok(a) Then
-            szin = Autok(i).GetColor
-            szam = Autok(i).GetLegjobbSzektoridok(a)
-        End If
-    Next i
-
-    If szam = 10000000 Then ' Kezdõérték
-        List1.AddItem "Nincs még mért szektoridõ!"
-        Exit Sub
-    End If
-
-    List1.AddItem "Legjobb " & a & ". szektor ideje: " & szam & " másodperc"
-    List1.AddItem "Az idõt beállította a " & szin & " szinû autó."
 End Sub

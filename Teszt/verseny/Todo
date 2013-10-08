@@ -1,17 +1,14 @@
-- tÃ¶bb autÃ³ lehetÅ‘sÃ©ge (max 4 de a szÃ¡muk vÃ¡ltoztathatÃ³ legyen)
-- 1 autÃ³ amit Ã­rÃ¡nyÃ­that a felhasznÃ¡lÃ³ (5.-ik autÃ³)
-- az autÃ³k sebessÃ©ge vÃ¡ltozzon.
-- pÃ¡lya vonalÃ¡nak tÃ¡rolÃ¡sÃ¡t megoldani dinamikusan majd megoldani a fÃ¡jlbÃ³l valÃ³ kordinÃ¡tabetÃ¶ltÃ©st
-- start Ã©s cÃ©lvonal lÃ©trehozÃ¡sa (a befutokat jelezni)
-- kÃ¶ridÅ‘ mÃ©rÃ©se
-- pÃ¡lya elhagyÃ¡sÃ¡t nÃ©zni (ha lehetsÃ©ges)
-- kocsik helyzetÃ©nek jelzÃ©se (melyik van elÅ‘bbre)
-- kezdÅ‘kÃ¶r ne a 0-a legyen hanem az 1
-- 3 szektor lÃ©trehozÃ¡sa.
-- szektoridÅ‘k mÃ©rÃ©se Ã©s kiÃ­rÃ¡sa.
-- autÃ³k egyes adatai kÃ¶zÃ¶tt lehessen vÃ¡ltani (itt lehetne legjÃ³bb kÃ¶ridÅ‘, rangsor stb, persze ezek csak akkor ha arra a kiÃ­rÃ¡sra van beÃ¡llÃ­tva.)
-- pÃ¡lya hosszÃ¡nak megmÃ©rÃ©se az elsÅ‘ kÃ¶r utÃ¡na Ã©s a kÃ¶zelÃ­tÅ‘ Ã©rtÃ©k kiÃ­rÃ¡sa.
-- teljes megtett tÃ¡volsÃ¡g mÃ©rÃ©se.
-- tÃ¡volsÃ¡got mÃ©terben kÃ©ne mÃ©rni valami szabÃ¡ly alapjÃ¡n.
-- ha lehetsÃ©ges az autÃ³k sebessÃ©gÃ©t a fordulÃ¡sok (kanyarok) Ã©s egyenesek alapjÃ¡n kÃ©ne meghatÃ¡rozni.
-- ha lehetsÃ©ges ne csak a baloldali xy kordinÃ¡tÃ¡k alapjÃ¡n legyen mÃ©rve a faltol valÃ³ tÃ¡volsÃ¡g.
+- több autó lehetõsége (max 4 de a számuk változtatható legyen)
+- 1 autó amit írányíthat a felhasználó (5.-ik autó)
+- az autók sebessége változzon.
+- pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
+- start és célvonal létrehozása (a befutokat jelezni)
+- pálya elhagyását nézni (ha lehetséges)
+- kocsik helyzetének jelzése (melyik van elõbbre)
+- autók egyes adatai között lehessen váltani (itt lehetne szektoridõ (naturban), rangsor stb, persze ezek csak akkor ha arra a kiírásra van beállítva.)
+- pálya hosszának megmérése az elsõ kör utána és a közelítõ érték kiírása.
+- teljes megtett távolság mérése.
+- távolságot méterben kéne mérni valami szabály alapján.
+- ha lehetséges az autók sebességét a fordulások (kanyarok) és egyenesek alapján kéne meghatározni.
+- ha lehetséges ne csak a baloldali xy kordináták alapján legyen mérve a faltol való távolság.
+- amikor kiírja hogy vége a játéknak engedje befutni az autókat hogy elmentse az adatokat de már közben állítsa is le õket.

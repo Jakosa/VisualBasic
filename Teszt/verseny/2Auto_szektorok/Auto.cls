@@ -34,6 +34,7 @@ Dim i As Long
 Const PontosabbKor = True   ' Ha "true" akkor tökéletesebben középen van az autó. "false" esetén viszont szerintem élethübb.
 Const xhossz = 80           ' Kocsi hossza.
 Const yhossz = 60           ' Kocsi szélessége.
+Dim ACelvonal As Boolean       ' Átment a célvonalon vagy sem.
 Dim KorokSzama As Byte
 Dim EgyKorido As Date ' Egy kör
 Dim StopKorido As Date
@@ -41,9 +42,6 @@ Dim BKorido As Boolean      ' Induláskor állítja csak be a köidõt az adott idõre
 Dim BStopKorido As Boolean
 Dim EgySzektorido As Date  ' Egy szektor
 Dim ASzektorvonal As Boolean ' Átment a szektoron.
-Dim LegjobbSzektorido(1 To 3) As Single
-Dim LegjobbKorido As Single
-Dim LegjobbKoridoSzama As Byte
 
 Private Type Korok
     Korido As Single
@@ -54,41 +52,6 @@ Dim KorokTomb() As Korok
 
 Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
-End Property
-
-Public Property Get GetKorSzektoridok(ii As Integer) As Single
-    GetKorSzektoridok = KorokTomb(KorokSzama).Szektorido(ii)
-End Property
-
-Public Property Get GetLegjobbKorido() As Single
-    GetLegjobbKorido = LegjobbKorido
-End Property
-
-Public Property Get GetLegjobbKoridoSzama() As Byte
-    GetLegjobbKoridoSzama = LegjobbKoridoSzama
-End Property
-
-Public Property Get GetLegjobbSzektoridok(ii As Integer) As Single
-    GetLegjobbSzektoridok = LegjobbSzektorido(ii)
-End Property
-
-Public Property Get GetColor() As String
-    Dim szin As String
-
-    Select Case Color
-        Case ColorConstants.vbBlue
-            szin = "kék"
-        Case ColorConstants.vbRed
-            szin = "piros"
-        Case ColorConstants.vbGreen
-            szin = "zöld"
-        Case ColorConstants.vbYellow
-            szin = "sárga"
-        Case Else
-            szin = "fekete"
-    End Select
-
-    GetColor = szin
 End Property
 
 Public Sub SetX0(X As Double)
@@ -107,8 +70,8 @@ Public Sub SetEY(Y As Double)
     ey = Y
 End Sub
 
-Public Sub SetColor(szin As String)
-    Select Case szin
+Public Sub SetColor(Szin As String)
+    Select Case Szin
         Case "Kék", "kék"
             Color = ColorConstants.vbBlue
         Case "Piros", "piros"
@@ -190,8 +153,6 @@ Public Sub Stop_Kocsi()
 End Sub
 
 Private Sub Class_Initialize()
-    Dim ciklus As Integer
-
     ex = 0.6
     ey = -1
     x0 = 1100
@@ -200,14 +161,9 @@ Private Sub Class_Initialize()
     BStopKorido = False
     KorokSzama = Palya.GetKezdokorErteke()
     SetNyomvonal True
+    ACelvonal = False
     ASzektorvonal = False
     ReDim KorokTomb(Palya.GetKezdokorErteke() To Palya.GetMKorokSzama()) As Korok
-
-    LegjobbKorido = 10000000   ' Kezdõérték
-
-    For ciklus = LBound(LegjobbSzektorido) To UBound(LegjobbSzektorido)
-        LegjobbSzektorido(ciklus) = 10000000  ' Kezdõérték
-    Next ciklus
 End Sub
 
 Private Sub Class_Terminate()
@@ -221,8 +177,8 @@ Private Sub Timer0_Timer()
         i = 1
     End If
 
+    Dim NowTime As Date
     If BStopKorido Then
-        Dim NowTime As Date
         NowTime = Now
         EgyKorido = DateAdd("s", DateDiff("s", StopKorido, NowTime), EgyKorido)
         EgySzektorido = DateAdd("s", DateDiff("s", StopKorido, NowTime), EgySzektorido)
@@ -395,12 +351,6 @@ Private Sub Szektorok()
             If szam = 3 Then
                 NextKor = True
                 KorokTomb(KorokSzama).Korido = DateDiff("s", EgyKorido, NowTime)
-
-                If LegjobbKorido > KorokTomb(KorokSzama).Korido Then
-                    LegjobbKorido = KorokTomb(KorokSzama).Korido
-                    LegjobbKoridoSzama = KorokSzama
-                End If
-
                 KorokTomb(KorokSzama).Szektorido(szam) = KorokTomb(KorokSzama).Korido
 
                 Dim j As Byte
@@ -411,17 +361,13 @@ Private Sub Szektorok()
                 KorokTomb(KorokSzama).Szektorido(szam) = DateDiff("s", EgySzektorido, NowTime)
             End If
 
-            If LegjobbSzektorido(szam) > KorokTomb(KorokSzama).Szektorido(szam) Then
-                LegjobbSzektorido(szam) = KorokTomb(KorokSzama).Szektorido(szam)
+            Palya.List1.AddItem KorokSzama
+            Palya.List1.AddItem "Szektor: " & Color & " Befejezett Szektor: " & szam & " Szektoridõ: " & KorokTomb(KorokSzama).Szektorido(szam)
+
+            If szam = 3 Then
+                Palya.List1.AddItem KorokTomb(KorokSzama).Korido
+                Palya.List1.AddItem "Beértem a célba: " & Color & " Befejezett kör: " & KorokSzama
             End If
-
-            'Palya.List1.AddItem KorokSzama
-            'Palya.List1.AddItem "Szektor: " & Color & " Befejezett Szektor: " & szam & " Szektoridõ: " & KorokTomb(KorokSzama).Szektorido(szam)
-
-            'If szam = 3 Then
-            '    Palya.List1.AddItem KorokTomb(KorokSzama).Korido
-            '    Palya.List1.AddItem "Beértem a célba: " & Color & " Befejezett kör: " & KorokSzama
-            'End If
 
             NowTime = Now
 
@@ -430,6 +376,10 @@ Private Sub Szektorok()
             End If
 
             EgySzektorido = NowTime
+
+            'If i = 3 Then
+            '    Exit For ' Crash fix
+            'End If
         ElseIf dist > 100 And ASzektorvonal Then
             ASzektorvonal = False
         End If
