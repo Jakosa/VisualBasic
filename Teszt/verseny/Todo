@@ -12,3 +12,12 @@
 - ha lehetséges az autók sebességét a fordulások (kanyarok) és egyenesek alapján kéne meghatározni.
 - ha lehetséges ne csak a baloldali xy kordináták alapján legyen mérve a faltol való távolság.
 - amikor kiírja hogy vége a játéknak engedje befutni az autókat hogy elmentse az adatokat de már közben állítsa is le õket.
+- Kéne sima szektoridõ kiírás is ahol minden autónak megjelenne az ideje.
+- Kéne sima köridõ kiírás is ahol minden autónak megjelenne az ideje.
+- A felállított teljes köridõnél kikéne írni a szektoridõt is hogy mibõl rakodott össze.
+- Kilehetne írni egy elméleti legjobb köridõt a legjobb szektoridõk alapján.
+- Listbox átalakítása, átnevezése.
+- Hiba: Legjob köridõ ideje ideje (duplán szerepel az ideje)
+- ha célba érnek a kocsik valami kis gif elõ jöhetne
+- kilométer/óra jelzés
+- legnagyobb végsebesség kiírása.
