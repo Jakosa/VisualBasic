@@ -1,23 +1,17 @@
-- több autó lehetõsége (max 4 de a számuk változtatható legyen)
 - 1 autó amit írányíthat a felhasználó (5.-ik autó)
 - az autók sebessége változzon.
 - pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
 - start és célvonal létrehozása (a befutokat jelezni)
 - pálya elhagyását nézni (ha lehetséges)
 - kocsik helyzetének jelzése (melyik van elõbbre)
-- autók egyes adatai között lehessen váltani (itt lehetne szektoridõ (naturban), rangsor stb, persze ezek csak akkor ha arra a kiírásra van beállítva.)
+- rangsor megírása (futam közbeni és futam végén)
 - pálya hosszának megmérése az elsõ kör utána és a közelítõ érték kiírása.
 - teljes megtett távolság mérése.
 - távolságot méterben kéne mérni valami szabály alapján.
 - ha lehetséges az autók sebességét a fordulások (kanyarok) és egyenesek alapján kéne meghatározni.
 - ha lehetséges ne csak a baloldali xy kordináták alapján legyen mérve a faltol való távolság.
 - amikor kiírja hogy vége a játéknak engedje befutni az autókat hogy elmentse az adatokat de már közben állítsa is le õket.
-- Kéne sima szektoridõ kiírás is ahol minden autónak megjelenne az ideje.
-- Kéne sima köridõ kiírás is ahol minden autónak megjelenne az ideje.
-- A felállított teljes köridõnél kikéne írni a szektoridõt is hogy mibõl rakodott össze.
-- Kilehetne írni egy elméleti legjobb köridõt a legjobb szektoridõk alapján.
-- Listbox átalakítása, átnevezése.
-- Hiba: Legjob köridõ ideje ideje (duplán szerepel az ideje)
 - ha célba érnek a kocsik valami kis gif elõ jöhetne
 - kilométer/óra jelzés
 - legnagyobb végsebesség kiírása.
+- új játéknál a régi nyomvonalakat el kéne tüntetni.
