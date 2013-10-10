@@ -585,13 +585,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim Autok(1 To 4) As New Auto   ' Autók beállítását tároló tömb.
-Dim AutokSzama As Byte          ' Autók száma
-Dim Korok As Byte               ' Éppen hányadik körnél tartunk.
-Dim MKorokSzama As Byte         ' Maximum körök száma
-Dim Started As Boolean          ' Jelzi hogy elindult-e már a játék vagy sem.
-Const KezdokorErteke = 1        ' Tárolja hogy mennyitõl induljon az elsõ kör.
-Const BorderWidth = 2           ' Autók vonalának szélessége.
+Dim Autok(1 To 4) As New Auto
+Dim AutokSzama As Byte ' Autók száma
+Dim Korok As Byte
+Dim MKorokSzama As Byte
+Dim Started As Boolean
+Const KezdokorErteke = 1
+Const BorderWidth = 2
 Const ex = 0.6
 Const ey = -1
 
@@ -760,11 +760,6 @@ Private Sub Timer_VersenyAdatok_Timer()
         Case "Legjobb köridõ"
             Dim lkor As Byte, aszam As Byte
             CleanVAText
-
-            If Not Started Then
-                NoStartedGameVAText
-                Exit Sub
-            End If
 
             If Korok = KezdokorErteke Then
                 AddVAText "Nincs még mért köridõ!"

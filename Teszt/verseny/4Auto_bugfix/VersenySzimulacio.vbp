@@ -6,7 +6,6 @@ Form=About.frm
 Reference=*\G{00025E01-0000-0000-C000-000000000046}#4.0#0#C:\Program Files\Common Files\Microsoft Shared\DAO\DAO350.DLL#Microsoft DAO 3.51 Object Library
 IconForm="Palya"
 Startup="Palya"
-ExeName32="VersenySzimulacio.exe"
 Command32=""
 Name="VersenySzimulacio"
 HelpContextID="0"
