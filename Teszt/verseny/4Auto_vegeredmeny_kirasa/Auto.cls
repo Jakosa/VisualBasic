@@ -61,7 +61,7 @@ Private Type Korok
 End Type
 
 Dim KorokTomb() As Korok
-'Dim NyPontok(0 To 1000000) As NyomvonalPontok
+Dim NyPontok(0 To 1000000) As NyomvonalPontok
 
 Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
@@ -266,13 +266,13 @@ Public Sub Dispose()
 
     Palya.Controls.Remove "Timer" & AutoSzama & "1"
 
-    'If nyvp > 0 Then
-    '    For i = LBound(NyPontok) To nyvp
-    '        If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
-    '            Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
-    '        End If
-    '    Next i
-    'End If
+    If nyvp > 0 Then
+        For i = LBound(NyPontok) To nyvp
+            If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
+                Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
+            End If
+        Next i
+    End If
 End Sub
 
 Public Sub Show()
@@ -317,7 +317,7 @@ Private Sub Timer0_Timer()
     distb = 1000000
     distj = 1000000
 
-    For ciklus = Palya.Line5.LBound To Palya.Line5.UBound
+    For ciklus = Palya.Line5.lbound To Palya.Line5.UBound
         Dim db As Single, dj As Single
         db = Distance(xb, yb, Palya.Line5(ciklus).X1, Palya.Line5(ciklus).X2, Palya.Line5(ciklus).Y1, Palya.Line5(ciklus).Y2)
         dj = Distance(xj, yj, Palya.Line5(ciklus).X1, Palya.Line5(ciklus).X2, Palya.Line5(ciklus).Y1, Palya.Line5(ciklus).Y2)
@@ -361,13 +361,13 @@ Private Sub Timer0_Timer()
 
     Szektorok
 
-    'If Nyomvonal And nyvp < UBound(NyPontok) Then
-    '    NyPontok(nyvp).x0 = x0
-    '    NyPontok(nyvp).y0 = y0
-    '    nyvp = nyvp + 1
+    If Nyomvonal And nyvp < UBound(NyPontok) Then
+        NyPontok(nyvp).x0 = x0
+        NyPontok(nyvp).y0 = y0
+        nyvp = nyvp + 1
 
-    '    Palya.Circle (x0, y0), 10, Color
-    'End If
+        Palya.Circle (x0, y0), 10, Color
+    End If
 
     If GameEnd Then
         UtolsoMeterek = UtolsoMeterek + 1
@@ -460,7 +460,7 @@ Private Sub Szektorok()
         Dim Dist As Single, ciklus As Byte, szam As Byte
         Dist = 1000000
 
-        For ciklus = Palya.SzektorVonal.LBound To Palya.SzektorVonal.UBound
+        For ciklus = Palya.SzektorVonal.lbound To Palya.SzektorVonal.UBound
             Dim d As Single
             d = Distance(x0, y0, Palya.SzektorVonal(ciklus).X1, Palya.SzektorVonal(ciklus).X2, Palya.SzektorVonal(ciklus).Y1, Palya.SzektorVonal(ciklus).Y2)
 

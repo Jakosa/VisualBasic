@@ -46,8 +46,6 @@ Dim LegjobbKorido As Single
 Dim LegjobbKoridoSzama As Byte
 Dim AutoSzama As Byte
 Dim nyvp As Long
-Dim GameEnd As Boolean ' Vége a játéknak.
-Dim UtolsoMeterek As Integer
 
 Private Type NyomvonalPontok
     Circle As VB.Shape
@@ -61,7 +59,7 @@ Private Type Korok
 End Type
 
 Dim KorokTomb() As Korok
-'Dim NyPontok(0 To 1000000) As NyomvonalPontok
+Dim NyPontok(0 To 1000000) As NyomvonalPontok
 
 Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
@@ -69,16 +67,6 @@ End Property
 
 Public Property Get GetKorSzektoridok(ii As Integer) As Single
     GetKorSzektoridok = KorokTomb(KorokSzama).Szektorido(ii)
-End Property
-
-Public Property Get GetOsszKorido() As Single
-    Dim osszido As Single, ciklus As Integer
-
-    For ciklus = Palya.GetKezdokorErteke To Palya.GetMKorokSzama
-        osszido = osszido + KorokTomb(ciklus).Korido
-    Next ciklus
-
-    GetOsszKorido = osszido
 End Property
 
 Public Property Get GetLegjobbKorido() As Single
@@ -236,14 +224,13 @@ Private Sub Class_Initialize()
     y0 = 4000
     nyvp = 0
     BKorido = True
-    GameEnd = False
     BStopKorido = False
     KorokSzama = Palya.GetKezdokorErteke()
     SetNyomvonal True
     ASzektorvonal = False
     ReDim KorokTomb(Palya.GetKezdokorErteke() To Palya.GetMKorokSzama()) As Korok
 
-    LegjobbKorido = 1000   ' Kezdõérték
+    LegjobbKorido = 10000000   ' Kezdõérték
 
     For ciklus = LBound(LegjobbSzektorido) To UBound(LegjobbSzektorido)
         LegjobbSzektorido(ciklus) = 10000000  ' Kezdõérték
@@ -266,13 +253,13 @@ Public Sub Dispose()
 
     Palya.Controls.Remove "Timer" & AutoSzama & "1"
 
-    'If nyvp > 0 Then
-    '    For i = LBound(NyPontok) To nyvp
-    '        If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
-    '            Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
-    '        End If
-    '    Next i
-    'End If
+    If nyvp > 0 Then
+        For i = LBound(NyPontok) To nyvp
+            If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
+                Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
+            End If
+        Next i
+    End If
 End Sub
 
 Public Sub Show()
@@ -361,20 +348,12 @@ Private Sub Timer0_Timer()
 
     Szektorok
 
-    'If Nyomvonal And nyvp < UBound(NyPontok) Then
-    '    NyPontok(nyvp).x0 = x0
-    '    NyPontok(nyvp).y0 = y0
-    '    nyvp = nyvp + 1
+    If Nyomvonal And nyvp < UBound(NyPontok) Then
+        NyPontok(nyvp).x0 = x0
+        NyPontok(nyvp).y0 = y0
+        nyvp = nyvp + 1
 
-    '    Palya.Circle (x0, y0), 10, Color
-    'End If
-
-    If GameEnd Then
-        UtolsoMeterek = UtolsoMeterek + 1
-
-        If UtolsoMeterek = 20 Then
-            Timer0.Enabled = False
-        End If
+        Palya.Circle (x0, y0), 10, Color
     End If
 End Sub
 
@@ -523,9 +502,5 @@ Private Sub Szektorok()
 
     If NextKor Then
         KorokSzama = KorokSzama + 1
-    End If
-
-    If KorokSzama > Palya.GetMKorokSzama Then
-        GameEnd = True
     End If
 End Sub

@@ -46,11 +46,9 @@ Dim LegjobbKorido As Single
 Dim LegjobbKoridoSzama As Byte
 Dim AutoSzama As Byte
 Dim nyvp As Long
-Dim GameEnd As Boolean ' Vége a játéknak.
-Dim UtolsoMeterek As Integer
+Dim SebessegValtozas As Byte ' Számolja hány másodpercenként (vagy timer lefutásként) lesz változtatva a sebesség.
 
 Private Type NyomvonalPontok
-    Circle As VB.Shape
     x0 As Double
     y0 As Double
 End Type
@@ -61,7 +59,7 @@ Private Type Korok
 End Type
 
 Dim KorokTomb() As Korok
-'Dim NyPontok(0 To 1000000) As NyomvonalPontok
+Dim NyPontok(0 To 1000000) As NyomvonalPontok
 
 Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
@@ -69,16 +67,6 @@ End Property
 
 Public Property Get GetKorSzektoridok(ii As Integer) As Single
     GetKorSzektoridok = KorokTomb(KorokSzama).Szektorido(ii)
-End Property
-
-Public Property Get GetOsszKorido() As Single
-    Dim osszido As Single, ciklus As Integer
-
-    For ciklus = Palya.GetKezdokorErteke To Palya.GetMKorokSzama
-        osszido = osszido + KorokTomb(ciklus).Korido
-    Next ciklus
-
-    GetOsszKorido = osszido
 End Property
 
 Public Property Get GetLegjobbKorido() As Single
@@ -93,59 +81,43 @@ Public Property Get GetLegjobbSzektoridok(ii As Integer) As Single
     GetLegjobbSzektoridok = LegjobbSzektorido(ii)
 End Property
 
-Public Property Get GetKVonal1() As VB.Line
-    Set GetKVonal1 = KVonal1
-End Property
-
-Public Property Get GetKVonal2() As VB.Line
-    Set GetKVonal2 = KVonal2
-End Property
-
-Public Property Get GetKVonal3() As VB.Line
-    Set GetKVonal3 = KVonal3
-End Property
-
-Public Property Get GetKVonal4() As VB.Line
-    Set GetKVonal4 = KVonal4
-End Property
-
 Public Property Get GetColor() As String
-    Dim Szin As String
+    Dim szin As String
 
     Select Case Color
         Case ColorConstants.vbBlue
-            Szin = "kék"
+            szin = "kék"
         Case ColorConstants.vbRed
-            Szin = "piros"
+            szin = "piros"
         Case ColorConstants.vbGreen
-            Szin = "zöld"
+            szin = "zöld"
         Case ColorConstants.vbYellow
-            Szin = "sárga"
+            szin = "sárga"
         Case Else
-            Szin = "fekete"
+            szin = "fekete"
     End Select
 
-    GetColor = Szin
+    GetColor = szin
 End Property
 
-Public Sub SetX0(x As Double)
-    x0 = x
+Public Sub SetX0(X As Double)
+    x0 = X
 End Sub
 
 Public Sub SetY0(Y As Double)
     y0 = Y
 End Sub
 
-Public Sub SetEX(x As Double)
-    ex = x
+Public Sub SetEX(X As Double)
+    ex = X
 End Sub
 
 Public Sub SetEY(Y As Double)
     ey = Y
 End Sub
 
-Public Sub SetColor(Szin As String)
-    Select Case Szin
+Public Sub SetColor(szin As String)
+    Select Case szin
         Case "Kék", "kék"
             Color = ColorConstants.vbBlue
         Case "Piros", "piros"
@@ -236,14 +208,13 @@ Private Sub Class_Initialize()
     y0 = 4000
     nyvp = 0
     BKorido = True
-    GameEnd = False
     BStopKorido = False
     KorokSzama = Palya.GetKezdokorErteke()
     SetNyomvonal True
     ASzektorvonal = False
     ReDim KorokTomb(Palya.GetKezdokorErteke() To Palya.GetMKorokSzama()) As Korok
 
-    LegjobbKorido = 1000   ' Kezdõérték
+    LegjobbKorido = 10000000   ' Kezdõérték
 
     For ciklus = LBound(LegjobbSzektorido) To UBound(LegjobbSzektorido)
         LegjobbSzektorido(ciklus) = 10000000  ' Kezdõérték
@@ -266,13 +237,13 @@ Public Sub Dispose()
 
     Palya.Controls.Remove "Timer" & AutoSzama & "1"
 
-    'If nyvp > 0 Then
-    '    For i = LBound(NyPontok) To nyvp
-    '        If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
-    '            Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
-    '        End If
-    '    Next i
-    'End If
+    If nyvp > 0 Then
+        For i = LBound(NyPontok) To nyvp
+            If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
+                Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
+            End If
+        Next i
+    End If
 End Sub
 
 Public Sub Show()
@@ -361,20 +332,12 @@ Private Sub Timer0_Timer()
 
     Szektorok
 
-    'If Nyomvonal And nyvp < UBound(NyPontok) Then
-    '    NyPontok(nyvp).x0 = x0
-    '    NyPontok(nyvp).y0 = y0
-    '    nyvp = nyvp + 1
-
-    '    Palya.Circle (x0, y0), 10, Color
-    'End If
-
-    If GameEnd Then
-        UtolsoMeterek = UtolsoMeterek + 1
-
-        If UtolsoMeterek = 20 Then
-            Timer0.Enabled = False
-        End If
+    If Nyomvonal And nyvp < UBound(NyPontok) Then
+        NyPontok(nyvp).x0 = x0
+        NyPontok(nyvp).y0 = y0
+        nyvp = nyvp + 1
+    
+        Palya.Circle (x0, y0), 10, Color
     End If
 End Sub
 
@@ -457,34 +420,23 @@ Private Sub Szektorok()
 
     Dim NextKor As Boolean, ii As Byte
     For ii = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido)
-        Dim Dist As Single, ciklus As Byte, szam As Byte
-        Dist = 1000000
+        Dim dist As Single, ciklus As Byte, szam As Byte
+        dist = 1000000
 
         For ciklus = Palya.SzektorVonal.LBound To Palya.SzektorVonal.UBound
             Dim d As Single
             d = Distance(x0, y0, Palya.SzektorVonal(ciklus).X1, Palya.SzektorVonal(ciklus).X2, Palya.SzektorVonal(ciklus).Y1, Palya.SzektorVonal(ciklus).Y2)
 
-            If Dist > d Then
-                Dist = d
+            If dist > d Then
+                dist = d
                 szam = ciklus + 1 ' Mert egyel magasabbon vannak
             End If
         Next ciklus
 
-        If Dist < 100 And Not ASzektorvonal Then
+        If dist < 100 And Not ASzektorvonal Then
             Dim NowTime As Date
             NowTime = Now
             ASzektorvonal = True
-
-            For ciklus = LBound(SorrendTomb(KorokSzama).Szektor(szam).AutoSzine) To UBound(SorrendTomb(KorokSzama).Szektor(szam).AutoSzine)
-                If Not SorrendTomb(KorokSzama).Szektor(szam).VanAdat Then
-                    SorrendTomb(KorokSzama).Szektor(szam).VanAdat = True
-                End If
-
-                If SorrendTomb(KorokSzama).Szektor(szam).AutoSzine(ciklus) = "" Then
-                    SorrendTomb(KorokSzama).Szektor(szam).AutoSzine(ciklus) = GetColor
-                    Exit For
-                End If
-            Next ciklus
 
             If szam = 3 Then
                 NextKor = True
@@ -516,16 +468,12 @@ Private Sub Szektorok()
             End If
 
             EgySzektorido = NowTime
-        ElseIf Dist > 100 And ASzektorvonal Then
+        ElseIf dist > 100 And ASzektorvonal Then
             ASzektorvonal = False
         End If
     Next ii
 
     If NextKor Then
         KorokSzama = KorokSzama + 1
-    End If
-
-    If KorokSzama > Palya.GetMKorokSzama Then
-        GameEnd = True
     End If
 End Sub

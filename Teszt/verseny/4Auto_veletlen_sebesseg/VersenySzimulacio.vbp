@@ -1,21 +1,19 @@
 Type=Exe
 Form=Palya.frm
-Form=About.frm
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
 Class=Auto; Auto.cls
-Module=PalyaData; PalyaData.bas
-Form=VForm.frm
+Form=About.frm
+Reference=*\G{00025E01-0000-0000-C000-000000000046}#4.0#0#C:\Program Files\Common Files\Microsoft Shared\DAO\DAO350.DLL#Microsoft DAO 3.51 Object Library
 IconForm="Palya"
 Startup="Palya"
-HelpFile=""
-Title="VersenySzimulacio"
 ExeName32="VersenySzimulacio.exe"
 Command32=""
 Name="VersenySzimulacio"
 HelpContextID="0"
 CompatibleMode="0"
 MajorVer=0
-MinorVer=3
-RevisionVer=4
+MinorVer=2
+RevisionVer=1
 AutoIncrementVer=0
 ServerSupportFiles=0
 VersionCompanyName="Microsoft Corporation"
@@ -34,7 +32,6 @@ Unattended=0
 Retained=0
 ThreadPerObject=0
 MaxNumberOfThreads=1
-DebugStartupOption=0
 
 [MS Transaction Server]
 AutoRefresh=1

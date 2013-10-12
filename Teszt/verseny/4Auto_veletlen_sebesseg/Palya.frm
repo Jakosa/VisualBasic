@@ -1,30 +1,28 @@
 VERSION 5.00
 Begin VB.Form Palya 
+   AutoRedraw      =   -1  'True
    BackColor       =   &H8000000E&
-   Caption         =   "Versenyszimulácó"
+   Caption         =   "Palya"
    ClientHeight    =   9810
    ClientLeft      =   165
    ClientTop       =   735
-   ClientWidth     =   15465
+   ClientWidth     =   14550
    LinkTopic       =   "Form1"
    ScaleHeight     =   9810
-   ScaleWidth      =   15465
+   ScaleWidth      =   14550
    StartUpPosition =   3  'Windows Default
-   Begin VB.CommandButton Command1 
-      Caption         =   "Ideiglenes Tesztgomb"
-      Height          =   615
-      Left            =   1200
-      TabIndex        =   9
-      Top             =   8760
-      Width           =   2415
+   Begin VB.Timer Timer_AutoLista 
+      Interval        =   500
+      Left            =   1320
+      Top             =   9360
    End
    Begin VB.Frame Frame2 
       BackColor       =   &H8000000E&
       Caption         =   "Autók"
       Height          =   3495
-      Left            =   10440
-      TabIndex        =   5
-      Top             =   120
+      Left            =   9600
+      TabIndex        =   7
+      Top             =   2400
       Width           =   4815
       Begin VB.TextBox AutoListaText 
          BorderStyle     =   0  'None
@@ -40,7 +38,7 @@ Begin VB.Form Palya
          Height          =   2415
          Left            =   240
          MultiLine       =   -1  'True
-         TabIndex        =   8
+         TabIndex        =   10
          Top             =   840
          Width           =   4335
       End
@@ -50,7 +48,7 @@ Begin VB.Form Palya
          Left            =   240
          List            =   "Palya.frx":000D
          Style           =   2  'Dropdown List
-         TabIndex        =   6
+         TabIndex        =   8
          Top             =   360
          Width           =   4335
       End
@@ -59,9 +57,9 @@ Begin VB.Form Palya
       BackColor       =   &H8000000E&
       Caption         =   "Versenyadatok"
       Height          =   3615
-      Left            =   10440
-      TabIndex        =   3
-      Top             =   3840
+      Left            =   9600
+      TabIndex        =   5
+      Top             =   6120
       Width           =   4815
       Begin VB.TextBox VersenyAdatokText 
          BackColor       =   &H8000000E&
@@ -79,7 +77,7 @@ Begin VB.Form Palya
          Left            =   240
          Locked          =   -1  'True
          MultiLine       =   -1  'True
-         TabIndex        =   7
+         TabIndex        =   9
          Top             =   840
          Width           =   4335
       End
@@ -90,27 +88,27 @@ Begin VB.Form Palya
          List            =   "Palya.frx":004A
          Sorted          =   -1  'True
          Style           =   2  'Dropdown List
-         TabIndex        =   4
+         TabIndex        =   6
          Top             =   360
          Width           =   4335
       End
    End
-   Begin VB.Label Label5 
-      AutoSize        =   -1  'True
-      BackColor       =   &H8000000E&
-      Caption         =   "Start / Cél / Szektor 3"
-      Height          =   195
-      Left            =   1680
-      TabIndex        =   10
-      Top             =   4440
-      Width           =   1560
+   Begin VB.Timer Timer_VersenyAdatok 
+      Interval        =   500
+      Left            =   720
+      Top             =   9360
+   End
+   Begin VB.Timer Timer_Korok 
+      Interval        =   50
+      Left            =   120
+      Top             =   9360
    End
    Begin VB.Label Label4 
       BackColor       =   &H8000000E&
       Caption         =   "Szektor 2"
       Height          =   375
       Left            =   6600
-      TabIndex        =   2
+      TabIndex        =   4
       Top             =   5640
       Width           =   1095
    End
@@ -120,7 +118,7 @@ Begin VB.Form Palya
       Caption         =   "Szektor 1"
       Height          =   195
       Left            =   4680
-      TabIndex        =   1
+      TabIndex        =   3
       Top             =   360
       Width           =   675
    End
@@ -159,10 +157,32 @@ Begin VB.Form Palya
          Strikethrough   =   0   'False
       EndProperty
       Height          =   300
-      Left            =   6240
-      TabIndex        =   0
+      Left            =   5880
+      TabIndex        =   2
       Top             =   120
       Width           =   2190
+   End
+   Begin VB.Label Label2 
+      AutoSize        =   -1  'True
+      BackColor       =   &H8000000E&
+      Caption         =   "Cél"
+      Height          =   195
+      Left            =   2040
+      TabIndex        =   1
+      Top             =   4560
+      UseMnemonic     =   0   'False
+      Width           =   225
+   End
+   Begin VB.Label Label1 
+      AutoSize        =   -1  'True
+      BackColor       =   &H8000000E&
+      Caption         =   "Start"
+      Height          =   195
+      Left            =   120
+      TabIndex        =   0
+      Top             =   4560
+      UseMnemonic     =   0   'False
+      Width           =   330
    End
    Begin VB.Line Line5 
       BorderWidth     =   2
@@ -565,17 +585,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim WithEvents Timer_VersenyAdatok As VB.Timer
-Attribute Timer_VersenyAdatok.VB_VarHelpID = -1
-Dim WithEvents Timer_AutoLista As VB.Timer
-Attribute Timer_AutoLista.VB_VarHelpID = -1
-Dim WithEvents Timer_Korok As VB.Timer
-Attribute Timer_Korok.VB_VarHelpID = -1
+Dim Autok(1 To 4) As New Auto   ' Autók beállítását tároló tömb.
 Dim AutokSzama As Byte          ' Autók száma
 Dim Korok As Byte               ' Éppen hányadik körnél tartunk.
 Dim MKorokSzama As Byte         ' Maximum körök száma
 Dim Started As Boolean          ' Jelzi hogy elindult-e már a játék vagy sem.
-Dim TempAutoLista As String     ' Hány autó van kiválasztva. (terheléscsökkentés)
 Const KezdokorErteke = 1        ' Tárolja hogy mennyitõl induljon az elsõ kör.
 Const BorderWidth = 2           ' Autók vonalának szélessége.
 Const ex = 0.6
@@ -589,44 +603,19 @@ Public Property Get GetMKorokSzama() As Byte
     GetMKorokSzama = MKorokSzama
 End Property
 
-Public Property Get GetKorokSzama() As Byte
-    GetKorokSzama = Korok
-End Property
-
-Public Property Get GetAutokSzama() As Byte
-    GetAutokSzama = AutokSzama
-End Property
-
-Private Sub Command1_Click()
-    VForm.Show
-End Sub
-
 Private Sub Form_Load()
     Started = False
     AutokSzama = 0
     Korok = KezdokorErteke
-    MKorokSzama = 2
+    MKorokSzama = 5
     SetKorokSzama Korok
-
-    Set Timer_Korok = Palya.Controls.Add("VB.Timer", "Timer_Korok", Palya)
-    Timer_Korok.Interval = 40
-
-    Set Timer_VersenyAdatok = Palya.Controls.Add("VB.Timer", "Timer_VersenyAdatok", Palya)
-    Timer_VersenyAdatok.Interval = 500
-
-    Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
-    Timer_AutoLista.Interval = 500
 
     VersenyAdatok.ListIndex = 0
     AutoLista.ListIndex = 0
-    TempAutoLista = ""
-    ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
 End Sub
 
 Private Sub Form_Terminate()
-    Set Timer_Korok = Nothing
-    Set Timer_VersenyAdatok = Nothing
-    Set Timer_AutoLista = Nothing
+    'Dispose_Game
 End Sub
 
 Private Sub New_Game(ASzama As Byte)
@@ -675,10 +664,8 @@ End Sub
 
 Private Sub NewGame_Click()
     Started = False
-    Unload VForm
     Dispose_Game
     AutokSzama = 0
-    Timer_Korok.Enabled = True
     Timer_AutoLista.Enabled = True
     AutoLista.Enabled = True
     Korok = KezdokorErteke
@@ -687,8 +674,6 @@ Private Sub NewGame_Click()
 
     VersenyAdatok.ListIndex = 0
     AutoLista.ListIndex = 0
-    TempAutoLista = ""
-    ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
 End Sub
 
 Private Sub Nyomvonal_Click()
@@ -745,8 +730,8 @@ Private Sub Timer_Korok_Timer()
             Korok = Autok(i).GetKorokSzama
 
             If Korok > MKorokSzama Then
-                VForm.Show
-                Timer_Korok.Enabled = False
+                Stop_Click
+                MsgBox "Vége a játéknak! Nyertes autó száma: " & i
                 Exit Sub
             End If
 
@@ -756,7 +741,7 @@ Private Sub Timer_Korok_Timer()
 End Sub
 
 Private Sub Timer_VersenyAdatok_Timer()
-    Dim i As Byte, ciklus As Single, szam As Single, Szin As String
+    Dim i As Byte, szam As Single, szin As String
 
     Select Case VersenyAdatok.List(VersenyAdatok.ListIndex)
         Case "Autók sorrendje"
@@ -766,55 +751,6 @@ Private Sub Timer_VersenyAdatok_Timer()
                 NoStartedGameVAText
                 Exit Sub
             End If
-
-            Dim tempkor As Byte, tempautok As Byte
-
-            If Korok > MKorokSzama Then
-                tempkor = Korok - 1
-            Else
-                tempkor = Korok
-            End If
-
-            tempautok = 0
-
-            Do While True
-                For ciklus = 3 To 1 Step -1
-                    For i = LBound(SorrendTomb(tempkor).Szektor(ciklus).AutoSzine) + tempautok To AutokSzama
-                        If SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i) = "" And SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
-                            Exit For
-                        ElseIf SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= AutokSzama Then
-                            AddVAText i & ". Autó: " & SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i)
-                            tempautok = tempautok + 1
-                        End If
-
-                        If tempautok = AutokSzama Then
-                            Exit For
-                        End If
-                    Next i
-
-                    If tempautok = AutokSzama Then
-                        Exit For
-                    End If
-                Next ciklus
-
-                If tempautok = AutokSzama Then
-                    Exit Do
-                End If
-
-                If tempkor > KezdokorErteke Then
-                    tempkor = tempkor - 1
-                Else
-                    Exit Do
-                End If
-            Loop
-
-            If tempautok = 0 Then
-                AddVAText "Nincs még sorrend!"
-            Else
-                AddVAText ""
-            End If
-
-            AddVAText "A sorrend mindig a következõ szektornál frissül!"
         Case "Legjobb 1. szektor"
             SzektoridoKiiras 1
         Case "Legjobb 2. szektor"
@@ -838,7 +774,7 @@ Private Sub Timer_VersenyAdatok_Timer()
             For i = LBound(Autok) To AutokSzama
                 If szam < Autok(i).GetLegjobbKorido Then
                     aszam = i
-                    Szin = Autok(i).GetColor
+                    szin = Autok(i).GetColor
                     szam = Autok(i).GetLegjobbKorido
                     lkor = Autok(i).GetLegjobbKoridoSzama
                 End If
@@ -850,7 +786,7 @@ Private Sub Timer_VersenyAdatok_Timer()
             AddVAText "Harmadik szektor ideje: " & Autok(aszam).GetLegjobbSzektoridok(3) & " másodperc"
             AddVAText ""
             AddVAText "Az idõ a(z) " & lkor & ". körben került beállításra."
-            AddVAText "A(z) idõt beállította a " & Szin & " szinû autó."
+            AddVAText "A(z) idõt beállította a " & szin & " szinû autó."
         Case "Elméleti legjobb köridõ"
             Dim T(1 To 3) As Single, TSzin(1 To 3) As String, ljekorido As Single
             CleanVAText
@@ -885,13 +821,13 @@ Private Sub Timer_VersenyAdatok_Timer()
     End Select
 End Sub
 
-Private Function LegjobbSzektorido(ByVal a As Integer, Szin As String) As Single
+Private Function LegjobbSzektorido(ByVal a As Integer, szin As String) As Single
     Dim i As Byte, szam As Single
     CleanVAText
 
     For i = LBound(Autok) To AutokSzama
         If szam < Autok(i).GetLegjobbSzektoridok(a) Then
-            Szin = Autok(i).GetColor
+            szin = Autok(i).GetColor
             szam = Autok(i).GetLegjobbSzektoridok(a)
         End If
     Next i
@@ -900,7 +836,7 @@ Private Function LegjobbSzektorido(ByVal a As Integer, Szin As String) As Single
 End Function
 
 Private Sub SzektoridoKiiras(a As Integer)
-    Dim i As Byte, szam As Single, Szin As String
+    Dim i As Byte, szam As Single, szin As String
     CleanVAText
 
     If Not Started Then
@@ -908,7 +844,7 @@ Private Sub SzektoridoKiiras(a As Integer)
         Exit Sub
     End If
 
-    szam = LegjobbSzektorido(a, Szin)
+    szam = LegjobbSzektorido(a, szin)
 
     If szam = 10000000 Then ' Kezdõérték
         AddVAText "Nincs még mért szektoridõ!"
@@ -916,7 +852,7 @@ Private Sub SzektoridoKiiras(a As Integer)
     End If
 
     AddVAText "Legjobb szektoridõ: " & szam & " másodperc"
-    AddVAText "Az idõt beállította a " & Szin & " szinû autó."
+    AddVAText "Az idõt beállította a " & szin & " szinû autó."
 End Sub
 
 Private Sub NoStartedGameVAText()
@@ -937,29 +873,22 @@ Private Sub Timer_AutoLista_Timer()
         Timer_AutoLista.Enabled = False
     End If
 
-    If TempAutoLista = AutoLista.List(AutoLista.ListIndex) Then
-        Exit Sub
-    End If
-
     Select Case AutoLista.List(AutoLista.ListIndex)
         Case "Kettõ autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 2
             AutokKiirasa
         Case "Három autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 3
             AutokKiirasa
         Case "Négy autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 4
             AutokKiirasa
         Case Else
             CleanALText
-            AddALText "Hiba!"
+            AddAlText "Hiba!"
     End Select
 End Sub
 
@@ -972,7 +901,7 @@ Private Sub AutokKiirasa()
     CleanALText
 
     For i = LBound(Autok) To AutokSzama
-        AddALText "[" & i & ". Autó] Színe: " & Autok(i).GetColor()
+        AddAlText "[" & i & ". Autó] Színe: " & Autok(i).GetColor()
     Next i
 End Sub
 
@@ -980,33 +909,7 @@ Private Sub CleanALText()
     AutoListaText.Text = ""
 End Sub
 
-Private Sub AddALText(Szoveg As String)
+Private Sub AddAlText(Szoveg As String)
     AutoListaText.Text = AutoListaText.Text & Szoveg & vbCrLf
 End Sub
 
-Private Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal LineX1 As Single, ByVal LineX2 As Single, ByVal LineY1 As Single, ByVal LineY2 As Single) As Single
-    Dim AA As Single, BB As Single, CC As Single, DD As Single
-    Dim dot As Single, len_sq As Single, param As Single
-    Dim xx As Single, yy As Single
-    AA = PointX - LineX1
-    BB = PointY - LineY1
-    CC = LineX2 - LineX1
-    DD = LineY2 - LineY1
-
-    dot = AA * CC + BB * DD
-    len_sq = CC * CC + DD * DD
-    param = dot / len_sq
-
-    If param < 0 Then
-        xx = LineX1
-        yy = LineY1
-    ElseIf param > 1 Then
-        xx = LineX2
-        yy = LineY2
-    Else
-        xx = LineX1 + param * CC
-        yy = LineY1 + param * DD
-    End If
-
-    Distance = Sqr(((PointX - xx) * (PointX - xx)) + ((PointY - yy) * (PointY - yy)))
-End Function

@@ -1,16 +1,16 @@
 - 1 autó amit írányíthat a felhasználó (5.-ik autó)
-- az autók sebessége változzon.
 - pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
-- start és célvonal létrehozása (a befutokat jelezni)
 - pálya elhagyását nézni (ha lehetséges)
-- kocsik helyzetének jelzése (melyik van elõbbre)
-- rangsor megírása (futam közbeni és futam végén)
+- végeredmény kiijelzõt befejezni
 - pálya hosszának megmérése az elsõ kör utána és a közelítõ érték kiírása.
 - teljes megtett távolság mérése.
 - távolságot méterben kéne mérni valami szabály alapján.
-- ha lehetséges az autók sebességét a fordulások (kanyarok) és egyenesek alapján kéne meghatározni.
-- ha lehetséges ne csak a baloldali xy kordináták alapján legyen mérve a faltol való távolság.
-- amikor kiírja hogy vége a játéknak engedje befutni az autókat hogy elmentse az adatokat de már közben állítsa is le õket.
 - ha célba érnek a kocsik valami kis gif elõ jöhetne
 - kilométer/óra jelzés
 - legnagyobb végsebesség kiírása.
+- ha új játékot indítanánk ugorjon fel egy ablak hogy bíztosan újat kezdünk-e.
+- Nyomvonal megjelenítési hibáját javítani kell.
+- Nyomvonal létrehozásához és tárolásához más mód kell mert iszonyatosan terheli a memóriát. (jelenleg kikommentezve)
+- jobb idõmeghatározás (szektorok/körök)
+- a célvonal elõl induljanak az autók (de ekkor ne legyen semmi se mérve csak onnét induljanak)
+- minden autóról külön külön legyen kiírás hogy legjóbb szektoridõ, legjobb idõ stb (ami van még ötlet az oda), opcionálisan jelenjenek csak meg. Ha nincs annyi autó akkor a felesleg ne látszódjon.

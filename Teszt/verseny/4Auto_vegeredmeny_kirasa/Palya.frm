@@ -575,7 +575,6 @@ Dim AutokSzama As Byte          ' Autók száma
 Dim Korok As Byte               ' Éppen hányadik körnél tartunk.
 Dim MKorokSzama As Byte         ' Maximum körök száma
 Dim Started As Boolean          ' Jelzi hogy elindult-e már a játék vagy sem.
-Dim TempAutoLista As String     ' Hány autó van kiválasztva. (terheléscsökkentés)
 Const KezdokorErteke = 1        ' Tárolja hogy mennyitõl induljon az elsõ kör.
 Const BorderWidth = 2           ' Autók vonalának szélessége.
 Const ex = 0.6
@@ -619,7 +618,6 @@ Private Sub Form_Load()
 
     VersenyAdatok.ListIndex = 0
     AutoLista.ListIndex = 0
-    TempAutoLista = ""
     ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
 End Sub
 
@@ -687,7 +685,6 @@ Private Sub NewGame_Click()
 
     VersenyAdatok.ListIndex = 0
     AutoLista.ListIndex = 0
-    TempAutoLista = ""
     ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
 End Sub
 
@@ -937,23 +934,16 @@ Private Sub Timer_AutoLista_Timer()
         Timer_AutoLista.Enabled = False
     End If
 
-    If TempAutoLista = AutoLista.List(AutoLista.ListIndex) Then
-        Exit Sub
-    End If
-
     Select Case AutoLista.List(AutoLista.ListIndex)
         Case "Kettõ autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 2
             AutokKiirasa
         Case "Három autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 3
             AutokKiirasa
         Case "Négy autó"
-            TempAutoLista = AutoLista.List(AutoLista.ListIndex)
             Dispose_Game
             New_Game 4
             AutokKiirasa
