@@ -10,14 +10,6 @@ Begin VB.Form Palya
    ScaleHeight     =   9810
    ScaleWidth      =   15465
    StartUpPosition =   3  'Windows Default
-   Begin VB.CommandButton Command1 
-      Caption         =   "Ideiglenes Tesztgomb"
-      Height          =   615
-      Left            =   1200
-      TabIndex        =   9
-      Top             =   8760
-      Width           =   2415
-   End
    Begin VB.Frame Frame2 
       BackColor       =   &H8000000E&
       Caption         =   "Autók"
@@ -87,7 +79,7 @@ Begin VB.Form Palya
          Height          =   315
          ItemData        =   "Palya.frx":0034
          Left            =   240
-         List            =   "Palya.frx":004A
+         List            =   "Palya.frx":004D
          Sorted          =   -1  'True
          Style           =   2  'Dropdown List
          TabIndex        =   4
@@ -101,7 +93,7 @@ Begin VB.Form Palya
       Caption         =   "Start / Cél / Szektor 3"
       Height          =   195
       Left            =   1680
-      TabIndex        =   10
+      TabIndex        =   9
       Top             =   4440
       Width           =   1560
    End
@@ -565,6 +557,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 Dim WithEvents Timer_VersenyAdatok As VB.Timer
 Attribute Timer_VersenyAdatok.VB_VarHelpID = -1
 Dim WithEvents Timer_AutoLista As VB.Timer
@@ -576,10 +569,16 @@ Dim Korok As Byte               ' Éppen hányadik körnél tartunk.
 Dim MKorokSzama As Byte         ' Maximum körök száma
 Dim Started As Boolean          ' Jelzi hogy elindult-e már a játék vagy sem.
 Dim TempAutoLista As String     ' Hány autó van kiválasztva. (terheléscsökkentés)
+Dim Felfuggesztes As Boolean
 Const KezdokorErteke = 1        ' Tárolja hogy mennyitõl induljon az elsõ kör.
 Const BorderWidth = 2           ' Autók vonalának szélessége.
+Const PalyaHosszanakLepteke = 10 ' 10 m-t jelent. Ez azt jelenti hogy egy elmozdulással az autó 10 métert tesz meg.
 Const ex = 0.6
 Const ey = -1
+
+Public Property Get GetPalyaHosszanakLepteke() As Byte
+    GetPalyaHosszanakLepteke = PalyaHosszanakLepteke
+End Property
 
 Public Property Get GetKezdokorErteke() As Byte
     GetKezdokorErteke = KezdokorErteke
@@ -597,17 +596,7 @@ Public Property Get GetAutokSzama() As Byte
     GetAutokSzama = AutokSzama
 End Property
 
-Private Sub Command1_Click()
-    VForm.Show
-End Sub
-
 Private Sub Form_Load()
-    Started = False
-    AutokSzama = 0
-    Korok = KezdokorErteke
-    MKorokSzama = 2
-    SetKorokSzama Korok
-
     Set Timer_Korok = Palya.Controls.Add("VB.Timer", "Timer_Korok", Palya)
     Timer_Korok.Interval = 40
 
@@ -617,10 +606,7 @@ Private Sub Form_Load()
     Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
     Timer_AutoLista.Interval = 500
 
-    VersenyAdatok.ListIndex = 0
-    AutoLista.ListIndex = 0
-    TempAutoLista = ""
-    ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
+    Clean
 End Sub
 
 Private Sub Form_Terminate()
@@ -648,7 +634,7 @@ Private Sub New_Game(ASzama As Byte)
         Autok(i).SetEX ex
         Autok(i).SetEY ey
         Autok(i).SetX0 1100 - i * 20
-        Autok(i).SetY0 4000 - i * 100
+        Autok(i).SetY0 5000
         Autok(i).SetColor T(i) ' Ha kell színezés csak akkor.
         Autok(i).SetBorderWidth BorderWidth
         Autok(i).Show
@@ -673,16 +659,39 @@ Private Sub Dispose_Game()
     AutokSzama = 0
 End Sub
 
-Private Sub NewGame_Click()
+Public Sub NewGame_Click()
+    If NewGameEnabled Then
+        Dispose_Game
+        Clean
+    End If
+
+    Dim i As Byte
+    For i = LBound(Autok) To AutokSzama
+        If Not Autok(i).GetGameEnd Then
+            Exit For
+        End If
+    Next i
+
+    If i = AutokSzama + 1 Then
+        WarningNewGame.Show
+    Else
+        Dispose_Game
+        Clean
+    End If
+End Sub
+
+Private Sub Clean()
     Started = False
     Unload VForm
     Dispose_Game
     AutokSzama = 0
+    Felfuggesztes = False
+    NewGameEnabled = False
     Timer_Korok.Enabled = True
     Timer_AutoLista.Enabled = True
     AutoLista.Enabled = True
     Korok = KezdokorErteke
-    MKorokSzama = 5
+    MKorokSzama = 2 ' Max körök száma itt kerül beálíltásra.
     SetKorokSzama Korok
 
     VersenyAdatok.ListIndex = 0
@@ -709,17 +718,43 @@ Private Sub Start_Click()
         MsgBox "Még nincsenek kiválasztva autók!"
         Exit Sub
     End If
+
     If Not Started Then
         Started = True
     End If
 
     Dim i As Byte
     For i = LBound(Autok) To AutokSzama
+        If Autok(i).GetGameEnd Then
+            MsgBox "A játék végetért! Nem indíthatod már el Start-tal! Indíts új játékot ha újat kezdenél."
+            Exit Sub
+        End If
+    Next i
+
+    If Felfuggesztes Then
+        MsgBox "A játék már fut!", , "Start: Hiba!"
+        Exit Sub
+    End If
+
+    If Not Felfuggesztes Then
+        Felfuggesztes = True
+    End If
+
+    For i = LBound(Autok) To AutokSzama
         Autok(i).Start
     Next i
 End Sub
 
 Private Sub Stop_Click()
+    If Not Felfuggesztes Then
+        MsgBox "A játék nem fut!", , "Stop: Hiba!"
+        Exit Sub
+    End If
+
+    If Felfuggesztes Then
+        Felfuggesztes = False
+    End If
+
     Dim i As Byte
     For i = LBound(Autok) To AutokSzama
         Autok(i).Stop_Kocsi
@@ -779,11 +814,11 @@ Private Sub Timer_VersenyAdatok_Timer()
 
             Do While True
                 For ciklus = 3 To 1 Step -1
-                    For i = LBound(SorrendTomb(tempkor).Szektor(ciklus).AutoSzine) + tempautok To AutokSzama
-                        If SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i) = "" And SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
+                    For i = LBound(SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To AutokSzama
+                        If SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin = "" And SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
                             Exit For
                         ElseIf SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= AutokSzama Then
-                            AddVAText i & ". Autó: " & SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i)
+                            AddVAText i & ". Autó: " & SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin
                             tempautok = tempautok + 1
                         End If
 
@@ -835,8 +870,9 @@ Private Sub Timer_VersenyAdatok_Timer()
                 Exit Sub
             End If
 
+            szam = 1000
             For i = LBound(Autok) To AutokSzama
-                If szam < Autok(i).GetLegjobbKorido Then
+                If szam > Autok(i).GetLegjobbKorido Then
                     aszam = i
                     Szin = Autok(i).GetColor
                     szam = Autok(i).GetLegjobbKorido
@@ -879,6 +915,22 @@ Private Sub Timer_VersenyAdatok_Timer()
             AddVAText ""
             AddVAText "Harmadik szektor ideje: " & T(3) & " másodperc"
             AddVAText "Autó színe: " & TSzin(3)
+        Case "Pálya hossza"
+            CleanVAText
+
+            If Not Started Then
+                NoStartedGameVAText
+                Exit Sub
+            End If
+
+            If Korok = KezdokorErteke Then
+                AddVAText "Még nem sikerült megmérni a pálya hosszát!"
+                Exit Sub
+            End If
+
+            AddVAText "Egy kör hossza: " & Autok(LBound(Autok)).GetEgyKorHossza & " m"
+            AddVAText "Ez az érték csak egy körübelüli érték mely a mozgásváltozással van összefüggésben."
+            AddVAText PalyaHosszanakLepteke & " egység (egy lépés) felel meg " & PalyaHosszanakLepteke & " méternek."
         Case Else
             CleanVAText
             AddVAText "Hiba!"

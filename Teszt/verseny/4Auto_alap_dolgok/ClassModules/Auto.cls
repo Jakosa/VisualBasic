@@ -48,6 +48,9 @@ Dim AutoSzama As Byte
 Dim nyvp As Long
 Dim GameEnd As Boolean ' Vége a játéknak.
 Dim UtolsoMeterek As Integer
+Dim EgyKorHossza As Integer
+Dim OsszesUt As Integer
+Dim IndulasStartVonalElol As Boolean ' Startvonal elõli indulás.
 
 Private Type NyomvonalPontok
     Circle As VB.Shape
@@ -62,6 +65,18 @@ End Type
 
 Dim KorokTomb() As Korok
 'Dim NyPontok(0 To 1000000) As NyomvonalPontok
+
+Public Property Get GetGameEnd() As Boolean
+    GetGameEnd = GameEnd
+End Property
+
+Public Property Get GetEgyKorHossza() As Integer
+    GetEgyKorHossza = EgyKorHossza
+End Property
+
+Public Property Get GetOsszesUt() As Integer
+    GetOsszesUt = OsszesUt
+End Property
 
 Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
@@ -202,7 +217,7 @@ Public Sub Load(szam As Byte)
 End Sub
 
 Public Sub Start()
-    If Started Then
+    If Started Or GameEnd Then
         Exit Sub
     End If
 
@@ -217,7 +232,7 @@ Public Sub Start()
 End Sub
 
 Public Sub Stop_Kocsi()
-    If Not Started Then
+    If Not Started Or GameEnd Then
         Exit Sub
     End If
 
@@ -238,6 +253,7 @@ Private Sub Class_Initialize()
     BKorido = True
     GameEnd = False
     BStopKorido = False
+    IndulasStartVonalElol = False
     KorokSzama = Palya.GetKezdokorErteke()
     SetNyomvonal True
     ASzektorvonal = False
@@ -369,6 +385,12 @@ Private Sub Timer0_Timer()
     '    Palya.Circle (x0, y0), 10, Color
     'End If
 
+    If KorokSzama = Palya.GetKezdokorErteke Then
+        EgyKorHossza = EgyKorHossza + Palya.GetPalyaHosszanakLepteke ' Méterben van értve.
+    End If
+
+    OsszesUt = OsszesUt + Palya.GetPalyaHosszanakLepteke         ' Méterben van értve.
+
     If GameEnd Then
         UtolsoMeterek = UtolsoMeterek + 1
 
@@ -475,13 +497,19 @@ Private Sub Szektorok()
             NowTime = Now
             ASzektorvonal = True
 
-            For ciklus = LBound(SorrendTomb(KorokSzama).Szektor(szam).AutoSzine) To UBound(SorrendTomb(KorokSzama).Szektor(szam).AutoSzine)
+            If Not IndulasStartVonalElol Then
+                IndulasStartVonalElol = True
+                Exit Sub
+            End If
+
+            For ciklus = LBound(SorrendTomb(KorokSzama).Szektor(szam).Autok) To UBound(SorrendTomb(KorokSzama).Szektor(szam).Autok)
                 If Not SorrendTomb(KorokSzama).Szektor(szam).VanAdat Then
                     SorrendTomb(KorokSzama).Szektor(szam).VanAdat = True
                 End If
 
-                If SorrendTomb(KorokSzama).Szektor(szam).AutoSzine(ciklus) = "" Then
-                    SorrendTomb(KorokSzama).Szektor(szam).AutoSzine(ciklus) = GetColor
+                If SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Szin = "" Then
+                    SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Szin = GetColor
+                    SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Ido = NowTime
                     Exit For
                 End If
             Next ciklus

@@ -9,8 +9,9 @@ Begin VB.Form VForm
    LinkTopic       =   "Form1"
    ScaleHeight     =   3645
    ScaleWidth      =   13155
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   2  'CenterScreen
    Begin VB.TextBox KulonbsegText 
+      Alignment       =   1  'Right Justify
       BorderStyle     =   0  'None
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -69,6 +70,7 @@ Begin VB.Form VForm
       Width           =   2295
    End
    Begin VB.TextBox OsszUtText 
+      Alignment       =   1  'Right Justify
       BorderStyle     =   0  'None
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -283,6 +285,7 @@ End Sub
 
 Private Sub Timer_Sorrend_Timer()
     Dim tempkor As Byte, tempautok As Byte, ciklus As Integer, ciklus2 As Integer, i As Byte
+    Dim NowTime As Date
 
     If Palya.GetKorokSzama > Palya.GetMKorokSzama Then
         tempkor = Palya.GetKorokSzama - 1
@@ -293,20 +296,30 @@ Private Sub Timer_Sorrend_Timer()
     tempautok = 0
     CleanSText
     CleanOIText
+    CleanOUText
     CleanLJText
+    CleanKText
 
     Do While True
         For ciklus = 3 To 1 Step -1
-            For i = LBound(SorrendTomb(tempkor).Szektor(ciklus).AutoSzine) + tempautok To Palya.GetAutokSzama
-                If SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i) = "" And SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
+            For i = LBound(SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To Palya.GetAutokSzama
+                If SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin = "" And SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
                     Exit For
                 ElseIf SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= Palya.GetAutokSzama Then
-                    AddSText i & ". Autó: " & SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i)
+                    AddSText i & ". Autó: " & SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin
 
                     For ciklus2 = LBound(Autok) To Palya.GetAutokSzama
-                        If Autok(ciklus2).GetColor = SorrendTomb(tempkor).Szektor(ciklus).AutoSzine(i) Then
+                        If Autok(ciklus2).GetColor = SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin Then
                             AddLJText Autok(ciklus2).GetLegjobbKorido & " másodperc"
                             AddOIText Autok(ciklus2).GetOsszKorido & " másodperc"
+                            AddOUText Autok(ciklus2).GetOsszesUt & " m"
+
+                            If tempautok = 0 Then
+                                NowTime = SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Ido
+                                AddKText 0
+                            Else
+                                AddKText "+" & Abs(DateDiff("s", SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Ido, NowTime)) & " másodperc"
+                            End If
                         End If
                     Next ciklus2
 
