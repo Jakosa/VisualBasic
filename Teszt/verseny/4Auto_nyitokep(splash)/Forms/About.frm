@@ -18,17 +18,16 @@ Begin VB.Form AboutForm
    StartUpPosition =   2  'CenterScreen
    Begin VB.PictureBox picIcon 
       AutoSize        =   -1  'True
-      BorderStyle     =   0  'None
       ClipControls    =   0   'False
-      Height          =   900
-      Left            =   2280
+      Height          =   540
+      Left            =   2520
       Picture         =   "About.frx":0000
-      ScaleHeight     =   632.1
+      ScaleHeight     =   337.12
       ScaleMode       =   0  'User
-      ScaleWidth      =   632.1
+      ScaleWidth      =   337.12
       TabIndex        =   1
-      Top             =   0
-      Width           =   900
+      Top             =   120
+      Width           =   540
    End
    Begin VB.CommandButton cmdClose 
       Cancel          =   -1  'True
@@ -55,7 +54,7 @@ Begin VB.Form AboutForm
       Height          =   375
       Left            =   120
       TabIndex        =   5
-      Top             =   1200
+      Top             =   1080
       Width           =   2775
    End
    Begin VB.Line Line1 
@@ -71,10 +70,10 @@ Begin VB.Form AboutForm
       BackColor       =   &H8000000E&
       Caption         =   "Teszt Teszt Teszt Teszt Teszt Teszt Teszt Teszt Teszt Teszt Teszt Teszt"
       ForeColor       =   &H00000000&
-      Height          =   810
+      Height          =   930
       Left            =   120
       TabIndex        =   2
-      Top             =   1560
+      Top             =   1440
       Width           =   2565
    End
    Begin VB.Label lblTitle 
@@ -93,7 +92,7 @@ Begin VB.Form AboutForm
       Height          =   600
       Left            =   120
       TabIndex        =   3
-      Top             =   240
+      Top             =   120
       Width           =   2565
    End
    Begin VB.Line Line1 
@@ -120,7 +119,7 @@ Begin VB.Form AboutForm
       Height          =   225
       Left            =   120
       TabIndex        =   4
-      Top             =   840
+      Top             =   780
       Width           =   2565
    End
 End

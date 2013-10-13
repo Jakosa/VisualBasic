@@ -1,7 +1,6 @@
 - 1 autó amit írányíthat a felhasználó (5.-ik autó)
 - pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
 - pálya elhagyását nézni (ha lehetséges)
-- ha célba érnek a kocsik valami kis gif elõ jöhetne
 - kilométer/óra jelzés
 - legnagyobb végsebesség kiírása.
 - Nyomvonal megjelenítési hibáját javítani kell.
@@ -11,4 +10,3 @@
 - beállítások megírása.
 - konfig fájl létrehozása.
 - sárga autó szint le kéne cserélni
-- egy kör távolságánál vegye figyelembe a kezdésnél a IndulasStartVonalElol-t is (feltételbe kerüljön bele ez is)

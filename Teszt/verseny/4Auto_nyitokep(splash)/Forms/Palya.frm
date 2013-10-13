@@ -140,21 +140,21 @@ Begin VB.Form Palya
    Begin VB.Label KorKiiras 
       AutoSize        =   -1  'True
       BackColor       =   &H8000000E&
-      Caption         =   "Kör: 0/0"
+      Caption         =   "Körök száma: 0/0"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
-         Size            =   13.5
+         Size            =   12
          Charset         =   238
          Weight          =   700
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   360
-      Left            =   7080
+      Height          =   300
+      Left            =   6240
       TabIndex        =   0
       Top             =   120
-      Width           =   1095
+      Width           =   2190
    End
    Begin VB.Line Line5 
       BorderWidth     =   2
@@ -563,25 +563,24 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim WithEvents Timer_VersenyAdatok As VB.Timer  ' VersenyAdatok elnevezésõ listát frissíti.
+Dim WithEvents Timer_VersenyAdatok As VB.Timer
 Attribute Timer_VersenyAdatok.VB_VarHelpID = -1
-Dim WithEvents Timer_AutoLista As VB.Timer      ' AutoLista elnevezésõ listát frissíti.
+Dim WithEvents Timer_AutoLista As VB.Timer
 Attribute Timer_AutoLista.VB_VarHelpID = -1
-Dim WithEvents Timer_Korok As VB.Timer          ' Frissíti a körök számát. (Ha új kör van megváltoztatja a számlálót is.)
+Dim WithEvents Timer_Korok As VB.Timer
 Attribute Timer_Korok.VB_VarHelpID = -1
-Dim AutokSzama As Byte                          ' Versenypályán lévõ autók számát tárolja.
-Dim Korok As Byte                               ' Tárolja éppen hányadik körnél tartunk.
-Dim MKorokSzama As Byte                         ' Maximum körök száma.
-Dim Started As Boolean                          ' Jelzi hogy elindult-e már a játék vagy sem.
-Dim TempAutoLista As String                     ' Hány autó van kiválasztva. (terheléscsökkentés)
-Dim Felfuggesztes As Boolean                    ' Ha használva van a Stop gomb akkor lesz "true" az értéke.
-Const KezdokorErteke = 1                        ' Tárolja hogy hánytól induljon az elsõ kör.
-Const BorderWidth = 2                           ' Autók vonalának szélessége.
-Const PalyaHosszanakLepteke = 10                   ' 10 m-t jelent. Ez azt jelenti hogy egy elmozdulással az autó 10 métert tesz meg.
+Dim AutokSzama As Byte          ' Autók száma
+Dim Korok As Byte               ' Éppen hányadik körnél tartunk.
+Dim MKorokSzama As Byte         ' Maximum körök száma
+Dim Started As Boolean          ' Jelzi hogy elindult-e már a játék vagy sem.
+Dim TempAutoLista As String     ' Hány autó van kiválasztva. (terheléscsökkentés)
+Dim Felfuggesztes As Boolean
+Const KezdokorErteke = 1        ' Tárolja hogy mennyitõl induljon az elsõ kör.
+Const BorderWidth = 2           ' Autók vonalának szélessége.
+Const PalyaHosszanakLepteke = 10 ' 10 m-t jelent. Ez azt jelenti hogy egy elmozdulással az autó 10 métert tesz meg.
 Const ex = 0.6
 Const ey = -1
 
-' Publikus változók.
 Public Property Get GetPalyaHosszanakLepteke() As Byte
     GetPalyaHosszanakLepteke = PalyaHosszanakLepteke
 End Property
@@ -602,31 +601,27 @@ Public Property Get GetAutokSzama() As Byte
     GetAutokSzama = AutokSzama
 End Property
 
-' Publikus változók vége.
+Private Sub Command1_Click()
+    Splash.Show
+End Sub
 
-' Beállítjuk a form létrehozásakor az alap folyamatokat.
 Private Sub Form_Load()
-    ' Korok timer létrehozása
     Set Timer_Korok = Palya.Controls.Add("VB.Timer", "Timer_Korok", Palya)
-    Timer_Korok.Interval = 40          ' Érték beállítása. 40 millisec
+    Timer_Korok.Interval = 40
 
-    ' VersenyAdatok timer létrehozása
     Set Timer_VersenyAdatok = Palya.Controls.Add("VB.Timer", "Timer_VersenyAdatok", Palya)
-    Timer_VersenyAdatok.Interval = 500 ' Érték beállítása. 500 millisec
+    Timer_VersenyAdatok.Interval = 500
 
-    ' AutoLista timer létrehozása
     Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
-    Timer_AutoLista.Interval = 500     ' Érték beállítása. 500 millisec
+    Timer_AutoLista.Interval = 500
 
-    ' Alapértékek beállítása.
     Clean
 End Sub
 
-' Form megszünésekor bizonyos dolgok megsemisítésre kerülnek.
 Private Sub Form_Terminate()
-    Set Timer_Korok = Nothing         ' Nullázás
-    Set Timer_VersenyAdatok = Nothing ' Nullázás
-    Set Timer_AutoLista = Nothing     ' Nullázás
+    Set Timer_Korok = Nothing
+    Set Timer_VersenyAdatok = Nothing
+    Set Timer_AutoLista = Nothing
 End Sub
 
 Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
@@ -705,24 +700,22 @@ Public Sub NewGame_Click()
 End Sub
 
 Private Sub Clean()
-    Started = False                 ' Játék még csak most fog kezdõdni így az értéke "false" lesz.
-    Unload VForm                    ' Végeredmény ablak bezárása.
-    Dispose_Game                    ' Régi autók megsemmisítése.
-    AutokSzama = 0                  ' Autók számát nullára állítjuk.
-    Felfuggesztes = False           ' Felfüggesztés "false" értékre állítása.
-    NewGameEnabled = False          ' Új játék indításának lehetõségét "false"-ra állítjuk.
-    Timer_Korok.Enabled = True      ' Engedélyezzük a Korok timer-t.
-    Timer_AutoLista.Enabled = True  ' Engedélyezzük az AutoLista timer-t.
-    AutoLista.Enabled = True        ' Engedélyezzük az AutoLista combobox-ot.
-    Korok = KezdokorErteke          ' Beállítjuk hogy mitõl kezze el a körök számolását a rendszer.
-    MKorokSzama = 2                 ' Beállítjuk a maximum körök számát.
-    SetKorokSzama Korok             ' Megváltoztatjuk a körök számának kiírást.
+    Started = False
+    Unload VForm
+    Dispose_Game
+    AutokSzama = 0
+    Felfuggesztes = False
+    NewGameEnabled = False
+    Timer_Korok.Enabled = True
+    Timer_AutoLista.Enabled = True
+    AutoLista.Enabled = True
+    Korok = KezdokorErteke
+    MKorokSzama = 2 ' Max körök száma itt kerül beálíltásra.
+    SetKorokSzama Korok
 
-    VersenyAdatok.ListIndex = 0     ' Kezdõelem beállítása.
-    AutoLista.ListIndex = 0         ' Kezdõelem beállítása.
-    TempAutoLista = ""              ' Takarítás.
-
-    ' Tömb újradimenzionálása a nullázás érdekében.
+    VersenyAdatok.ListIndex = 0
+    AutoLista.ListIndex = 0
+    TempAutoLista = ""
     ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
 End Sub
 
@@ -787,28 +780,24 @@ Private Sub Stop_Click()
     Next i
 End Sub
 
-' Névjegy ablak megnyítása.
 Private Sub About_Click()
     AboutForm.Show
 End Sub
 
-' Program bezárása.
 Private Sub Exit_Click()
     Forms_Unload
 End Sub
 
-' Minden formot bezárunk hogy nehogy valamelyik is nyítva maradjon.
 Private Sub Forms_Unload()
-    Unload AboutForm      ' Névjegy form bezárása.
-    Unload VForm          ' Végeredmény form bezárása.
-    Unload SettingsForm   ' Beállítások form bezárása.
-    Unload WarningNewGame ' Új játék figyelmeztetés form bezárása.
-    Unload Me             ' Pálya form bezárása.
+    Unload AboutForm
+    Unload VForm
+    Unload SettingsForm
+    Unload WarningNewGame
+    Unload Me
 End Sub
 
-' Kiírt körök felíratának megváltoztatása.
 Private Sub SetKorokSzama(KorSz As Byte)
-    KorKiiras.Caption = "Kör: " & KorSz & "/" & MKorokSzama
+    KorKiiras.Caption = "Körök száma: " & KorSz & "/" & MKorokSzama
 End Sub
 
 Private Sub Timer_Korok_Timer()
