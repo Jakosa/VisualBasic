@@ -10,3 +10,5 @@
 - beállítások megírása.
 - konfig fájl létrehozása.
 - sárga autó szint le kéne cserélni
+- indláskor is változtatott sebességgel induljon el az autó mint ahogy menet közben is változtatja.
+- pircturebox használata a nyomvonalhoz (0, 0 pontba kell majd kezdõdnie hogy a pályát kitöltse meg így elsz kompatibilis.), van benne clear (clean) függvény is elvileg.
