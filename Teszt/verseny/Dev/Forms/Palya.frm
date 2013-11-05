@@ -585,9 +585,8 @@ Dim WithEvents Timer_Korok As VB.Timer          ' Frissíti a körök számát. (Ha ú
 Attribute Timer_Korok.VB_VarHelpID = -1
 Dim AutokSzama As Byte                          ' Versenypályán lévõ autók számát tárolja.
 Dim Korok As Byte                               ' Tárolja éppen hányadik körnél tartunk.
-Dim MKorokSzama As Byte                         ' Maximum körök száma.
 Dim Started As Boolean                          ' Jelzi hogy elindult-e már a játék vagy sem.
-Dim TempAutoLista As String                     ' Hány autó van kiválasztva. (terheléscsökkentés)
+Public TempAutoLista As String                  ' Hány autó van kiválasztva. (terheléscsökkentés)
 Dim Felfuggesztes As Boolean                    ' Ha használva van a Stop gomb akkor lesz "true" az értéke.
 Const KezdokorErteke = 1                        ' Tárolja hogy hánytól induljon az elsõ kör.
 Const BorderWidth = 2                           ' Autók vonalának szélessége.
@@ -602,10 +601,6 @@ End Property
 
 Public Property Get GetKezdokorErteke() As Byte
     GetKezdokorErteke = KezdokorErteke
-End Property
-
-Public Property Get GetMKorokSzama() As Byte
-    GetMKorokSzama = MKorokSzama
 End Property
 
 Public Property Get GetKorokSzama() As Byte
@@ -703,6 +698,11 @@ Private Sub Dispose_Game()
 End Sub
 
 Private Sub GlobalSettings_Click()
+    If Started Then
+        MsgBox "A játék már fut! Indíts új játékot ha szeretnél a beállíátsokon változtatni.", , "Beállítások: Hiba!"
+        Exit Sub
+    End If
+
     SettingsForm.Show
 End Sub
 
@@ -738,7 +738,6 @@ Private Sub Clean()
     Timer_AutoLista.Enabled = True  ' Engedélyezzük az AutoLista timer-t.
     AutoLista.Enabled = True        ' Engedélyezzük az AutoLista combobox-ot.
     Korok = KezdokorErteke          ' Beállítjuk hogy mitõl kezze el a körök számolását a rendszer.
-    MKorokSzama = 2                 ' Beállítjuk a maximum körök számát.
     SetKorokSzama Korok             ' Megváltoztatjuk a körök számának kiírást.
 
     VersenyAdatok.ListIndex = 0     ' Kezdõelem beállítása.
@@ -746,7 +745,7 @@ Private Sub Clean()
     TempAutoLista = ""              ' Takarítás.
 
     ' Tömb újradimenzionálása a nullázás érdekében.
-    ReDim SorrendTomb(KezdokorErteke To MKorokSzama) As Sorrend
+    ReDim SorrendTomb(KezdokorErteke To Config.Globalis_KorokSzama) As Sorrend
 End Sub
 
 Private Sub Nyomvonal_Click()
@@ -835,8 +834,8 @@ Private Sub Forms_Unload()
 End Sub
 
 ' Kiírt körök felíratának megváltoztatása.
-Private Sub SetKorokSzama(KorSz As Byte)
-    KorKiiras.Caption = "Kör: " & KorSz & "/" & MKorokSzama
+Public Sub SetKorokSzama(KorSz As Byte)
+    KorKiiras.Caption = "Kör: " & KorSz & "/" & Config.Globalis_KorokSzama
 End Sub
 
 Private Sub Timer_Korok_Timer()
@@ -845,7 +844,7 @@ Private Sub Timer_Korok_Timer()
         If Korok < Autok(i).GetKorokSzama Then
             Korok = Autok(i).GetKorokSzama
 
-            If Korok > MKorokSzama Then
+            If Korok > Config.Globalis_KorokSzama Then
                 VForm.Show
                 Timer_Korok.Enabled = False
                 Exit Sub
@@ -870,7 +869,7 @@ Private Sub Timer_VersenyAdatok_Timer()
 
             Dim tempkor As Byte, tempautok As Byte
 
-            If Korok > MKorokSzama Then
+            If Korok > Config.Globalis_KorokSzama Then
                 tempkor = Korok - 1
             Else
                 tempkor = Korok

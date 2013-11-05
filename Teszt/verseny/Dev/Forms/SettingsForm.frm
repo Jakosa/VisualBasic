@@ -252,6 +252,9 @@ Private Sub CmdAlkalmaz_Click()
     Config.Globalis_SzektorNevek = TempGlobalis_SzektorNevek
     Config.Globalis_KorokSzama = TempGlobalis_KorokSzama
     Config.SetConfig
+
+    Palya.SetKorokSzama Palya.GetKezdokorErteke
+    Palya.TempAutoLista = -1
 End Sub
 
 Private Sub CmdAlapertelmezes_Click()
@@ -326,6 +329,7 @@ Private Sub Init()
 
     KorokComboBox.ListIndex = Config.Globalis_KorokSzama - 2
     TempGlobalis_KorokSzama = Config.Globalis_KorokSzama
+    Palya.SetKorokSzama 1
 End Sub
 
 Private Sub SetAllVisible(visible As Boolean)

@@ -88,7 +88,7 @@ End Property
 Public Property Get GetOsszKorido() As Single
     Dim osszido As Single, ciklus As Integer
 
-    For ciklus = Palya.GetKezdokorErteke To Palya.GetMKorokSzama
+    For ciklus = Palya.GetKezdokorErteke To Config.Globalis_KorokSzama
         osszido = osszido + KorokTomb(ciklus).Korido
     Next ciklus
 
@@ -256,7 +256,7 @@ Private Sub Class_Initialize()
     KorokSzama = Palya.GetKezdokorErteke()
     SetNyomvonal True
     ASzektorvonal = False
-    ReDim KorokTomb(Palya.GetKezdokorErteke() To Palya.GetMKorokSzama()) As Korok
+    ReDim KorokTomb(Palya.GetKezdokorErteke() To Config.Globalis_KorokSzama) As Korok
 
     LegjobbKorido = 1000   ' Kezdõérték
 
@@ -470,7 +470,7 @@ End Sub
 ' Két szektoridõ mérése értelemszerüen távolság alapján ha elérte.
 ' 0-tól 1-ig tartanak a szektorvonalak mert a célvonal egyben a harmadik szektor.
 Private Sub Szektorok()
-    If KorokSzama > Palya.GetMKorokSzama() Then
+    If KorokSzama > Config.Globalis_KorokSzama Then
         Exit Sub
     End If
 
@@ -550,7 +550,7 @@ Private Sub Szektorok()
         KorokSzama = KorokSzama + 1
     End If
 
-    If KorokSzama > Palya.GetMKorokSzama Then
+    If KorokSzama > Config.Globalis_KorokSzama Then
         GameEnd = True
     End If
 End Sub
