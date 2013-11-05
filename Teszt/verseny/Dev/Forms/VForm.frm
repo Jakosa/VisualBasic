@@ -273,7 +273,7 @@ Dim WithEvents Timer_Sorrend As VB.Timer
 Attribute Timer_Sorrend.VB_VarHelpID = -1
 
 Private Sub Form_Load()
-    Label5.Caption = Palya.GetMKorokSzama & Label5.Caption
+    Label5.Caption = Config.Globalis_KorokSzama & Label5.Caption
 
     Set Timer_Sorrend = VForm.Controls.Add("VB.Timer", "Timer_Sorrend", VForm)
     Timer_Sorrend.Interval = 500
@@ -287,7 +287,7 @@ Private Sub Timer_Sorrend_Timer()
     Dim tempkor As Byte, tempautok As Byte, ciklus As Integer, ciklus2 As Integer, i As Byte
     Dim NowTime As Date
 
-    If Palya.GetKorokSzama > Palya.GetMKorokSzama Then
+    If Palya.GetKorokSzama > Config.Globalis_KorokSzama Then
         tempkor = Palya.GetKorokSzama - 1
     Else
         tempkor = Palya.GetKorokSzama

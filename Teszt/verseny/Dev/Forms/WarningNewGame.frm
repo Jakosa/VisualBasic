@@ -1,5 +1,6 @@
 VERSION 5.00
 Begin VB.Form WarningNewGame 
+   BackColor       =   &H8000000E&
    Caption         =   "Figyelmeztetés: Új játék"
    ClientHeight    =   1485
    ClientLeft      =   60
@@ -35,6 +36,7 @@ Begin VB.Form WarningNewGame
    End
    Begin VB.Label Label2 
       AutoSize        =   -1  'True
+      BackColor       =   &H8000000E&
       Caption         =   "befejezett játék végeredményét. Kívánja elmenteni?"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -53,6 +55,7 @@ Begin VB.Form WarningNewGame
    End
    Begin VB.Label Label1 
       AutoSize        =   -1  'True
+      BackColor       =   &H8000000E&
       Caption         =   "Figyelem! Új játékot szeretne indítani de még nem mentette el az elõzõleg"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
