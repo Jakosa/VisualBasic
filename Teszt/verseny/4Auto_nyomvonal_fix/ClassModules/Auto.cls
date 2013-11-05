@@ -143,11 +143,11 @@ Public Property Get GetColor() As String
 End Property
 
 Public Sub SetX0(X As Double)
-    x0 = KorrigacioX(X)
+    x0 = X - Palya.HamisPalya.Left ' Palya.HamisPalya.Left korrigálja az eltérést.
 End Sub
 
 Public Sub SetY0(Y As Double)
-    y0 = KorrigacioY(Y)
+    y0 = Y - Palya.HamisPalya.Top  ' Palya.HamisPalya.Top korrigálja az eltérést.
 End Sub
 
 Public Sub SetEX(X As Double)
@@ -246,8 +246,8 @@ Private Sub Class_Initialize()
 
     ex = 0.6
     ey = -1
-    x0 = KorrigacioX(1100)
-    y0 = KorrigacioY(4000)
+    x0 = 1100 - Palya.HamisPalya.Left
+    y0 = 4000 - Palya.HamisPalya.Top
     nyvp = 0
     BKorido = True
     GameEnd = False
@@ -326,8 +326,8 @@ Private Sub Timer0_Timer()
 
     For ciklus = Palya.Line5.LBound To Palya.Line5.UBound
         Dim db As Single, dj As Single
-        db = Distance(xb, yb, KorrigacioX(Palya.Line5(ciklus).X1), KorrigacioX(Palya.Line5(ciklus).X2), KorrigacioY(Palya.Line5(ciklus).Y1), KorrigacioY(Palya.Line5(ciklus).Y2))
-        dj = Distance(xj, yj, KorrigacioX(Palya.Line5(ciklus).X1), KorrigacioX(Palya.Line5(ciklus).X2), KorrigacioY(Palya.Line5(ciklus).Y1), KorrigacioY(Palya.Line5(ciklus).Y2))
+        db = Distance(xb, yb, Palya.Line5(ciklus).X1 - Palya.HamisPalya.Left, Palya.Line5(ciklus).X2 - Palya.HamisPalya.Left, Palya.Line5(ciklus).Y1 - Palya.HamisPalya.Top, Palya.Line5(ciklus).Y2 - Palya.HamisPalya.Top)
+        dj = Distance(xj, yj, Palya.Line5(ciklus).X1 - Palya.HamisPalya.Left, Palya.Line5(ciklus).X2 - Palya.HamisPalya.Left, Palya.Line5(ciklus).Y1 - Palya.HamisPalya.Top, Palya.Line5(ciklus).Y2 - Palya.HamisPalya.Top)
 
         If distb > db Then
             distb = db
@@ -386,16 +386,6 @@ Private Sub Timer0_Timer()
         End If
     End If
 End Sub
-
-' Korrigálja az X eltérést.
-Private Function KorrigacioX(ByVal PointX As Single) As Single
-    KorrigacioX = PointX - Palya.HamisPalya.Left
-End Function
-
-' Korrigálja az Y eltérést.
-Private Function KorrigacioY(ByVal PointY As Single) As Single
-    KorrigacioY = PointY - Palya.HamisPalya.Top
-End Function
 
 Private Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal LineX1 As Single, ByVal LineX2 As Single, ByVal LineY1 As Single, ByVal LineY2 As Single) As Single
     Dim AA As Single, BB As Single, CC As Single, DD As Single
@@ -481,7 +471,7 @@ Private Sub Szektorok()
 
         For ciklus = Palya.SzektorVonal.LBound To Palya.SzektorVonal.UBound
             Dim d As Single
-            d = Distance(x0, y0, KorrigacioX(Palya.SzektorVonal(ciklus).X1), KorrigacioX(Palya.SzektorVonal(ciklus).X2), KorrigacioY(Palya.SzektorVonal(ciklus).Y1), KorrigacioY(Palya.SzektorVonal(ciklus).Y2))
+            d = Distance(x0, y0, Palya.SzektorVonal(ciklus).X1 - Palya.HamisPalya.Left, Palya.SzektorVonal(ciklus).X2 - Palya.HamisPalya.Left, Palya.SzektorVonal(ciklus).Y1 - Palya.HamisPalya.Top, Palya.SzektorVonal(ciklus).Y2 - Palya.HamisPalya.Top)
 
             If Dist > d Then
                 Dist = d

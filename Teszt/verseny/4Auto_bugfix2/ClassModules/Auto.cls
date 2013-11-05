@@ -64,6 +64,7 @@ Private Type Korok
 End Type
 
 Dim KorokTomb() As Korok
+'Dim NyPontok(0 To 1000000) As NyomvonalPontok
 
 Public Property Get GetGameEnd() As Boolean
     GetGameEnd = GameEnd
@@ -143,11 +144,11 @@ Public Property Get GetColor() As String
 End Property
 
 Public Sub SetX0(X As Double)
-    x0 = KorrigacioX(X)
+    x0 = X
 End Sub
 
 Public Sub SetY0(Y As Double)
-    y0 = KorrigacioY(Y)
+    y0 = Y
 End Sub
 
 Public Sub SetEX(X As Double)
@@ -198,10 +199,10 @@ End Sub
 
 Public Sub Load(szam As Byte)
     AutoSzama = szam
-    Set KVonal1 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "1", Palya.HamisPalya)
-    Set KVonal2 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "2", Palya.HamisPalya)
-    Set KVonal3 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "3", Palya.HamisPalya)
-    Set KVonal4 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "4", Palya.HamisPalya)
+    Set KVonal1 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "1", Palya)
+    Set KVonal2 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "2", Palya)
+    Set KVonal3 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "3", Palya)
+    Set KVonal4 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "4", Palya)
 
     SetVisible True
 
@@ -246,8 +247,8 @@ Private Sub Class_Initialize()
 
     ex = 0.6
     ey = -1
-    x0 = KorrigacioX(1100)
-    y0 = KorrigacioY(4000)
+    x0 = 1100
+    y0 = 4000
     nyvp = 0
     BKorido = True
     GameEnd = False
@@ -280,6 +281,14 @@ Public Sub Dispose()
     Next i
 
     Palya.Controls.Remove "Timer" & AutoSzama & "1"
+
+    'If nyvp > 0 Then
+    '    For i = LBound(NyPontok) To nyvp
+    '        If NyPontok(i).x0 > 0 And NyPontok(i).y0 > 0 Then
+    '            Palya.Circle (NyPontok(i).x0, NyPontok(i).y0), 10, Palya.BackColor
+    '        End If
+    '    Next i
+    'End If
 End Sub
 
 Public Sub Show()
@@ -326,8 +335,8 @@ Private Sub Timer0_Timer()
 
     For ciklus = Palya.Line5.LBound To Palya.Line5.UBound
         Dim db As Single, dj As Single
-        db = Distance(xb, yb, KorrigacioX(Palya.Line5(ciklus).X1), KorrigacioX(Palya.Line5(ciklus).X2), KorrigacioY(Palya.Line5(ciklus).Y1), KorrigacioY(Palya.Line5(ciklus).Y2))
-        dj = Distance(xj, yj, KorrigacioX(Palya.Line5(ciklus).X1), KorrigacioX(Palya.Line5(ciklus).X2), KorrigacioY(Palya.Line5(ciklus).Y1), KorrigacioY(Palya.Line5(ciklus).Y2))
+        db = Distance(xb, yb, Palya.Line5(ciklus).X1, Palya.Line5(ciklus).X2, Palya.Line5(ciklus).Y1, Palya.Line5(ciklus).Y2)
+        dj = Distance(xj, yj, Palya.Line5(ciklus).X1, Palya.Line5(ciklus).X2, Palya.Line5(ciklus).Y1, Palya.Line5(ciklus).Y2)
 
         If distb > db Then
             distb = db
@@ -369,7 +378,7 @@ Private Sub Timer0_Timer()
     Szektorok
 
     If Nyomvonal Then
-        Palya.HamisPalya.Circle (x0, y0), 10, Color
+        Palya.Picture1.Circle (x0, y0), 10, Color
     End If
 
     If KorokSzama = Palya.GetKezdokorErteke And IndulasStartVonalElol Then
@@ -386,16 +395,6 @@ Private Sub Timer0_Timer()
         End If
     End If
 End Sub
-
-' Korrigálja az X eltérést.
-Private Function KorrigacioX(ByVal PointX As Single) As Single
-    KorrigacioX = PointX - Palya.HamisPalya.Left
-End Function
-
-' Korrigálja az Y eltérést.
-Private Function KorrigacioY(ByVal PointY As Single) As Single
-    KorrigacioY = PointY - Palya.HamisPalya.Top
-End Function
 
 Private Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal LineX1 As Single, ByVal LineX2 As Single, ByVal LineY1 As Single, ByVal LineY2 As Single) As Single
     Dim AA As Single, BB As Single, CC As Single, DD As Single
@@ -481,7 +480,7 @@ Private Sub Szektorok()
 
         For ciklus = Palya.SzektorVonal.LBound To Palya.SzektorVonal.UBound
             Dim d As Single
-            d = Distance(x0, y0, KorrigacioX(Palya.SzektorVonal(ciklus).X1), KorrigacioX(Palya.SzektorVonal(ciklus).X2), KorrigacioY(Palya.SzektorVonal(ciklus).Y1), KorrigacioY(Palya.SzektorVonal(ciklus).Y2))
+            d = Distance(x0, y0, Palya.SzektorVonal(ciklus).X1, Palya.SzektorVonal(ciklus).X2, Palya.SzektorVonal(ciklus).Y1, Palya.SzektorVonal(ciklus).Y2)
 
             If Dist > d Then
                 Dist = d

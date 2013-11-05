@@ -94,7 +94,6 @@ Option Explicit
 Private Sub Form_Load()
     lblVersion.Caption = "Verzió " & App.Major & "." & App.Minor & "." & App.Revision
     lblProductName.Caption = App.Title
-    Config.LoadConfig ' Config betöltése.
     Timer1.Enabled = True
 End Sub
 

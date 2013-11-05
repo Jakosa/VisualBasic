@@ -1,5 +1,5 @@
 VERSION 5.00
-Begin VB.Form SettingsForm 
+Begin VB.Form Settings 
    BackColor       =   &H8000000E&
    Caption         =   "Beállítások"
    ClientHeight    =   6480
@@ -38,9 +38,9 @@ Begin VB.Form SettingsForm
       End
       Begin VB.ComboBox KorokComboBox 
          Height          =   315
-         ItemData        =   "SettingsForm.frx":0000
+         ItemData        =   "Settings.frx":0000
          Left            =   1920
-         List            =   "SettingsForm.frx":003D
+         List            =   "Settings.frx":003D
          Sorted          =   -1  'True
          TabIndex        =   11
          Top             =   1080
@@ -136,9 +136,9 @@ Begin VB.Form SettingsForm
             Strikethrough   =   0   'False
          EndProperty
          Height          =   990
-         ItemData        =   "SettingsForm.frx":0095
+         ItemData        =   "Settings.frx":0095
          Left            =   480
-         List            =   "SettingsForm.frx":00A5
+         List            =   "Settings.frx":00A5
          Sorted          =   -1  'True
          TabIndex        =   10
          Top             =   1440
@@ -157,9 +157,9 @@ Begin VB.Form SettingsForm
             Strikethrough   =   0   'False
          EndProperty
          Height          =   510
-         ItemData        =   "SettingsForm.frx":00CC
+         ItemData        =   "Settings.frx":00CC
          Left            =   480
-         List            =   "SettingsForm.frx":00D6
+         List            =   "Settings.frx":00D6
          Sorted          =   -1  'True
          TabIndex        =   3
          Top             =   600
@@ -207,12 +207,65 @@ Begin VB.Form SettingsForm
       End
    End
 End
-Attribute VB_Name = "SettingsForm"
+Attribute VB_Name = "Settings"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+'\\ Get Window Long Indexes...
+Public Enum enGetWindowLong
+    GWL_EXSTYLE = (-20)
+    GWL_HINSTANCE = (-6)
+    GWL_HWNDPARENT = (-8)
+    GWL_ID = (-12)
+    GWL_STYLE = (-16)
+    GWL_USERDATA = (-21)
+    GWL_WNDPROC = (-4)
+End Enum
+
+'\\ Window Style
+Public Enum enWindowStyles
+    WS_BORDER = &H800000
+    WS_CAPTION = &HC00000
+    WS_CHILD = &H40000000
+    WS_CLIPCHILDREN = &H2000000
+    WS_CLIPSIBLINGS = &H4000000
+    WS_DISABLED = &H8000000
+    WS_DLGFRAME = &H400000
+    WS_GROUP = &H20000
+    WS_HSCROLL = &H100000
+    WS_MAXIMIZE = &H1000000
+    WS_MAXIMIZEBOX = &H10000
+    WS_MINIMIZE = &H20000000
+    WS_MINIMIZEBOX = &H20000
+    WS_OVERLAPPED = &H0&
+    WS_POPUP = &H80000000
+    WS_SYSMENU = &H80000
+    WS_TABSTOP = &H10000
+    WS_THICKFRAME = &H40000
+    WS_VISIBLE = &H10000000
+    WS_VSCROLL = &H200000
+End Enum
+
+Public Enum enSetWindowPos
+    SWP_FRAMECHANGED = &H20 ' The frame changed: send WM_NCCALCSIZE
+    SWP_HIDEWINDOW = &H80
+    SWP_NOACTIVATE = &H10
+    SWP_NOCOPYBITS = &H100
+    SWP_NOMOVE = &H2
+    SWP_NOOWNERZORDER = &H200 ' Don't do owner Z ordering
+    SWP_NOREDRAW = &H8
+    SWP_NOSIZE = &H1
+    SWP_NOZORDER = &H4
+    SWP_SHOWWINDOW = &H40
+End Enum
+'\\ Set window ...
+Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As enSetWindowPos) As Long
+
+Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
+Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 
 Public TempGlobalis_Nyomvonal As Boolean
 Public TempGlobalis_SzektorNevek As Boolean
@@ -235,6 +288,7 @@ Private Sub Form_Load()
 
     'AutokLista.ListIndex = 0
 
+    Config.LoadConfig
     Init ' Beállítások inicializálása.
 End Sub
 

@@ -1,14 +1,13 @@
-- 1 autó amit írányíthat a felhasználó (5.-ik autó)
 - pálya vonalának tárolását megoldani dinamikusan majd megoldani a fájlból való kordinátabetöltést
-- pálya elhagyását nézni (ha lehetséges)
 - kilométer/óra jelzés
 - legnagyobb végsebesség kiírása.
-- Nyomvonal megjelenítési hibáját javítani kell.
-- Nyomvonal létrehozásához és tárolásához más mód kell mert iszonyatosan terheli a memóriát. (jelenleg kikommentezve)
 - jobb idõmeghatározás (szektorok/körök)
-- minden autóról külön külön legyen kiírás hogy legjóbb szektoridõ, legjobb idõ, legnagyobb sebesség stb (ami van még ötlet az oda), opcionálisan jelenjenek csak meg. Ha nincs annyi autó akkor a felesleg ne látszódjon.
-- beállítások megírása.
+- minden autóról külön külön legyen kiírás hogy legjobb szektoridõ, legjobb idõ, legnagyobb sebesség stb (ami van még ötlet az oda), opcionálisan jelenjenek csak meg. Ha nincs annyi autó akkor a felesleg ne látszódjon.
+- beállítások befejezése.
+- Szektornevek kikapcsolásának lehetõségét átvetiteni a pályára is a beállíátoskból. (az az alkalmazni)
 - konfig fájl létrehozása.
 - sárga autó szint le kéne cserélni
-- indláskor is változtatott sebességgel induljon el az autó mint ahogy menet közben is változtatja.
-- pircturebox használata a nyomvonalhoz (0, 0 pontba kell majd kezdõdnie hogy a pályát kitöltse meg így elsz kompatibilis.), van benne clear (clean) függvény is elvileg.
+- A menûben alkalmazott listbox elemkijelõlés alapján kellene emgoldani a checkbox mûködéseket a pályán (autoadatok stb)
+- Menûnél kéne a körök számát állítani az általános fülön.
+- Ha van rá idõ akkor egy pehelysúlyú logrendszert lehetne írni (config részhez kéne fõleg.)
+- Ha a globális nyomvonal bekapcsolásra kerül akkor az autok nyomvonalai ne kerüljenek ha nincsenek bekapcsolva.

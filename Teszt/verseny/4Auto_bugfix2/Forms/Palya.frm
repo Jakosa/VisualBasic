@@ -10,7 +10,7 @@ Begin VB.Form Palya
    ScaleHeight     =   9810
    ScaleWidth      =   15465
    StartUpPosition =   2  'CenterScreen
-   Begin VB.PictureBox HamisPalya 
+   Begin VB.PictureBox Picture1 
       Appearance      =   0  'Flat
       AutoRedraw      =   -1  'True
       BackColor       =   &H80000005&
@@ -20,8 +20,8 @@ Begin VB.Form Palya
       Left            =   0
       ScaleHeight     =   7815
       ScaleWidth      =   9855
-      TabIndex        =   9
-      Top             =   600
+      TabIndex        =   10
+      Top             =   0
       Width           =   9855
    End
    Begin VB.Frame Frame2 
@@ -29,7 +29,7 @@ Begin VB.Form Palya
       Caption         =   "Autók"
       Height          =   3495
       Left            =   10440
-      TabIndex        =   4
+      TabIndex        =   5
       Top             =   840
       Width           =   4815
       Begin VB.TextBox AutoListaText 
@@ -46,7 +46,7 @@ Begin VB.Form Palya
          Height          =   2415
          Left            =   240
          MultiLine       =   -1  'True
-         TabIndex        =   7
+         TabIndex        =   8
          Top             =   840
          Width           =   4335
       End
@@ -56,7 +56,7 @@ Begin VB.Form Palya
          Left            =   240
          List            =   "Palya.frx":000D
          Style           =   2  'Dropdown List
-         TabIndex        =   5
+         TabIndex        =   6
          Top             =   360
          Width           =   4335
       End
@@ -66,7 +66,7 @@ Begin VB.Form Palya
       Caption         =   "Versenyadatok"
       Height          =   3615
       Left            =   10440
-      TabIndex        =   2
+      TabIndex        =   3
       Top             =   4560
       Width           =   4815
       Begin VB.TextBox VersenyAdatokText 
@@ -85,7 +85,7 @@ Begin VB.Form Palya
          Left            =   240
          Locked          =   -1  'True
          MultiLine       =   -1  'True
-         TabIndex        =   6
+         TabIndex        =   7
          Top             =   840
          Width           =   4335
       End
@@ -96,45 +96,10 @@ Begin VB.Form Palya
          List            =   "Palya.frx":004D
          Sorted          =   -1  'True
          Style           =   2  'Dropdown List
-         TabIndex        =   3
+         TabIndex        =   4
          Top             =   360
          Width           =   4335
       End
-   End
-   Begin VB.Label KorKiiras 
-      AutoSize        =   -1  'True
-      BackColor       =   &H8000000E&
-      Caption         =   "Kör: 0/0"
-      BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   13.5
-         Charset         =   238
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   360
-      Left            =   7320
-      TabIndex        =   10
-      Top             =   120
-      Width           =   1095
-   End
-   Begin VB.Line Line5 
-      BorderWidth     =   2
-      Index           =   3
-      X1              =   720
-      X2              =   720
-      Y1              =   3720
-      Y2              =   4320
-   End
-   Begin VB.Line Line5 
-      BorderWidth     =   2
-      Index           =   13
-      X1              =   960
-      X2              =   720
-      Y1              =   3120
-      Y2              =   3720
    End
    Begin VB.Label Label5 
       AutoSize        =   -1  'True
@@ -142,7 +107,7 @@ Begin VB.Form Palya
       Caption         =   "Start / Cél / Szektor 3"
       Height          =   195
       Left            =   1680
-      TabIndex        =   8
+      TabIndex        =   9
       Top             =   4440
       Width           =   1560
    End
@@ -151,7 +116,7 @@ Begin VB.Form Palya
       Caption         =   "Szektor 2"
       Height          =   375
       Left            =   6600
-      TabIndex        =   1
+      TabIndex        =   2
       Top             =   5640
       Width           =   1095
    End
@@ -161,7 +126,7 @@ Begin VB.Form Palya
       Caption         =   "Szektor 1"
       Height          =   195
       Left            =   4680
-      TabIndex        =   0
+      TabIndex        =   1
       Top             =   360
       Width           =   675
    End
@@ -185,6 +150,25 @@ Begin VB.Form Palya
       X2              =   3600
       Y1              =   360
       Y2              =   2280
+   End
+   Begin VB.Label KorKiiras 
+      AutoSize        =   -1  'True
+      BackColor       =   &H8000000E&
+      Caption         =   "Kör: 0/0"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   13.5
+         Charset         =   238
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   360
+      Left            =   7080
+      TabIndex        =   0
+      Top             =   120
+      Width           =   1095
    End
    Begin VB.Line Line5 
       BorderWidth     =   2
@@ -444,6 +428,14 @@ Begin VB.Form Palya
    End
    Begin VB.Line Line5 
       BorderWidth     =   2
+      Index           =   13
+      X1              =   960
+      X2              =   720
+      Y1              =   3120
+      Y2              =   3720
+   End
+   Begin VB.Line Line5 
+      BorderWidth     =   2
       Index           =   12
       X1              =   2040
       X2              =   1440
@@ -516,6 +508,14 @@ Begin VB.Form Palya
    End
    Begin VB.Line Line5 
       BorderWidth     =   2
+      Index           =   3
+      X1              =   720
+      X2              =   720
+      Y1              =   3720
+      Y2              =   4320
+   End
+   Begin VB.Line Line5 
+      BorderWidth     =   2
       Index           =   1
       X1              =   720
       X2              =   720
@@ -579,6 +579,8 @@ Attribute VB_Exposed = False
 Option Explicit
 Dim WithEvents Timer_VersenyAdatok As VB.Timer  ' VersenyAdatok elnevezésõ listát frissíti.
 Attribute Timer_VersenyAdatok.VB_VarHelpID = -1
+Dim WithEvents Timer_Picture As VB.Timer
+Attribute Timer_Picture.VB_VarHelpID = -1
 Dim WithEvents Timer_AutoLista As VB.Timer      ' AutoLista elnevezésõ listát frissíti.
 Attribute Timer_AutoLista.VB_VarHelpID = -1
 Dim WithEvents Timer_Korok As VB.Timer          ' Frissíti a körök számát. (Ha új kör van megváltoztatja a számlálót is.)
@@ -620,7 +622,9 @@ End Property
 
 ' Beállítjuk a form létrehozásakor az alap folyamatokat.
 Private Sub Form_Load()
-    HamisPalya_Frissites
+    ' Picture timer létrehozása
+    Set Timer_Picture = Palya.Controls.Add("VB.Timer", "Timer_Picture", Palya)
+    Timer_Picture.Interval = 20        ' Érték beállítása. 40 millisec
 
     ' Korok timer létrehozása
     Set Timer_Korok = Palya.Controls.Add("VB.Timer", "Timer_Korok", Palya)
@@ -634,15 +638,13 @@ Private Sub Form_Load()
     Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
     Timer_AutoLista.Interval = 500     ' Érték beállítása. 500 millisec
 
-    ' Nyomvonal megjelenésének beállítása
-    Nyomvonal.Checked = Config.Globalis_Nyomvonal
-
     ' Alapértékek beállítása.
     Clean
 End Sub
 
 ' Form megszünésekor bizonyos dolgok megsemisítésre kerülnek.
 Private Sub Form_Terminate()
+    Set Timer_Picture = Nothing       ' Nullázás
     Set Timer_Korok = Nothing         ' Nullázás
     Set Timer_VersenyAdatok = Nothing ' Nullázás
     Set Timer_AutoLista = Nothing     ' Nullázás
@@ -656,8 +658,6 @@ Private Sub New_Game(ASzama As Byte)
     If Started Then
         Exit Sub
     End If
-
-    HamisPalya_Frissites
 
     Dim i As Byte
     i = 1
@@ -688,8 +688,6 @@ Private Sub Dispose_Game()
     If Started Then
         Exit Sub
     End If
-
-    HamisPalya_Frissites
 
     Dim i As Byte
     i = 1
@@ -756,10 +754,6 @@ Private Sub Nyomvonal_Click()
         Nyomvonal.Checked = True
     End If
 
-    Config.Globalis_Nyomvonal = Nyomvonal.Checked
-    Config.SetConfig
-
-    ' Itt kell majd az autok nyomvonalát buherálni......
     Dim i As Byte
     For i = LBound(Autok) To AutokSzama
         Autok(i).SetNyomvonal Nyomvonal.Checked
@@ -826,12 +820,11 @@ End Sub
 
 ' Minden formot bezárunk hogy nehogy valamelyik is nyítva maradjon.
 Private Sub Forms_Unload()
-    'Unload AboutForm      ' Névjegy form bezárása.
-    'Unload VForm          ' Végeredmény form bezárása.
-    'Unload SettingsForm   ' Beállítások form bezárása.
-    'Unload WarningNewGame ' Új játék figyelmeztetés form bezárása.
-    'Unload Me             ' Pálya form bezárása.
-    End
+    Unload AboutForm      ' Névjegy form bezárása.
+    Unload VForm          ' Végeredmény form bezárása.
+    Unload SettingsForm   ' Beállítások form bezárása.
+    Unload WarningNewGame ' Új játék figyelmeztetés form bezárása.
+    Unload Me             ' Pálya form bezárása.
 End Sub
 
 ' Kiírt körök felíratának megváltoztatása.
@@ -1103,17 +1096,16 @@ Private Sub AddALText(Szoveg As String)
     AutoListaText.Text = AutoListaText.Text & Szoveg & vbCrLf
 End Sub
 
-Private Sub HamisPalya_Frissites()
+Private Sub Timer_Picture_Timer()
     Dim vPt As POINTAPI
-
-    With HamisPalya
-       ClientToScreen .hWnd, vPt                             ' Konvertálás a 0, 0 képernyõ kordinátára.
-       ScreenToClient .Container.hWnd, vPt                   ' "Container" kordináták konvertálása.
-       SetViewportOrgEx .hDC, -vPt.X, -vPt.Y, vPt            ' Eltolás PictureBox DC.
-       SendMessage .Container.hWnd, WM_PAINT, .hDC, ByVal 0& ' VB átfestés.
-       SetViewportOrgEx .hDC, vPt.X, vPt.Y, vPt              ' Reset PictureBox DC.
+    With Picture1
+       ClientToScreen .hWnd, vPt ' convert 0,0 to screen coords
+       ScreenToClient .Container.hWnd, vPt ' convert that to container's coords
+       SetViewportOrgEx .hDC, -vPt.X, -vPt.Y, vPt ' offset the picbox DC
+       SendMessage .Container.hWnd, WM_PAINT, .hDC, ByVal 0& ' tell VB to repaint
+       SetViewportOrgEx .hDC, vPt.X, vPt.Y, vPt ' reset picbox DC
        If .AutoRedraw = True Then .Refresh
-    End With
+   End With
 End Sub
 
 Private Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal LineX1 As Single, ByVal LineX2 As Single, ByVal LineY1 As Single, ByVal LineY2 As Single) As Single

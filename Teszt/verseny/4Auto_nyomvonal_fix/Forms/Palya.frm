@@ -620,8 +620,6 @@ End Property
 
 ' Beállítjuk a form létrehozásakor az alap folyamatokat.
 Private Sub Form_Load()
-    HamisPalya_Frissites
-
     ' Korok timer létrehozása
     Set Timer_Korok = Palya.Controls.Add("VB.Timer", "Timer_Korok", Palya)
     Timer_Korok.Interval = 40          ' Érték beállítása. 40 millisec
@@ -633,9 +631,6 @@ Private Sub Form_Load()
     ' AutoLista timer létrehozása
     Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
     Timer_AutoLista.Interval = 500     ' Érték beállítása. 500 millisec
-
-    ' Nyomvonal megjelenésének beállítása
-    Nyomvonal.Checked = Config.Globalis_Nyomvonal
 
     ' Alapértékek beállítása.
     Clean
@@ -688,8 +683,6 @@ Private Sub Dispose_Game()
     If Started Then
         Exit Sub
     End If
-
-    HamisPalya_Frissites
 
     Dim i As Byte
     i = 1
@@ -756,10 +749,6 @@ Private Sub Nyomvonal_Click()
         Nyomvonal.Checked = True
     End If
 
-    Config.Globalis_Nyomvonal = Nyomvonal.Checked
-    Config.SetConfig
-
-    ' Itt kell majd az autok nyomvonalát buherálni......
     Dim i As Byte
     For i = LBound(Autok) To AutokSzama
         Autok(i).SetNyomvonal Nyomvonal.Checked
@@ -826,12 +815,11 @@ End Sub
 
 ' Minden formot bezárunk hogy nehogy valamelyik is nyítva maradjon.
 Private Sub Forms_Unload()
-    'Unload AboutForm      ' Névjegy form bezárása.
-    'Unload VForm          ' Végeredmény form bezárása.
-    'Unload SettingsForm   ' Beállítások form bezárása.
-    'Unload WarningNewGame ' Új játék figyelmeztetés form bezárása.
-    'Unload Me             ' Pálya form bezárása.
-    End
+    Unload AboutForm      ' Névjegy form bezárása.
+    Unload VForm          ' Végeredmény form bezárása.
+    Unload SettingsForm   ' Beállítások form bezárása.
+    Unload WarningNewGame ' Új játék figyelmeztetés form bezárása.
+    Unload Me             ' Pálya form bezárása.
 End Sub
 
 ' Kiírt körök felíratának megváltoztatása.
@@ -1105,13 +1093,12 @@ End Sub
 
 Private Sub HamisPalya_Frissites()
     Dim vPt As POINTAPI
-
     With HamisPalya
-       ClientToScreen .hWnd, vPt                             ' Konvertálás a 0, 0 képernyõ kordinátára.
-       ScreenToClient .Container.hWnd, vPt                   ' "Container" kordináták konvertálása.
-       SetViewportOrgEx .hDC, -vPt.X, -vPt.Y, vPt            ' Eltolás PictureBox DC.
-       SendMessage .Container.hWnd, WM_PAINT, .hDC, ByVal 0& ' VB átfestés.
-       SetViewportOrgEx .hDC, vPt.X, vPt.Y, vPt              ' Reset PictureBox DC.
+       ClientToScreen .hWnd, vPt ' convert 0,0 to screen coords
+       ScreenToClient .Container.hWnd, vPt ' convert that to container's coords
+       SetViewportOrgEx .hDC, -vPt.X, -vPt.Y, vPt ' offset the picbox DC
+       SendMessage .Container.hWnd, WM_PAINT, .hDC, ByVal 0& ' tell VB to repaint
+       SetViewportOrgEx .hDC, vPt.X, vPt.Y, vPt ' reset picbox DC
        If .AutoRedraw = True Then .Refresh
     End With
 End Sub
