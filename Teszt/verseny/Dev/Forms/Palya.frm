@@ -101,6 +101,13 @@ Begin VB.Form Palya
          Width           =   4335
       End
    End
+   Begin VB.Line MenuValasztoVonal 
+      BorderColor     =   &H80000000&
+      X1              =   0
+      X2              =   30000
+      Y1              =   0
+      Y2              =   0
+   End
    Begin VB.Label KorKiiras 
       AutoSize        =   -1  'True
       BackColor       =   &H8000000E&
@@ -629,6 +636,7 @@ Private Sub Form_Load()
     Set Timer_AutoLista = Palya.Controls.Add("VB.Timer", "Timer_AutoLista", Palya)
     Timer_AutoLista.Interval = 500     ' Érték beállítása. 500 millisec
 
+Debug.Print Config.Globalis_Nyomvonal
     ' Nyomvonal megjelenésének beállítása
     Nyomvonal.Checked = Config.Globalis_Nyomvonal
 
@@ -757,11 +765,14 @@ Private Sub Nyomvonal_Click()
 
     Config.Globalis_Nyomvonal = Nyomvonal.Checked
     Config.SetConfig
+    SetAutoNyomvonal
+End Sub
 
+Public Sub SetAutokNyomvonal()
     ' Itt kell majd az autok nyomvonalát buherálni......
     Dim i As Byte
     For i = LBound(Autok) To AutokSzama
-        Autok(i).SetNyomvonal Nyomvonal.Checked
+        Autok(i).SetNyomvonal Config.Globalis_Nyomvonal
     Next i
 End Sub
 

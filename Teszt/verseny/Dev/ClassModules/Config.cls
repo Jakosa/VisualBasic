@@ -32,6 +32,7 @@ Public Sub LoadConfig()
 
     If FileExists(ConfigPath) Then
 UjKonfigBetoltese:
+        SetDefault
         Open ConfigPath For Input As #1
 
         Do Until EOF(1)
@@ -46,8 +47,6 @@ UjKonfigBetoltese:
                         Else
                             Globalis_Nyomvonal = AGlobalis_Nyomvonal
                         End If
-                    Else
-                        Globalis_Nyomvonal = AGlobalis_Nyomvonal
                     End If
 
                     If InStr(sor, "Globalis_SzektorNevek") > 0 Then
@@ -56,8 +55,6 @@ UjKonfigBetoltese:
                         Else
                             Globalis_SzektorNevek = AGlobalis_SzektorNevek
                         End If
-                    Else
-                        Globalis_SzektorNevek = AGlobalis_SzektorNevek
                     End If
 
                     If InStr(sor, "Globalis_KorokSzama") > 0 Then
@@ -70,8 +67,6 @@ UjKonfigBetoltese:
                         If Globalis_KorokSzama > 20 Then
                             Globalis_KorokSzama = AGlobalis_KorokSzama
                         End If
-                    Else
-                        Globalis_KorokSzama = AGlobalis_KorokSzama
                     End If
                 End If
             End If
@@ -116,6 +111,12 @@ End Sub
 
 Public Sub DeleteConfig()
     Kill ConfigPath
+End Sub
+
+Private Sub SetDefault()
+    Globalis_Nyomvonal = AGlobalis_Nyomvonal
+    Globalis_SzektorNevek = AGlobalis_SzektorNevek
+    Globalis_KorokSzama = AGlobalis_KorokSzama
 End Sub
 
 Private Function Parse(sor As String) As String

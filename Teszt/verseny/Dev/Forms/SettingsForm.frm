@@ -9,7 +9,7 @@ Begin VB.Form SettingsForm
    LinkTopic       =   "Form1"
    ScaleHeight     =   6480
    ScaleWidth      =   11910
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Altalanos 
       BackColor       =   &H00FFFFFF&
       Caption         =   "Általános"
@@ -255,6 +255,14 @@ Private Sub CmdAlkalmaz_Click()
 
     Palya.SetKorokSzama Palya.GetKezdokorErteke
     Palya.TempAutoLista = -1
+
+    If Config.Globalis_Nyomvonal Then
+        Palya.Nyomvonal.Checked = 1
+    Else
+        Palya.Nyomvonal.Checked = 0
+    End If
+
+    Palya.SetAutokNyomvonal
 End Sub
 
 Private Sub CmdAlapertelmezes_Click()
@@ -329,7 +337,7 @@ Private Sub Init()
 
     KorokComboBox.ListIndex = Config.Globalis_KorokSzama - 2
     TempGlobalis_KorokSzama = Config.Globalis_KorokSzama
-    Palya.SetKorokSzama 1
+    Palya.SetKorokSzama Palya.GetKezdokorErteke
 End Sub
 
 Private Sub SetAllVisible(visible As Boolean)
