@@ -54,7 +54,7 @@ Public Sub Save()
                     For ciklus2 = LBound(PalyaInfo.Autok) To Palya.GetAutokSzama
                         If PalyaInfo.Autok(ciklus2).GetColor = PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin Then
                             Print #1, "Legjobb idõ: " & PalyaInfo.Autok(ciklus2).GetLegjobbKorido & " másodperc"
-                            Print #1, "Összes idõ idõ: " & PalyaInfo.Autok(ciklus2).GetOsszKorido & " másodperc"
+                            Print #1, "Összes idõ: " & PalyaInfo.Autok(ciklus2).GetOsszKorido & " másodperc"
                             Print #1, "Összes út: " & PalyaInfo.Autok(ciklus2).GetOsszesUt & " m"
 
                             If tempautok = 0 Then

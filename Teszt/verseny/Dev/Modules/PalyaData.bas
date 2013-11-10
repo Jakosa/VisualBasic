@@ -51,5 +51,5 @@ Public Type PInfo ' Pálya információ
 End Type
 
 Public PalyaInfo As PInfo
-Public Const KezdoSzektorido = 1000 ' Alapértelmezésben ennyirõl indul el.
+Public Const KezdoSzektorido = 100000 ' Alapértelmezésben ennyirõl indul el.
 
