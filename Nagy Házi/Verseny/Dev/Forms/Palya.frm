@@ -7,9 +7,9 @@ Begin VB.Form Palya
    ClientTop       =   450
    ClientWidth     =   15465
    LinkTopic       =   "Form1"
+   MaxButton       =   0   'False
    ScaleHeight     =   9810
    ScaleWidth      =   15465
-   StartUpPosition =   2  'CenterScreen
    Begin VB.PictureBox VirtualisPalya 
       Appearance      =   0  'Flat
       AutoRedraw      =   -1  'True

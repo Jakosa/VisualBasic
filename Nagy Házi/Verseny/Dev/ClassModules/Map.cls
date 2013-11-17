@@ -139,7 +139,7 @@ Public Sub DeleteDefaultMap()
     MapPath = MapDir & "/" & AGlobalis_PalyaNeve
 
     If FileExists(MapPath) Then
-        Kill ConfigPath
+        Kill MapPath
     End If
 End Sub
 
