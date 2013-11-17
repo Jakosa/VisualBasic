@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form WarningForm 
    BackColor       =   &H8000000E&
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "Form1"
+   Caption         =   "Figyelmeztetés!"
    ClientHeight    =   1305
    ClientLeft      =   45
    ClientTop       =   435
@@ -22,7 +22,7 @@ Begin VB.Form WarningForm
    ScaleHeight     =   1305
    ScaleWidth      =   3390
    StartUpPosition =   2  'CenterScreen
-   Begin VB.PictureBox WarningPicture 
+   Begin VB.PictureBox FigyelmeztetoJel 
       Appearance      =   0  'Flat
       AutoSize        =   -1  'True
       BackColor       =   &H80000005&
@@ -72,24 +72,63 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' Tárolja a hibaüzenetet.
 Public HibaUzenet As String
+' Program leállításának lehetõsége.
+Public Leallitas As String
 
+' Form betöltése.
 Private Sub Form_Load()
-    Hiba.Caption = HibaUzenet
-    Hiba.Width = TextWidth(HibaUzenet)
-
-    If Hiba.Width > WarningPicture.Width + CmdOk.Width Then
-        Width = Hiba.Width + WarningPicture.Width + CmdOk.Width / 2
-    Else
-        Width = Hiba.Width + WarningPicture.Width + CmdOk.Width
+    ' Megvizsgálja hogy a változó igaz-e. Ha igen akkor átírja a hibaüzenetet.
+    If Leallitas Then
+        HibaUzenet = HibaUzenet & " A program az ok gombra kattintás után le fog állni!"
     End If
 
+    ' Hibaüzenet kiírása.
+    Hiba.Caption = HibaUzenet
+    ' Hibaüzenet hosszának átvétele.
+    Hiba.Width = TextWidth(HibaUzenet)
+
+    ' Akkor fut le ha a "Hiba" hossza nagyobb mint a "FigyelmeztetoJel" + a "CmdOk" hossza. Ez az alap eset.
+    If Hiba.Width > FigyelmeztetoJel.Width + CmdOk.Width Then
+        Width = Hiba.Width + FigyelmeztetoJel.Width + CmdOk.Width / 2
+    Else
+        ' Akkor fut le ha nincs beállítva hibaüzenetnek semmi se. Így az ablak továbbra is értelmezhetõ lesz és nem mosódik össze rajta az adat.
+        Width = Hiba.Width + FigyelmeztetoJel.Width + CmdOk.Width
+    End If
+
+    ' Ablak középrehelyezése a képernyön.
     Me.Move (Screen.Width - Me.Width) / 2, (Screen.Height - Me.Height) / 2
+    ' CmdOk gomb középre helyezése a form-on belül.
     CmdOk.Left = Width / 2 - CmdOk.Width / 2
 End Sub
 
-Private Sub CmdOk_Click()
+' Form bezárása.
+Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
+    ' Program leallitasanak esetleges lehetõségét vizsgalja.
+    Leallas
+
+    ' Hibaüzenet törlése.
     HibaUzenet = "Hiba"
+End Sub
+
+' CmdOk gomb eseménye kattintás hatására.
+Private Sub CmdOk_Click()
+    ' Program leallitasanak esetleges lehetõségét vizsgalja.
+    Leallas
+
+    ' Hibaüzenet törlése.
+    HibaUzenet = "Hiba"
+    ' Form bezárása.
     Unload Me
+End Sub
+
+' Program leallitasanak esetleges lehetõségét vizsgalja.
+Private Sub Leallas()
+    ' Megvizsgálja hogy a változó igaz-e. Ha igen leáll a program.
+    If Leallitas Then
+        ' Program vége.
+        End
+    End If
 End Sub
 

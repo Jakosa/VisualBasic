@@ -25,20 +25,20 @@ Begin VB.Form Splash
       TabIndex        =   0
       Top             =   60
       Width           =   7005
-      Begin VB.Timer Timer1 
+      Begin VB.Timer Kesleltetes 
          Enabled         =   0   'False
          Interval        =   3000
          Left            =   120
          Top             =   3480
       End
-      Begin VB.Image Image1 
+      Begin VB.Image Lo 
          Height          =   1650
          Left            =   2760
          Picture         =   "Splash.frx":000C
          Top             =   360
          Width           =   1650
       End
-      Begin VB.Label lblVersion 
+      Begin VB.Label Verzio 
          Alignment       =   1  'Right Justify
          AutoSize        =   -1  'True
          BackColor       =   &H00FFFFFF&
@@ -58,11 +58,11 @@ Begin VB.Form Splash
          Top             =   3600
          Width           =   735
       End
-      Begin VB.Label lblProductName 
+      Begin VB.Label TermekNeve 
          Alignment       =   2  'Center
          AutoSize        =   -1  'True
          BackColor       =   &H00FFFFFF&
-         Caption         =   "Product"
+         Caption         =   "Termék neve"
          BeginProperty Font 
             Name            =   "Arial"
             Size            =   32.25
@@ -87,28 +87,37 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-'Private Sub Form_KeyPress(KeyAscii As Integer)
-'    Unload Me
-'End Sub
-
+' Form betöltése.
 Private Sub Form_Load()
-    lblVersion.Caption = "Verzió " & App.Major & "." & App.Minor & "." & App.Revision
-    lblProductName.Caption = App.Title
-    Config.LoadConfig                     ' Config betöltése.
-    Map.LoadMap Config.Globalis_PalyaNeve ' Beálitott pálya betöltése.
-    Timer1.Enabled = True
+    ' Kiírja a program verzióját. pl: 0.0.1
+    Verzio.Caption = "Verzió " & App.Major & "." & App.Minor & "." & App.Revision
+    ' Kiírja a program nevét.
+    TermekNeve.Caption = App.Title
+
+    ' Konfig fájl betöltése.
+    Config.LoadConfig
+
+    ' Pálya betöltése.
+    Map.LoadMap Config.Globalis_PalyaNeve
+
+    ' Késleltett programindítás elindítva.
+    Kesleltetes.Enabled = True
 End Sub
 
-'Private Sub Frame1_Click()
-'    Load_Palya
-'    Unload Me
-'End Sub
-
+' Palya form megnyitása.
 Private Sub Load_Palya()
+    ' Megnyitás.
     Palya.Show
 End Sub
 
-Private Sub Timer1_Timer()
+' Késleltetés idõzitõ eljárása.
+Private Sub Kesleltetes_Timer()
+    ' Palya form megnyitasa.
     Load_Palya
+
+    ' Késleltetésre szolgáló idõzitõ leállítása.
+    Kesleltetes.Enabled = False
+
+    ' Form bezárása.
     Unload Me
 End Sub

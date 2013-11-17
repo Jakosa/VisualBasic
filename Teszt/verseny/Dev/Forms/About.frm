@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form AboutForm 
    BackColor       =   &H8000000E&
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "About MyApp"
+   Caption         =   "Névjegy"
    ClientHeight    =   2805
    ClientLeft      =   2340
    ClientTop       =   1935
@@ -15,7 +15,7 @@ Begin VB.Form AboutForm
    ScaleMode       =   0  'User
    ScaleWidth      =   7366.86
    StartUpPosition =   2  'CenterScreen
-   Begin VB.Frame Frame1 
+   Begin VB.Frame FejlesztokNevenekSavja 
       BorderStyle     =   0  'None
       Caption         =   "Frame1"
       Height          =   855
@@ -23,7 +23,7 @@ Begin VB.Form AboutForm
       TabIndex        =   4
       Top             =   2160
       Width           =   7935
-      Begin VB.Label Dev 
+      Begin VB.Label Fejlesztok 
          AutoSize        =   -1  'True
          Caption         =   "Fejlesztõk: Csaba, Valter, Vazul"
          BeginProperty Font 
@@ -43,7 +43,7 @@ Begin VB.Form AboutForm
          Width           =   2715
       End
    End
-   Begin VB.PictureBox picIcon 
+   Begin VB.PictureBox Lo 
       AutoSize        =   -1  'True
       BorderStyle     =   0  'None
       ClipControls    =   0   'False
@@ -57,7 +57,7 @@ Begin VB.Form AboutForm
       Top             =   109
       Width           =   1650
    End
-   Begin VB.Label lblDescription 
+   Begin VB.Label Leiras 
       BackColor       =   &H8000000E&
       Caption         =   $"About.frx":BD54
       ForeColor       =   &H80000015&
@@ -67,10 +67,10 @@ Begin VB.Form AboutForm
       Top             =   1080
       Width           =   5085
    End
-   Begin VB.Label lblTitle 
+   Begin VB.Label TermekNeve 
       AutoSize        =   -1  'True
       BackColor       =   &H8000000E&
-      Caption         =   "Application Title"
+      Caption         =   "Termék Neve"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
          Size            =   17.25
@@ -85,18 +85,9 @@ Begin VB.Form AboutForm
       Left            =   2625
       TabIndex        =   2
       Top             =   240
-      Width           =   3105
+      Width           =   2385
    End
-   Begin VB.Line Line1 
-      BorderColor     =   &H00FFFFFF&
-      BorderWidth     =   2
-      Index           =   0
-      X1              =   98.6
-      X2              =   5309.398
-      Y1              =   1697.936
-      Y2              =   1697.936
-   End
-   Begin VB.Label lblVersion 
+   Begin VB.Label Verzio 
       BackColor       =   &H8000000E&
       Caption         =   "Verzió"
       BeginProperty Font 
@@ -123,9 +114,17 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' Form betöltése.
 Private Sub Form_Load()
-    Me.Caption = "Névjegy " & App.Title
-    lblVersion.Caption = "Verzió " & App.Major & "." & App.Minor & "." & App.Revision
-    lblTitle.Caption = App.Title
+    ' Form címének megváltoztatása a program nevére.
+    Caption = App.Title & " névjegye"
+    ' Kiírja a fejlesztõ(k) nevét.
+    Fejlesztok.Caption = "Fejlesztõ(k): " & App.ProductName
+    ' "Fejlesztok" középre helyezése a form-on belül.
+    Fejlesztok.Left = Width / 2 - Fejlesztok.Width / 2
+    ' Kiírja a program verzióját. pl: 0.0.1
+    Verzio.Caption = "Verzió " & App.Major & "." & App.Minor & "." & App.Revision
+    ' Kiírja a program nevét.
+    TermekNeve.Caption = App.Title
 End Sub
 

@@ -17,21 +17,37 @@ Private Const ConfigDir = "Config"
 Private Const ConfigFile = "Config.conf"
 Private ConfigPath As String
 
+' Globális változó. A neve takarja mira való.
 Public Globalis_Nyomvonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Globalis_SzektorNevek As Boolean
+' Globális változó. A neve takarja mira való.
 Public Globalis_StartCelVonalNeve As Boolean
+' Globális változó. A neve takarja mira való.
 Public Globalis_KorokSzama As Byte
+' Globális változó. A neve takarja mira való.
 Public Globalis_PalyaNeve As String
+' Globális változó. A neve takarja mira való.
 Public Globalis_SzektorVonalak As Boolean
+' Globális változó. A neve takarja mira való.
 Public Globalis_StartCelVonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Globalis_TokeletesKorozes As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Elso_Nyomvonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Elso_TokeletesKorozes As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Masodik_Nyomvonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Masodik_TokeletesKorozes As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Harmadik_Nyomvonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Harmadik_TokeletesKorozes As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Negyedik_Nyomvonal As Boolean
+' Globális változó. A neve takarja mira való.
 Public Autok_Negyedik_TokeletesKorozes As Boolean
 
 Private Sub Class_Initialize()
@@ -49,38 +65,38 @@ UjKonfigBetoltese:
         Open ConfigPath For Input As #1
 
         Do Until EOF(1)
-            Dim sor As String
-            Line Input #1, sor
+            Dim Sor As String
+            Line Input #1, Sor
 
-            If Len(sor) > 0 Then
-                If Not Mid$(sor, 1, 1) = "#" Then
-                    If InStr(sor, "Globalis_Nyomvonal") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_Nyomvonal = CBool(Parse(sor))
+            If Len(Sor) > 0 Then
+                If Not Mid$(Sor, 1, 1) = "#" Then
+                    If InStr(Sor, "Globalis_Nyomvonal") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_Nyomvonal = CBool(Parse(Sor))
                         Else
                             Globalis_Nyomvonal = AGlobalis_Nyomvonal
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_SzektorNevek") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_SzektorNevek = CBool(Parse(sor))
+                    If InStr(Sor, "Globalis_SzektorNevek") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_SzektorNevek = CBool(Parse(Sor))
                         Else
                             Globalis_SzektorNevek = AGlobalis_SzektorNevek
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_StartCelVonalNeve") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_StartCelVonalNeve = CBool(Parse(sor))
+                    If InStr(Sor, "Globalis_StartCelVonalNeve") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_StartCelVonalNeve = CBool(Parse(Sor))
                         Else
                             Globalis_StartCelVonalNeve = AGlobalis_StartCelVonalNeve
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_KorokSzama") > 0 Then
-                        If IsByte(Parse(sor)) Then
-                            Globalis_KorokSzama = CByte(Parse(sor))
+                    If InStr(Sor, "Globalis_KorokSzama") > 0 Then
+                        If IsByte(Parse(Sor)) Then
+                            Globalis_KorokSzama = CByte(Parse(Sor))
                         Else
                             Globalis_KorokSzama = AGlobalis_KorokSzama
                         End If
@@ -90,93 +106,93 @@ UjKonfigBetoltese:
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_PalyaNeve") > 0 Then
-                        Globalis_PalyaNeve = CStr(Parse(sor))
+                    If InStr(Sor, "Globalis_PalyaNeve") > 0 Then
+                        Globalis_PalyaNeve = CStr(Parse(Sor))
                     End If
 
-                    If InStr(sor, "Globalis_SzektorVonalak") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_SzektorVonalak = CBool(Parse(sor))
+                    If InStr(Sor, "Globalis_SzektorVonalak") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_SzektorVonalak = CBool(Parse(Sor))
                         Else
                             Globalis_SzektorVonalak = AGlobalis_SzektorVonalak
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_SCV") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_StartCelVonal = CBool(Parse(sor))
+                    If InStr(Sor, "Globalis_SCV") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_StartCelVonal = CBool(Parse(Sor))
                         Else
                             Globalis_StartCelVonal = AGlobalis_StartCelVonal
                         End If
                     End If
 
-                    If InStr(sor, "Globalis_TokeletesKorozes") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Globalis_TokeletesKorozes = CBool(Parse(sor))
+                    If InStr(Sor, "Globalis_TokeletesKorozes") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Globalis_TokeletesKorozes = CBool(Parse(Sor))
                         Else
                             Globalis_TokeletesKorozes = AGlobalis_TokeletesKorozes
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Elso_Nyomvonal") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Elso_Nyomvonal = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Elso_Nyomvonal") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Elso_Nyomvonal = CBool(Parse(Sor))
                         Else
                             Autok_Elso_Nyomvonal = AAutok_Elso_Nyomvonal
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Elso_TokeletesKorozes") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Elso_TokeletesKorozes = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Elso_TokeletesKorozes") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Elso_TokeletesKorozes = CBool(Parse(Sor))
                         Else
                             Autok_Elso_TokeletesKorozes = AAutok_Elso_TokeletesKorozes
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Masodik_Nyomvonal") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Masodik_Nyomvonal = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Masodik_Nyomvonal") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Masodik_Nyomvonal = CBool(Parse(Sor))
                         Else
                             Autok_Masodik_Nyomvonal = AAutok_Masodik_Nyomvonal
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Masodik_TokeletesKorozes") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Masodik_TokeletesKorozes = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Masodik_TokeletesKorozes") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Masodik_TokeletesKorozes = CBool(Parse(Sor))
                         Else
                             Autok_Masodik_TokeletesKorozes = AAutok_Masodik_TokeletesKorozes
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Harmadik_Nyomvonal") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Harmadik_Nyomvonal = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Harmadik_Nyomvonal") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Harmadik_Nyomvonal = CBool(Parse(Sor))
                         Else
                             Autok_Harmadik_Nyomvonal = AAutok_Harmadik_Nyomvonal
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Harmadik_TokeletesKorozes") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Harmadik_TokeletesKorozes = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Harmadik_TokeletesKorozes") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Harmadik_TokeletesKorozes = CBool(Parse(Sor))
                         Else
                             Autok_Harmadik_TokeletesKorozes = AAutok_Harmadik_TokeletesKorozes
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Negyedik_Nyomvonal") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Negyedik_Nyomvonal = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Negyedik_Nyomvonal") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Negyedik_Nyomvonal = CBool(Parse(Sor))
                         Else
                             Autok_Negyedik_Nyomvonal = AAutok_Negyedik_Nyomvonal
                         End If
                     End If
 
-                    If InStr(sor, "Autok_Negyedik_TokeletesKorozes") > 0 Then
-                        If IsBoolean(Parse(sor)) Then
-                            Autok_Negyedik_TokeletesKorozes = CBool(Parse(sor))
+                    If InStr(Sor, "Autok_Negyedik_TokeletesKorozes") > 0 Then
+                        If IsBoolean(Parse(Sor)) Then
+                            Autok_Negyedik_TokeletesKorozes = CBool(Parse(Sor))
                         Else
                             Autok_Negyedik_TokeletesKorozes = AAutok_Negyedik_TokeletesKorozes
                         End If
@@ -184,6 +200,8 @@ UjKonfigBetoltese:
                 End If
             End If
         Loop
+
+        ' Fájl lezására.
         Close #1
     Else
         CreateConfig True
@@ -192,25 +210,42 @@ UjKonfigBetoltese:
     End If
 End Sub
 
-Private Sub CreateConfig(isdefault As Boolean)
+' Konfig fájl létrehozása.
+' Az "IsDefault" változó tárolja hogy alapértelmezet konfig fájlt kell-e létrehozni vagy a konfig fájlt kell módosítva létrehozni.
+Private Sub CreateConfig(ByVal IsDefault As Boolean)
     Dim TempGlobalis_Nyomvonal As Boolean
+    ' Ideiglenes változó.
     Dim TempGlobalis_SzektorNevek As Boolean
+    ' Ideiglenes változó.
     Dim TempGlobalis_StartCelVonalNeve As Boolean
+    ' Ideiglenes változó.
     Dim TempGlobalis_KorokSzama As Byte
+    ' Ideiglenes változó.
     Dim TempGlobalis_PalyaNeve As String
+    ' Ideiglenes változó.
     Dim TempGlobalis_SzektorVonalak As Boolean
+    ' Ideiglenes változó.
     Dim TempGlobalis_StartCelVonal As Boolean
+    ' Ideiglenes változó.
     Dim TempGlobalis_TokeletesKorozes As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Elso_Nyomvonal As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Elso_TokeletesKorozes As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Masodik_Nyomvonal As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Masodik_TokeletesKorozes As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Harmadik_Nyomvonal As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Harmadik_TokeletesKorozes As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Negyedik_Nyomvonal As Boolean
+    ' Ideiglenes változó.
     Dim TempAutok_Negyedik_TokeletesKorozes As Boolean
     
-    If isdefault Then
+    If IsDefault Then
         TempGlobalis_Nyomvonal = AGlobalis_Nyomvonal
         TempGlobalis_SzektorNevek = AGlobalis_SzektorNevek
         TempGlobalis_StartCelVonalNeve = AGlobalis_StartCelVonalNeve
@@ -246,8 +281,10 @@ Private Sub CreateConfig(isdefault As Boolean)
         TempAutok_Negyedik_TokeletesKorozes = Autok_Negyedik_TokeletesKorozes
     End If
 
+    ' Fájl megnyítása írásra.
     Open ConfigPath For Output As #1
 
+    ' Adatok kiírása a fájlba.
     Print #1, "# Játékhoz tartozó konfig fájl. Figyelem! Csak hozzáértõek piszkáljanak bele mert hibát is okozhatnak az átgondolatlan cselekvéssel!"
     Print #1, ""
     Print #1, "# Globálisan itt kapcsolható be vagy ki a nyomvonal."
@@ -283,6 +320,8 @@ Private Sub CreateConfig(isdefault As Boolean)
     Print #1, "Autok_Negyedik_Nyomvonal = " & CStr(TempAutok_Negyedik_Nyomvonal)
     Print #1, "# Negyedik autónál itt kapcsolható be vagy ki a tökéletes körözés."
     Print #1, "Autok_Negyedik_TokeletesKorozes = " & CStr(TempAutok_Negyedik_TokeletesKorozes)
+
+    ' Fájl lezására.
     Close #1
 End Sub
 
@@ -314,6 +353,6 @@ Private Sub SetDefault()
     Autok_Negyedik_TokeletesKorozes = AAutok_Negyedik_TokeletesKorozes
 End Sub
 
-Private Function Parse(sor As String) As String
-    Parse = LTrim(Mid$(sor, InStr(1, sor, "=") + 1))
+Private Function Parse(ByVal Sor As String) As String
+    Parse = LTrim(Mid$(Sor, InStr(1, Sor, "=") + 1))
 End Function

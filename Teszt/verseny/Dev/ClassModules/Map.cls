@@ -19,7 +19,7 @@ Private Sub Class_Initialize()
     MapPath = MapDir & "/" & Config.Globalis_PalyaNeve
 End Sub
 
-Public Sub LoadMap(MapName As String)
+Public Sub LoadMap(ByVal MapName As String)
     Clean
 
     If DirExists(MapDir) Then
@@ -30,21 +30,20 @@ Public Sub LoadMap(MapName As String)
 
     If FileExists(MapPath) Then
 UjBetoltese:
-        'SetDefault
         Open MapPath For Input As #1
 
         Do Until EOF(1)
-            Dim sor As String
-            Line Input #1, sor
+            Dim Sor As String
+            Line Input #1, Sor
 
-            If Len(sor) > 0 Then
-                If Not Mid$(sor, 1, 1) = "#" Then
-                    If InStr(sor, "PalyaVonal") > 0 Then
+            If Len(Sor) > 0 Then
+                If Not Mid$(Sor, 1, 1) = "#" Then
+                    If InStr(Sor, "PalyaVonal") > 0 Then
                         If PalyaInfo.PalyaVonalakSzama >= UBound(PalyaInfo.PalyaVonalTomb) Then
                             ReDim Preserve PalyaInfo.PalyaVonalTomb(0 To UBound(PalyaInfo.PalyaVonalTomb) + 50) As VonalKoordinatak
                         End If
 
-                        PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama) = ParseLine(Parse(sor))
+                        PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama) = ParseLine(Parse(Sor))
                         Set PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal = Palya.Controls.Add("VB.Line", "PalyaVonal" & CStr(PalyaInfo.PalyaVonalakSzama), Palya)
                         'PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.BorderColor = &H80000008
                         PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.X1 = PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).X1
@@ -52,16 +51,16 @@ UjBetoltese:
                         PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.Y1 = PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Y1
                         PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.Y2 = PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Y2
                         PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.BorderWidth = 2
-                        PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.visible = True
+                        PalyaInfo.PalyaVonalTomb(PalyaInfo.PalyaVonalakSzama).Vonal.Visible = True
                         PalyaInfo.PalyaVonalakSzama = PalyaInfo.PalyaVonalakSzama + 1
                     End If
 
-                    If InStr(sor, "SzektorVonal") > 0 Then
+                    If InStr(Sor, "SzektorVonal") > 0 Then
                         If PalyaInfo.SzektorVonalakSzama >= UBound(PalyaInfo.SzektorVonalTomb) Then
                             ReDim Preserve PalyaInfo.SzektorVonalTomb(0 To UBound(PalyaInfo.SzektorVonalTomb) + 5) As VonalKoordinatak
                         End If
 
-                        PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama) = ParseLine(Parse(sor))
+                        PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama) = ParseLine(Parse(Sor))
                         Set PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal = Palya.Controls.Add("VB.Line", "SzektorVonal" & CStr(PalyaInfo.SzektorVonalakSzama), Palya)
                         'PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.BorderColor = &H80000008
                         PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.X1 = PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).X1
@@ -69,40 +68,40 @@ UjBetoltese:
                         PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.Y1 = PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Y1
                         PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.Y2 = PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Y2
                         PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.BorderWidth = 1
-                        PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.visible = True
+                        PalyaInfo.SzektorVonalTomb(PalyaInfo.SzektorVonalakSzama).Vonal.Visible = True
                         PalyaInfo.SzektorVonalakSzama = PalyaInfo.SzektorVonalakSzama + 1
                     End If
 
-                    If InStr(sor, "SzektorNev") > 0 Then
+                    If InStr(Sor, "SzektorNev") > 0 Then
                         If PalyaInfo.SzektorNevekSzama >= UBound(PalyaInfo.SzektorNevTomb) Then
                             ReDim Preserve PalyaInfo.SzektorNevTomb(0 To UBound(PalyaInfo.SzektorNevTomb) + 5) As NevKoordinatak
                         End If
 
-                        PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama) = ParseLabel(Parse(sor))
+                        PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama) = ParseLabel(Parse(Sor))
                         Set PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label = Palya.Controls.Add("VB.Label", "SzektorNev" & CStr(PalyaInfo.SzektorNevekSzama), Palya)
                         PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.BackColor = Palya.BackColor
                         PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.AutoSize = True
                         PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.Caption = "Szektor " & CStr(PalyaInfo.SzektorNevekSzama + 1)
                         PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.Left = PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Left
                         PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.Top = PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Top
-                        PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.visible = True
+                        PalyaInfo.SzektorNevTomb(PalyaInfo.SzektorNevekSzama).Label.Visible = True
                         PalyaInfo.SzektorNevekSzama = PalyaInfo.SzektorNevekSzama + 1
                     End If
 
-                    If InStr(sor, "StartCelVonalNev") > 0 Then
-                        PalyaInfo.StartCelVonalNev = ParseLabel(Parse(sor))
+                    If InStr(Sor, "StartCelVonalNev") > 0 Then
+                        PalyaInfo.StartCelVonalNev = ParseLabel(Parse(Sor))
                         Set PalyaInfo.StartCelVonalNev.Label = Palya.Controls.Add("VB.Label", "StartCelVonalNev", Palya)
                         PalyaInfo.StartCelVonalNev.Label.BackColor = Palya.BackColor
                         PalyaInfo.StartCelVonalNev.Label.AutoSize = True
                         PalyaInfo.StartCelVonalNev.Label.Caption = "Start / Cél"
                         PalyaInfo.StartCelVonalNev.Label.Left = PalyaInfo.StartCelVonalNev.Left
                         PalyaInfo.StartCelVonalNev.Label.Top = PalyaInfo.StartCelVonalNev.Top
-                        PalyaInfo.StartCelVonalNev.Label.visible = True
+                        PalyaInfo.StartCelVonalNev.Label.Visible = True
                     End If
 
-                    If InStr(sor, "KorokSzama") > 0 Then
-                        If IsByte(Parse(sor)) Then
-                            PalyaInfo.KorokSzama = CByte(Parse(sor))
+                    If InStr(Sor, "KorokSzama") > 0 Then
+                        If IsByte(Parse(Sor)) Then
+                            PalyaInfo.KorokSzama = CByte(Parse(Sor))
                         Else
                             PalyaInfo.KorokSzama = AGlobalis_KorokSzama
                         End If
@@ -112,12 +111,12 @@ UjBetoltese:
                         End If
                     End If
 
-                    If InStr(sor, "KocsiVonal") > 0 Then
+                    If InStr(Sor, "KocsiVonal") > 0 Then
                         If PalyaInfo.KocsiVonalakSzama >= UBound(PalyaInfo.SzektorVonalTomb) Then
                             ReDim Preserve PalyaInfo.KocsiVonalTomb(1 To UBound(PalyaInfo.KocsiVonalTomb) + 4) As VonalKoordinatak
                         End If
 
-                        PalyaInfo.KocsiVonalTomb(PalyaInfo.KocsiVonalakSzama) = ParseLine(Parse(sor))
+                        PalyaInfo.KocsiVonalTomb(PalyaInfo.KocsiVonalakSzama) = ParseLine(Parse(Sor))
                         PalyaInfo.KocsiVonalakSzama = PalyaInfo.KocsiVonalakSzama + 1
                     End If
                 End If
@@ -133,6 +132,14 @@ UjBetoltese:
         End If
 
         GoTo UjBetoltese
+    End If
+End Sub
+
+Public Sub DeleteDefaultMap()
+    MapPath = MapDir & "/" & AGlobalis_PalyaNeve
+
+    If FileExists(MapPath) Then
+        Kill ConfigPath
     End If
 End Sub
 
@@ -211,15 +218,15 @@ Private Sub CreateMap()
     Close #1
 End Sub
 
-Private Function Parse(sor As String) As String
-    Parse = LTrim(Mid$(sor, InStr(1, sor, ":") + 1))
+Private Function Parse(ByVal Sor As String) As String
+    Parse = LTrim(Mid$(Sor, InStr(1, Sor, ":") + 1))
 End Function
 
-Private Function ParseLine(sor As String) As VonalKoordinatak
+Private Function ParseLine(ByVal Sor As String) As VonalKoordinatak
     Dim vk As VonalKoordinatak
     Dim v() As String
 
-    v = Split(sor, ";")
+    v = Split(Sor, ";")
 
     If UBound(v) - LBound(v) + 1 < 4 Then
         Exit Function
@@ -252,11 +259,11 @@ Private Function ParseLine(sor As String) As VonalKoordinatak
     ParseLine = vk
 End Function
 
-Private Function ParseLabel(sor As String) As NevKoordinatak
+Private Function ParseLabel(ByVal Sor As String) As NevKoordinatak
     Dim nk As NevKoordinatak
     Dim v() As String
 
-    v = Split(sor, ";")
+    v = Split(Sor, ";")
 
     If UBound(v) - LBound(v) + 1 < 2 Then
         Exit Function

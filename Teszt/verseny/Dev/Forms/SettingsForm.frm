@@ -478,21 +478,37 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' Ideiglenes változó.
 Private TempGlobalis_Nyomvonal As Boolean
+' Ideiglenes változó.
 Private TempGlobalis_SzektorNevek As Boolean
+' Ideiglenes változó.
 Private TempGlobalis_StartCelVonalNeve As Boolean
+' Ideiglenes változó.
 Private TempGlobalis_KorokSzama As Byte
+' Ideiglenes változó.
 Private TempGlobalis_PalyaNeve As String
+' Ideiglenes változó.
 Private TempGlobalis_SzektorVonalak As Boolean
+' Ideiglenes változó.
 Private TempGlobalis_StartCelVonal As Boolean
+' Ideiglenes változó.
 Private TempGlobalis_TokeletesKorozes As Boolean
+' Ideiglenes változó.
 Private TempAutok_Elso_Nyomvonal As Boolean
+' Ideiglenes változó.
 Private TempAutok_Elso_TokeletesKorozes As Boolean
+' Ideiglenes változó.
 Private TempAutok_Masodik_Nyomvonal As Boolean
+' Ideiglenes változó.
 Private TempAutok_Masodik_TokeletesKorozes As Boolean
+' Ideiglenes változó.
 Private TempAutok_Harmadik_Nyomvonal As Boolean
+' Ideiglenes változó.
 Private TempAutok_Harmadik_TokeletesKorozes As Boolean
+' Ideiglenes változó.
 Private TempAutok_Negyedik_Nyomvonal As Boolean
+' Ideiglenes változó.
 Private TempAutok_Negyedik_TokeletesKorozes As Boolean
 
 Private Sub Form_Load()
@@ -503,6 +519,7 @@ Private Sub Form_Load()
     Call SetWindowLong(GlobalisLista.hWnd, GWL_STYLE, lStyle)
     Call SetWindowPos(GlobalisLista.hWnd, 0, 0, 0, 0, 0, SWP_FRAMECHANGED + SWP_NOMOVE + SWP_NOSIZE)
 
+    ' Kezdõelem beállítása.
     GlobalisLista.ListIndex = 0
 
     lStyle = GetWindowLong(AutokLista.hWnd, GWL_STYLE)
@@ -510,7 +527,8 @@ Private Sub Form_Load()
     Call SetWindowLong(AutokLista.hWnd, GWL_STYLE, lStyle)
     Call SetWindowPos(AutokLista.hWnd, 0, 0, 0, 0, 0, SWP_FRAMECHANGED + SWP_NOMOVE + SWP_NOSIZE)
 
-    Init ' Beállítások inicializálása.
+    ' Beállítások inicializálása.
+    Init
 End Sub
 
 Private Sub CmdOk_Click()
@@ -545,7 +563,7 @@ Private Sub CmdAlkalmaz_Click()
     Config.SetConfig
 
     Palya.SetKorokSzama Palya.GetKezdokorErteke
-    Palya.UjAutokLetrehozasa Palya.GetAutokSzama
+    Palya.UjAutokLetrehozasa PalyaInfo.AutokSzama
 
     If Config.Globalis_Nyomvonal Then
         Palya.Nyomvonal.Checked = 1
@@ -561,30 +579,40 @@ Private Sub CmdAlkalmaz_Click()
 
     Map.LoadMap Config.Globalis_PalyaNeve
 
+    If Not Vizsgalat Then
+        Unload Me
+    End If
+
     If Not tname = Config.Globalis_PalyaNeve Then
         Config.Globalis_KorokSzama = PalyaInfo.KorokSzama
         Config.SetConfig
 
+        ' Kezdõelem beállítása.
         KorokComboBox.ListIndex = Config.Globalis_KorokSzama - 2
         Palya.SetKorokSzama Palya.GetKezdokorErteke
-        Palya.UjAutokLetrehozasa Palya.GetAutokSzama
+        Palya.UjAutokLetrehozasa PalyaInfo.AutokSzama
     End If
 
+    ' Frissítési az autók nyomvonalának megjelenítését.
     Palya.SetAutokNyomvonal
+    ' Frissítési az autók tökéletes körözésének állapotát.
     Palya.SetAutokTokeletesKorozes
     PTKorokSzama.Caption = PalyaInfo.KorokSzama
-    Palya.HamisPalya_Frissites
+    ' Frissíti a virtuálisan létrehozott pályát.
+    Palya.VirtualisPalya_Frissites
 End Sub
 
 Private Sub CmdAlapertelmezes_Click()
     Config.DeleteConfig
     Config.LoadConfig
 
+    Map.DeleteDefaultMap
     Map.LoadMap Config.Globalis_PalyaNeve
     Config.Globalis_KorokSzama = PalyaInfo.KorokSzama
     Config.SetConfig
 
-    Init ' Beállítások inicializálása.
+    ' Beállítások inicializálása.
+    Init
 End Sub
 
 Private Sub CheckNyomvonal_Click()
@@ -713,10 +741,10 @@ Private Sub GlobalisLista_Click()
     Select Case GlobalisLista.List(GlobalisLista.ListIndex)
         Case "Általános"
             AutokLista.ListIndex = -1
-            Altalanos.visible = True
+            Altalanos.Visible = True
         Case "Pálya"
             AutokLista.ListIndex = -1
-            PalyaFrame.visible = True
+            PalyaFrame.Visible = True
     End Select
 End Sub
 
@@ -726,16 +754,16 @@ Private Sub AutokLista_Click()
     Select Case AutokLista.List(AutokLista.ListIndex)
         Case "Elsõ"
             GlobalisLista.ListIndex = -1
-            ElsoFrame.visible = True
+            ElsoFrame.Visible = True
         Case "Második"
             GlobalisLista.ListIndex = -1
-            MasodikFrame.visible = True
+            MasodikFrame.Visible = True
         Case "Harmadik"
             GlobalisLista.ListIndex = -1
-            HarmadikFrame.visible = True
+            HarmadikFrame.Visible = True
         Case "Negyedik"
             GlobalisLista.ListIndex = -1
-            NegyedikFrame.visible = True
+            NegyedikFrame.Visible = True
     End Select
 End Sub
 
@@ -854,23 +882,27 @@ Private Sub Init()
         TempAutok_Negyedik_TokeletesKorozes = Config.Autok_Negyedik_TokeletesKorozes
     End If
 
+    ' Frissítési az autók nyomvonalának megjelenítését.
     Palya.SetAutokNyomvonal
+    ' Frissítési az autók tökéletes körözésének állapotát.
     Palya.SetAutokTokeletesKorozes
     TempGlobalis_PalyaNeve = Config.Globalis_PalyaNeve
+    ' Kezdõelem beállítása.
     KorokComboBox.ListIndex = Config.Globalis_KorokSzama - 2
     TempGlobalis_KorokSzama = Config.Globalis_KorokSzama
     Palya.SetKorokSzama Palya.GetKezdokorErteke
     PTKorokSzama.Caption = PalyaInfo.KorokSzama
-    Palya.HamisPalya_Frissites
+    ' Frissíti a virtuálisan létrehozott pályát.
+    Palya.VirtualisPalya_Frissites
 End Sub
 
-Private Sub SetAllVisible(visible As Boolean)
-    Altalanos.visible = visible
-    PalyaFrame.visible = visible
-    ElsoFrame.visible = visible
-    MasodikFrame.visible = visible
-    HarmadikFrame.visible = visible
-    NegyedikFrame.visible = visible
+Private Sub SetAllVisible(ByVal Visible As Boolean)
+    Altalanos.Visible = Visible
+    PalyaFrame.Visible = Visible
+    ElsoFrame.Visible = Visible
+    MasodikFrame.Visible = Visible
+    HarmadikFrame.Visible = Visible
+    NegyedikFrame.Visible = Visible
 End Sub
 
 Private Sub SetPalyaComboBox()
@@ -898,5 +930,6 @@ Private Sub SetPalyaComboBox()
         a = Dir$
     Loop
 
+    ' Kezdõelem beállítása.
     PalyaComboBox.ListIndex = index
 End Sub

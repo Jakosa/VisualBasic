@@ -1,56 +1,8 @@
 Attribute VB_Name = "Utils"
 Option Explicit
 
-' Get Window Long Indexes...
-Public Enum enGetWindowLong
-    GWL_EXSTYLE = (-20)
-    GWL_HINSTANCE = (-6)
-    GWL_HWNDPARENT = (-8)
-    GWL_ID = (-12)
-    GWL_STYLE = (-16)
-    GWL_USERDATA = (-21)
-    GWL_WNDPROC = (-4)
-End Enum
-
-' Window Style
-Public Enum enWindowStyles
-    WS_BORDER = &H800000
-    WS_CAPTION = &HC00000
-    WS_CHILD = &H40000000
-    WS_CLIPCHILDREN = &H2000000
-    WS_CLIPSIBLINGS = &H4000000
-    WS_DISABLED = &H8000000
-    WS_DLGFRAME = &H400000
-    WS_GROUP = &H20000
-    WS_HSCROLL = &H100000
-    WS_MAXIMIZE = &H1000000
-    WS_MAXIMIZEBOX = &H10000
-    WS_MINIMIZE = &H20000000
-    WS_MINIMIZEBOX = &H20000
-    WS_OVERLAPPED = &H0&
-    WS_POPUP = &H80000000
-    WS_SYSMENU = &H80000
-    WS_TABSTOP = &H10000
-    WS_THICKFRAME = &H40000
-    WS_VISIBLE = &H10000000
-    WS_VSCROLL = &H200000
-End Enum
-
-Public Enum enSetWindowPos
-    SWP_FRAMECHANGED = &H20 ' The frame changed: send WM_NCCALCSIZE
-    SWP_HIDEWINDOW = &H80
-    SWP_NOACTIVATE = &H10
-    SWP_NOCOPYBITS = &H100
-    SWP_NOMOVE = &H2
-    SWP_NOOWNERZORDER = &H200 ' Don't do owner Z ordering
-    SWP_NOREDRAW = &H8
-    SWP_NOSIZE = &H1
-    SWP_NOZORDER = &H4
-    SWP_SHOWWINDOW = &H40
-End Enum
-
 ' Set window ...
-Public Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As enSetWindowPos) As Long
+Public Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As EnSetWindowPos) As Long
 Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
 Public Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 
@@ -123,8 +75,9 @@ Public Function Distance(ByVal PointX As Single, ByVal PointY As Single, ByVal L
     Distance = Sqr(((PointX - xx) * (PointX - xx)) + ((PointY - yy) * (PointY - yy)))
 End Function
 
-Public Sub WarningWindow(Title As String, Message As String)
+Public Sub WarningWindow(ByVal Title As String, ByVal Message As String, ByVal Leallas As Boolean)
     WarningForm.HibaUzenet = Message
+    WarningForm.Leallitas = Leallas
     WarningForm.Caption = Title
     WarningForm.Show
 End Sub

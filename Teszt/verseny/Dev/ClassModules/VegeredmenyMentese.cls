@@ -20,6 +20,17 @@ Private Sub Class_Initialize()
 End Sub
 
 Public Sub Save()
+    ' "i" segédváltozó a ciklushoz.
+    Dim i As Byte
+    For i = LBound(PalyaInfo.Autok) To PalyaInfo.AutokSzama
+        If Not PalyaInfo.Autok(i).GetGameEnd Then
+            ' Figyelmeztetés ablak megnyítása.
+            WarningWindow "Végeredmény mentése: Hiba!", "Nem futott végig a játék. Így nincs lehetõsége elmenteni a végeredményt.", False
+            ' Kilépés az eljárásból.
+            Exit Sub
+        End If
+    Next i
+
     If DirExists(SaveDir) Then
         MkDir SaveDir
     End If
@@ -31,7 +42,7 @@ Public Sub Save()
 
     Print #1, "# Mentett végeredmény."
 
-    Dim tempkor As Byte, tempautok As Byte, ciklus As Integer, ciklus2 As Integer, i As Byte
+    Dim tempkor As Byte, tempautok As Byte, ciklus As Integer, ciklus2 As Integer
     Dim NowTime As Date
 
     If Palya.GetKorokSzama > Config.Globalis_KorokSzama Then
@@ -44,14 +55,15 @@ Public Sub Save()
 
     Do While True
         For ciklus = 3 To 1 Step -1
-            For i = LBound(PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To Palya.GetAutokSzama
+            For i = LBound(PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To PalyaInfo.AutokSzama
                 If PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin = "" And PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
+                    ' Kilépés a ciklusból.
                     Exit For
-                ElseIf PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= Palya.GetAutokSzama Then
+                ElseIf PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= PalyaInfo.AutokSzama Then
                     Print #1, ""
                     Print #1, "Sorrend: " & i & ". Autó: " & PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin
 
-                    For ciklus2 = LBound(PalyaInfo.Autok) To Palya.GetAutokSzama
+                    For ciklus2 = LBound(PalyaInfo.Autok) To PalyaInfo.AutokSzama
                         If PalyaInfo.Autok(ciklus2).GetColor = PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin Then
                             Print #1, "Legjobb idõ: " & PalyaInfo.Autok(ciklus2).GetLegjobbKorido & " másodperc"
                             Print #1, "Összes idõ: " & PalyaInfo.Autok(ciklus2).GetOsszKorido & " másodperc"
@@ -69,23 +81,27 @@ Public Sub Save()
                     tempautok = tempautok + 1
                 End If
 
-                If tempautok = Palya.GetAutokSzama Then
+                If tempautok = PalyaInfo.AutokSzama Then
+                    ' Kilépés a ciklusból.
                     Exit For
                 End If
             Next i
 
-            If tempautok = Palya.GetAutokSzama Then
+            If tempautok = PalyaInfo.AutokSzama Then
+                ' Kilépés a ciklusból.
                 Exit For
             End If
         Next ciklus
 
-        If tempautok = Palya.GetAutokSzama Then
+        If tempautok = PalyaInfo.AutokSzama Then
+            ' Kilépés a ciklusból.
             Exit Do
         End If
 
         If tempkor > Palya.GetKezdokorErteke Then
             tempkor = tempkor - 1
         Else
+            ' Kilépés a ciklusból.
             Exit Do
         End If
     Loop

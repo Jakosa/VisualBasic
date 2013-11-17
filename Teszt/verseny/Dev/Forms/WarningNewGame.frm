@@ -13,7 +13,7 @@ Begin VB.Form WarningNewGame
    ScaleHeight     =   1485
    ScaleWidth      =   10455
    StartUpPosition =   2  'CenterScreen
-   Begin VB.PictureBox Picture1 
+   Begin VB.PictureBox FigyelmeztetoJel 
       Appearance      =   0  'Flat
       AutoSize        =   -1  'True
       BackColor       =   &H80000005&
@@ -28,7 +28,7 @@ Begin VB.Form WarningNewGame
       Top             =   0
       Width           =   795
    End
-   Begin VB.CommandButton CancelButton 
+   Begin VB.CommandButton CmdMegse 
       Caption         =   "Mégse"
       Height          =   375
       Left            =   6000
@@ -36,7 +36,7 @@ Begin VB.Form WarningNewGame
       Top             =   960
       Width           =   1335
    End
-   Begin VB.CommandButton NoButton 
+   Begin VB.CommandButton CmdNem 
       Caption         =   "Nem"
       Height          =   375
       Left            =   4560
@@ -44,7 +44,7 @@ Begin VB.Form WarningNewGame
       Top             =   960
       Width           =   1335
    End
-   Begin VB.CommandButton YesButton 
+   Begin VB.CommandButton CmdIgen 
       Caption         =   "Igen"
       Height          =   375
       Left            =   3120
@@ -98,21 +98,32 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Sub YesButton_Click()
+' CmdIgen gomb eseménye kattintás hatására.
+Private Sub CmdIgen_Click()
+    ' Végeredmény mentése.
     VegeredmenyMentese.Save
+    ' Új játék indításának engedélyezése.
     NewGameEnabled = True
+    ' Új játék indítása.
     Palya.NewGame_Click
+    ' Form bezárása.
     Unload Me
 End Sub
 
-Private Sub NoButton_Click()
+' CmdNem gomb eseménye kattintás hatására.
+Private Sub CmdNem_Click()
+    ' Új játék indításának engedélyezése.
     NewGameEnabled = True
+    ' Új játék indítása.
     Palya.NewGame_Click
+    ' Form bezárása.
     Unload Me
 End Sub
 
-Private Sub CancelButton_Click()
+' CmdMegse gomb eseménye kattintás hatására.
+Private Sub CmdMegse_Click()
+    ' Új játék indításának tiltása.
     NewGameEnabled = False
-    Palya.NewGame_Click
+    ' Form bezárása.
     Unload Me
 End Sub

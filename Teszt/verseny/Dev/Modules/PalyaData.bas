@@ -1,6 +1,7 @@
 Attribute VB_Name = "PalyaData"
 Option Explicit
 
+' Pályák könyvtárának neve.
 Public Const MapDir = "Maps"
 
 Public Type SorrendAdatok
@@ -33,7 +34,8 @@ Public Type NevKoordinatak
     Label As VB.Label
 End Type
 
-Public Type PInfo ' Pálya információ
+' Pálya információk
+Public Type PInfo
     PalyaNevek() As String
     PalyaVonalTomb() As VonalKoordinatak
     SzektorVonalTomb() As VonalKoordinatak
@@ -43,13 +45,71 @@ Public Type PInfo ' Pálya információ
     PalyaVonalakSzama As Integer
     SzektorVonalakSzama As Integer
     SzektorNevekSzama As Integer
-    KorokSzama As Byte ' Pályához tartozó ideális körszám.
+    ' Pályához tartozó ideális körszám.
+    KorokSzama As Byte
     SorrendTomb() As Sorrend
-    Autok(1 To 4) As New Auto   ' Autók beállítását tároló tömb.
+    ' Autók beállításait tároló tömb.
+    Autok(1 To 4) As New Auto
+    ' Versenypályán lévõ autók számát tárolja.
+    AutokSzama As Byte
     KocsiVonalTomb() As VonalKoordinatak
     KocsiVonalakSzama As Integer
 End Type
 
 Public PalyaInfo As PInfo
-Public Const KezdoSzektorido = 100000 ' Alapértelmezésben ennyirõl indul el.
+' Alapértelmezésben ennyirõl indul el.
+Public Const KezdoSzektorido = 100000
+' 5 m-t jelent. Ez azt jelenti hogy egy elmozdulással az autó 10 métert tesz meg.
+Public Const PalyaHosszanakLepteke = 5
 
+Public Function Vizsgalat() As Boolean
+    If PalyaInfo.KocsiVonalakSzama - 1 < 4 Then
+        WarningWindow "Hiányos adatok!", "Nincsen elegendõ kocsi vonal létrehozva! Jelenleg: " & CStr(PalyaInfo.KocsiVonalakSzama - 1) & ". Minimum: 4.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.KocsiVonalakSzama - 1 > 4 Then
+        WarningWindow "Hiányos adatok!", "Túl sok kocsi vonal lett létrehozva! Jelenleg: " & CStr(PalyaInfo.KocsiVonalakSzama - 1) & ". Maximum: 4.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.PalyaVonalakSzama = 0 Then
+        WarningWindow "Hiányos adatok!", "Nincsenek pálya vonalak!", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.SzektorNevekSzama < 3 Then
+        WarningWindow "Hiányos adatok!", "Nincsen elegendõ szektor név létrehozva! Jelenleg: " & CStr(PalyaInfo.SzektorNevekSzama) & ". Minimum: 3.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.SzektorNevekSzama > 3 Then
+        WarningWindow "Hiányos adatok!", "Túl sok szektor név lett létrehozva! Jelenleg: " & CStr(PalyaInfo.SzektorNevekSzama) & ". Maximum: 3.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.SzektorVonalakSzama < 3 Then
+        WarningWindow "Hiányos adatok!", "Nincsen elegendõ szektor vonal létrehozva! Jelenleg: " & CStr(PalyaInfo.SzektorVonalakSzama) & ". Minimum: 3.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.SzektorVonalakSzama > 3 Then
+        WarningWindow "Hiányos adatok!", "Túl sok szektor név lett létrehozva! Jelenleg: " & CStr(PalyaInfo.SzektorVonalakSzama) & ". Maximum: 3.", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    If PalyaInfo.StartCelVonalNev.Label Is Nothing Then
+        WarningWindow "Hiányos adatok!", "Nincsen start/célvonal létrehozva!", True
+        Vizsgalat = False
+        Exit Function
+    End If
+
+    Vizsgalat = True
+End Function

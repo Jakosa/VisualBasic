@@ -32,26 +32,35 @@ Private y0 As Double
 Private ex As Double
 Private ey As Double
 Private i As Long
-Private PontosabbKor As Boolean  ' Ha "true" akkor tökéletesebben középen van az autó. "false" esetén viszont szerintem élethübb.
-Private Const xhossz = 80           ' Kocsi hossza.
-Private Const yhossz = 60           ' Kocsi szélessége.
+' Ha "true" akkor tökéletesebben középen van az autó. "false" esetén viszont szerintem élethübb.
+Private PontosabbKor As Boolean
+' Kocsi hossza.
+Private Const xhossz = 80
+' Kocsi szélessége.
+Private Const yhossz = 60
 Private KorokSzama As Byte
-Private EgyKorido As Date ' Egy kör
+' Egy kör idejének hossza.
+Private EgyKorido As Date
 Private StopKorido As Date
-Private BKorido As Boolean      ' Induláskor állítja csak be a köidõt az adott idõre.
+' Induláskor a köridõ beállításában segítõ változó.
+Private BKorido As Boolean
 Private BStopKorido As Boolean
-Private EgySzektorido As Date  ' Egy szektor
-Private ASzektorvonal As Boolean ' Átment a szektoron.
+' Egy szektor idejének hossza.
+Private EgySzektorido As Date
+' Tárolja hogy az autó átment-e az egyik szetoron vagy sem.
+Private ASzektorvonal As Boolean
 Private LegjobbSzektorido(1 To 3) As Single
 Private LegjobbKorido As Single
 Private LegjobbKoridoSzama As Byte
 Private AutoSzama As Byte
 Private nyvp As Long
-Private GameEnd As Boolean ' Vége a játéknak.
+' Tárolja vége van-e a játéknak vagy sem.
+Private GameEnd As Boolean
 Private UtolsoMeterek As Integer
 Private EgyKorHossza As Integer
 Private OsszesUt As Integer
-Private IndulasStartVonalElol As Boolean ' Startvonal elõli indulás.
+' Segití a startvonal elõli indulást.
+Private IndulasStartVonalElol As Boolean
 
 Private Type NyomvonalPontok
     Circle As VB.Shape
@@ -161,7 +170,7 @@ Public Sub SetEY(ByVal Y As Double)
     ey = Y
 End Sub
 
-Public Sub SetColor(Szin As String)
+Public Sub SetColor(ByVal Szin As String)
     Select Case Szin
         Case "Kék", "kék"
             Color = ColorConstants.vbBlue
@@ -183,38 +192,38 @@ Public Sub SetColor(Szin As String)
     KVonal4.BorderColor = Color
 End Sub
 
-Public Sub SetVisible(visible As Boolean)
-    KVonal1.visible = visible
-    KVonal2.visible = visible
-    KVonal3.visible = visible
-    KVonal4.visible = visible
+Public Sub SetVisible(ByVal Visible As Boolean)
+    KVonal1.Visible = Visible
+    KVonal2.Visible = Visible
+    KVonal3.Visible = Visible
+    KVonal4.Visible = Visible
 End Sub
 
-Public Sub SetBorderWidth(Nagysag As Byte)
+Public Sub SetBorderWidth(ByVal Nagysag As Byte)
     KVonal1.BorderWidth = Nagysag
     KVonal2.BorderWidth = Nagysag
     KVonal3.BorderWidth = Nagysag
     KVonal4.BorderWidth = Nagysag
 End Sub
 
-Public Sub SetNyomvonal(nyom As Boolean)
-    Nyomvonal = nyom
+Public Sub SetNyomvonal(ByVal Nyom As Boolean)
+    Nyomvonal = Nyom
 End Sub
 
-Public Sub SetPontosabbKor(pkor As Boolean)
-    PontosabbKor = pkor
+Public Sub SetPontosabbKor(ByVal PKor As Boolean)
+    PontosabbKor = PKor
 End Sub
 
-Public Sub Load(szam As Byte)
-    AutoSzama = szam
-    Set KVonal1 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "1", Palya.HamisPalya)
-    Set KVonal2 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "2", Palya.HamisPalya)
-    Set KVonal3 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "3", Palya.HamisPalya)
-    Set KVonal4 = Palya.Controls.Add("VB.Line", "KocsiVonal" & szam & "4", Palya.HamisPalya)
+Public Sub Load(ByVal Szam As Byte)
+    AutoSzama = Szam
+    Set KVonal1 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "1", Palya.VirtualisPalya)
+    Set KVonal2 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "2", Palya.VirtualisPalya)
+    Set KVonal3 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "3", Palya.VirtualisPalya)
+    Set KVonal4 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "4", Palya.VirtualisPalya)
 
     SetVisible True
 
-    Set Timer0 = Palya.Controls.Add("VB.Timer", "Timer" & szam & "1", Palya)
+    Set Timer0 = Palya.Controls.Add("VB.Timer", "Timer" & Szam & "1", Palya)
     Timer0.Enabled = False
     Timer0.Interval = 50 + Rnd * 21
 
@@ -226,6 +235,7 @@ End Sub
 
 Public Sub Start()
     If Started Or GameEnd Then
+        ' Kilépés az eljárásból.
         Exit Sub
     End If
 
@@ -241,6 +251,7 @@ End Sub
 
 Public Sub Stop_Kocsi()
     If Not Started Or GameEnd Then
+        ' Kilépés az eljárásból.
         Exit Sub
     End If
 
@@ -276,10 +287,15 @@ Private Sub Class_Initialize()
 End Sub
 
 Private Sub Class_Terminate()
+    ' Nullázás.
     Set KVonal1 = Nothing
+    ' Nullázás.
     Set KVonal2 = Nothing
+    ' Nullázás.
     Set KVonal3 = Nothing
+    ' Nullázás.
     Set KVonal4 = Nothing
+    ' Nullázás.
     Set Timer0 = Nothing
 End Sub
 
@@ -294,6 +310,109 @@ End Sub
 
 Public Sub Show()
     NextMove
+End Sub
+
+' Korrigálja az X eltérést.
+Private Function KorrigacioX(ByVal PointX As Single) As Single
+    ' A virtuális pálya x tengely távolságának levonása.
+    KorrigacioX = PointX - Palya.VirtualisPalya.Left
+End Function
+
+' Korrigálja az Y eltérést.
+Private Function KorrigacioY(ByVal PointY As Single) As Single
+    ' A virtuális pálya y tengely távolságának levonása.
+    KorrigacioY = PointY - Palya.VirtualisPalya.Top
+End Function
+
+' Két szektoridõ mérése értelemszerüen távolság alapján ha elérte.
+' 0-tól 1-ig tartanak a szektorvonalak mert a célvonal egyben a harmadik szektor.
+Private Sub Szektorok()
+    If KorokSzama > Config.Globalis_KorokSzama Then
+        ' Kilépés az eljárásból.
+        Exit Sub
+    End If
+
+    Dim NextKor As Boolean, ii As Byte
+    For ii = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido)
+        Dim Dist As Single, ciklus As Byte, Szam As Byte
+        Dist = 1000000
+
+        For ciklus = LBound(PalyaInfo.SzektorVonalTomb) To PalyaInfo.SzektorVonalakSzama - 1
+            Dim d As Single
+            d = Distance(x0, y0, KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X1), KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X2), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y1), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y2))
+
+            If Dist > d Then
+                Dist = d
+                Szam = ciklus + 1 ' Mert egyel magasabbon vannak
+            End If
+        Next ciklus
+
+        If Dist < 100 And Not ASzektorvonal Then
+            Dim NowTime As Date
+            NowTime = Now
+            ASzektorvonal = True
+
+            If Not IndulasStartVonalElol Then
+                IndulasStartVonalElol = True
+                ' Kilépés az eljárásból.
+                Exit Sub
+            End If
+
+            For ciklus = LBound(PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).Autok) To UBound(PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).Autok)
+                If Not PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).VanAdat Then
+                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).VanAdat = True
+                End If
+
+                If PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).Autok(ciklus).Szin = "" Then
+                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).Autok(ciklus).Szin = GetColor
+                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(Szam).Autok(ciklus).Ido = NowTime
+                    ' Kilépés a ciklusból.
+                    Exit For
+                End If
+            Next ciklus
+
+            If Szam = 3 Then
+                NextKor = True
+                KorokTomb(KorokSzama).Korido = DateDiff("s", EgyKorido, NowTime)
+
+                If LegjobbKorido > KorokTomb(KorokSzama).Korido Then
+                    LegjobbKorido = KorokTomb(KorokSzama).Korido
+                    LegjobbKoridoSzama = KorokSzama
+                End If
+
+                KorokTomb(KorokSzama).Szektorido(Szam) = KorokTomb(KorokSzama).Korido
+
+                Dim j As Byte
+                For j = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido) - 1 ' Mert utolsót nem akarjuk kivonni
+                    KorokTomb(KorokSzama).Szektorido(Szam) = KorokTomb(KorokSzama).Szektorido(Szam) - KorokTomb(KorokSzama).Szektorido(j)
+                Next j
+            Else
+                KorokTomb(KorokSzama).Szektorido(Szam) = DateDiff("s", EgySzektorido, NowTime)
+            End If
+
+            If LegjobbSzektorido(Szam) > KorokTomb(KorokSzama).Szektorido(Szam) Then
+                LegjobbSzektorido(Szam) = KorokTomb(KorokSzama).Szektorido(Szam)
+            End If
+
+            NowTime = Now
+
+            If Szam = 3 Then
+                EgyKorido = NowTime
+            End If
+
+            EgySzektorido = NowTime
+        ElseIf Dist > 100 And ASzektorvonal Then
+            ASzektorvonal = False
+        End If
+    Next ii
+
+    If NextKor Then
+        KorokSzama = KorokSzama + 1
+    End If
+
+    If KorokSzama > Config.Globalis_KorokSzama Then
+        GameEnd = True
+    End If
 End Sub
 
 Private Sub Timer0_Timer()
@@ -389,14 +508,14 @@ Private Sub Timer0_Timer()
     Szektorok
 
     If Nyomvonal Then
-        Palya.HamisPalya.Circle (x0, y0), 10, Color
+        Palya.VirtualisPalya.Circle (x0, y0), 10, Color
     End If
 
     If KorokSzama = Palya.GetKezdokorErteke And IndulasStartVonalElol Then
-        EgyKorHossza = EgyKorHossza + Palya.GetPalyaHosszanakLepteke ' Méterben van értve.
+        EgyKorHossza = EgyKorHossza + PalyaHosszanakLepteke ' Méterben van értve.
     End If
 
-    OsszesUt = OsszesUt + Palya.GetPalyaHosszanakLepteke         ' Méterben van értve.
+    OsszesUt = OsszesUt + PalyaHosszanakLepteke         ' Méterben van értve.
 
     If GameEnd Then
         UtolsoMeterek = UtolsoMeterek + 1
@@ -407,20 +526,10 @@ Private Sub Timer0_Timer()
     End If
 End Sub
 
-' Korrigálja az X eltérést.
-Private Function KorrigacioX(ByVal PointX As Single) As Single
-    KorrigacioX = PointX - Palya.HamisPalya.Left
-End Function
-
-' Korrigálja az Y eltérést.
-Private Function KorrigacioY(ByVal PointY As Single) As Single
-    KorrigacioY = PointY - Palya.HamisPalya.Top
-End Function
-
-Private Sub NextCoordinate(BIrany As Boolean, VSzog As Boolean)
+Private Sub NextCoordinate(ByVal BalraKanyarodas As Boolean, ByVal VSzog As Boolean)
     Dim bj As Double
 
-    If BIrany Then
+    If BalraKanyarodas Then
         bj = -0.15
     Else
         bj = 0.15
@@ -438,113 +547,41 @@ Private Sub NextCoordinate(BIrany As Boolean, VSzog As Boolean)
     ey = ey / Sqr(ex * ex + ey * ey)
 End Sub
 
+' Mozgatás a következõ pontokba.
 Private Sub NextMove()
+    ' Vonal elsõ X pontjának legenerálása.
     KVonal1.X1 = x0 + xhossz * ex - yhossz * ey
+    ' Vonal elsõ Y pontjának legenerálása.
     KVonal1.Y1 = y0 + xhossz * ey + yhossz * ex
+    ' Vonal második X pontjának legenerálása.
     KVonal1.X2 = x0 - xhossz * ex - yhossz * ey
+    ' Vonal második Y pontjának legenerálása.
     KVonal1.Y2 = y0 - xhossz * ey + yhossz * ex
 
+    ' Vonal elsõ X pontjának legenerálása.
     KVonal2.X1 = x0 + xhossz * ex + yhossz * ey
+    ' Vonal elsõ Y pontjának legenerálása.
     KVonal2.Y1 = y0 + xhossz * ey - yhossz * ex
+    ' Vonal második X pontjának legenerálása.
     KVonal2.X2 = x0 - xhossz * ex + yhossz * ey
+    ' Vonal második Y pontjának legenerálása.
     KVonal2.Y2 = y0 - xhossz * ey - yhossz * ex
 
+    ' Vonal elsõ X pontjának átadása.
     KVonal3.X1 = KVonal1.X1
+    ' Vonal második X pontjának átadása.
     KVonal3.X2 = KVonal2.X1
+    ' Vonal elsõ Y pontjának átadása.
     KVonal3.Y1 = KVonal1.Y1
+    ' Vonal második Y pontjának átadása.
     KVonal3.Y2 = KVonal2.Y1
 
+    ' Vonal elsõ X pontjának átadása.
     KVonal4.X1 = KVonal1.X2
+    ' Vonal második X pontjának átadása.
     KVonal4.X2 = KVonal2.X2
+    ' Vonal elsõ Y pontjának átadása.
     KVonal4.Y1 = KVonal1.Y2
+    ' Vonal második Y pontjának átadása.
     KVonal4.Y2 = KVonal2.Y2
 End Sub
-
-' Két szektoridõ mérése értelemszerüen távolság alapján ha elérte.
-' 0-tól 1-ig tartanak a szektorvonalak mert a célvonal egyben a harmadik szektor.
-Private Sub Szektorok()
-    If KorokSzama > Config.Globalis_KorokSzama Then
-        Exit Sub
-    End If
-
-    Dim NextKor As Boolean, ii As Byte
-    For ii = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido)
-        Dim Dist As Single, ciklus As Byte, szam As Byte
-        Dist = 1000000
-
-        For ciklus = LBound(PalyaInfo.SzektorVonalTomb) To PalyaInfo.SzektorVonalakSzama - 1
-            Dim d As Single
-            d = Distance(x0, y0, KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X1), KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X2), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y1), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y2))
-
-            If Dist > d Then
-                Dist = d
-                szam = ciklus + 1 ' Mert egyel magasabbon vannak
-            End If
-        Next ciklus
-
-        If Dist < 100 And Not ASzektorvonal Then
-            Dim NowTime As Date
-            NowTime = Now
-            ASzektorvonal = True
-
-            If Not IndulasStartVonalElol Then
-                IndulasStartVonalElol = True
-                Exit Sub
-            End If
-
-            For ciklus = LBound(PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).Autok) To UBound(PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).Autok)
-                If Not PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).VanAdat Then
-                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).VanAdat = True
-                End If
-
-                If PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Szin = "" Then
-                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Szin = GetColor
-                    PalyaInfo.SorrendTomb(KorokSzama).Szektor(szam).Autok(ciklus).Ido = NowTime
-                    Exit For
-                End If
-            Next ciklus
-
-            If szam = 3 Then
-                NextKor = True
-                KorokTomb(KorokSzama).Korido = DateDiff("s", EgyKorido, NowTime)
-
-                If LegjobbKorido > KorokTomb(KorokSzama).Korido Then
-                    LegjobbKorido = KorokTomb(KorokSzama).Korido
-                    LegjobbKoridoSzama = KorokSzama
-                End If
-
-                KorokTomb(KorokSzama).Szektorido(szam) = KorokTomb(KorokSzama).Korido
-
-                Dim j As Byte
-                For j = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido) - 1 ' Mert utolsót nem akarjuk kivonni
-                    KorokTomb(KorokSzama).Szektorido(szam) = KorokTomb(KorokSzama).Szektorido(szam) - KorokTomb(KorokSzama).Szektorido(j)
-                Next j
-            Else
-                KorokTomb(KorokSzama).Szektorido(szam) = DateDiff("s", EgySzektorido, NowTime)
-            End If
-
-            If LegjobbSzektorido(szam) > KorokTomb(KorokSzama).Szektorido(szam) Then
-                LegjobbSzektorido(szam) = KorokTomb(KorokSzama).Szektorido(szam)
-            End If
-
-            NowTime = Now
-
-            If szam = 3 Then
-                EgyKorido = NowTime
-            End If
-
-            EgySzektorido = NowTime
-        ElseIf Dist > 100 And ASzektorvonal Then
-            ASzektorvonal = False
-        End If
-    Next ii
-
-    If NextKor Then
-        KorokSzama = KorokSzama + 1
-    End If
-
-    If KorokSzama > Config.Globalis_KorokSzama Then
-        GameEnd = True
-    End If
-End Sub
-

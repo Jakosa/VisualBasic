@@ -272,7 +272,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Dim WithEvents Timer_Sorrend As VB.Timer
+
+Private WithEvents Timer_Sorrend As VB.Timer
 Attribute Timer_Sorrend.VB_VarHelpID = -1
 
 Private Sub Form_Load()
@@ -305,13 +306,14 @@ Private Sub Timer_Sorrend_Timer()
 
     Do While True
         For ciklus = 3 To 1 Step -1
-            For i = LBound(PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To Palya.GetAutokSzama
+            For i = LBound(PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To PalyaInfo.AutokSzama
                 If PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin = "" And PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
+                    ' Kilépés a ciklusból.
                     Exit For
-                ElseIf PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= Palya.GetAutokSzama Then
+                ElseIf PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= PalyaInfo.AutokSzama Then
                     AddSText i & ". Autó: " & PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin
 
-                    For ciklus2 = LBound(PalyaInfo.Autok) To Palya.GetAutokSzama
+                    For ciklus2 = LBound(PalyaInfo.Autok) To PalyaInfo.AutokSzama
                         If PalyaInfo.Autok(ciklus2).GetColor = PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin Then
                             AddLJText PalyaInfo.Autok(ciklus2).GetLegjobbKorido & " másodperc"
                             AddOIText PalyaInfo.Autok(ciklus2).GetOsszKorido & " másodperc"
@@ -329,23 +331,27 @@ Private Sub Timer_Sorrend_Timer()
                     tempautok = tempautok + 1
                 End If
 
-                If tempautok = Palya.GetAutokSzama Then
+                If tempautok = PalyaInfo.AutokSzama Then
+                    ' Kilépés a ciklusból.
                     Exit For
                 End If
             Next i
 
-            If tempautok = Palya.GetAutokSzama Then
+            If tempautok = PalyaInfo.AutokSzama Then
+                ' Kilépés a ciklusból.
                 Exit For
             End If
         Next ciklus
 
-        If tempautok = Palya.GetAutokSzama Then
+        If tempautok = PalyaInfo.AutokSzama Then
+            ' Kilépés a ciklusból.
             Exit Do
         End If
 
         If tempkor > Palya.GetKezdokorErteke Then
             tempkor = tempkor - 1
         Else
+            ' Kilépés a ciklusból.
             Exit Do
         End If
     Loop
@@ -355,7 +361,7 @@ Private Sub CleanSText()
     SorrendText.Text = ""
 End Sub
 
-Private Sub AddSText(Szoveg As String)
+Private Sub AddSText(ByVal Szoveg As String)
     SorrendText.Text = SorrendText.Text & Szoveg & vbCrLf
 End Sub
 
@@ -363,7 +369,7 @@ Private Sub CleanOUText()
     OsszUtText.Text = ""
 End Sub
 
-Private Sub AddOUText(Szoveg As String)
+Private Sub AddOUText(ByVal Szoveg As String)
     OsszUtText.Text = OsszUtText.Text & Szoveg & vbCrLf
 End Sub
 
@@ -371,7 +377,7 @@ Private Sub CleanOIText()
     OsszIdoText.Text = ""
 End Sub
 
-Private Sub AddOIText(Szoveg As String)
+Private Sub AddOIText(ByVal Szoveg As String)
     OsszIdoText.Text = OsszIdoText.Text & Szoveg & vbCrLf
 End Sub
 
@@ -379,7 +385,7 @@ Private Sub CleanLJText()
     LegjobbIdoText.Text = ""
 End Sub
 
-Private Sub AddLJText(Szoveg As String)
+Private Sub AddLJText(ByVal Szoveg As String)
     LegjobbIdoText.Text = LegjobbIdoText.Text & Szoveg & vbCrLf
 End Sub
 
@@ -387,6 +393,6 @@ Private Sub CleanKText()
     KulonbsegText.Text = ""
 End Sub
 
-Private Sub AddKText(Szoveg As String)
+Private Sub AddKText(ByVal Szoveg As String)
     KulonbsegText.Text = KulonbsegText.Text & Szoveg & vbCrLf
 End Sub

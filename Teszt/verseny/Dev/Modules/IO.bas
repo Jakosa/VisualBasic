@@ -11,7 +11,7 @@ Public Function IsFile(ByVal Name As String) As Boolean
     IsFile = (GetAttr(Name) And vbDirectory) = 0
 End Function
 
-Public Function FileExists(FileName As String) As Boolean
+Public Function FileExists(ByVal FileName As String) As Boolean
     On Error GoTo ErrorHandler
 
     ' Megnézi létezik-e vagy sem.
@@ -20,6 +20,6 @@ ErrorHandler:
     ' False értékkel lép ki
 End Function
 
-Public Function DirExists(DirName As String) As Boolean
+Public Function DirExists(ByVal DirName As String) As Boolean
     DirExists = (Dir(DirName, vbDirectory) = "")
 End Function
