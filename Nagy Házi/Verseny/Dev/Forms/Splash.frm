@@ -34,7 +34,7 @@ Begin VB.Form Splash
       Begin VB.Image Lo 
          Height          =   1650
          Left            =   2760
-         Picture         =   "Splash.frx":000C
+         Picture         =   "Splash.frx":143A
          Top             =   360
          Width           =   1650
       End
