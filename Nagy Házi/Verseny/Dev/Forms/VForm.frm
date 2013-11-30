@@ -138,7 +138,7 @@ Begin VB.Form VForm
       Y1              =   960
       Y2              =   3480
    End
-   Begin VB.Label Label5 
+   Begin VB.Label Cimke 
       Alignment       =   2  'Center
       BackColor       =   &H8000000E&
       Caption         =   " körös verseny végeredménye."
@@ -273,82 +273,126 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+' Sorrendet frissíti.
 Private WithEvents Timer_Sorrend As VB.Timer
 Attribute Timer_Sorrend.VB_VarHelpID = -1
 
+' Beállítjuk a form létrehozásakor az alap folyamatokat.
 Private Sub Form_Load()
-    Label5.Caption = Config.Globalis_KorokSzama & Label5.Caption
+    ' Cimke beállítása.
+    Cimke.Caption = Config.Globalis_KorokSzama & Cimke.Caption
 
+    ' Sorrend timer létrehozása
     Set Timer_Sorrend = VForm.Controls.Add("VB.Timer", "Timer_Sorrend", VForm)
+    ' Érték beállítása. 500 millisec
     Timer_Sorrend.Interval = 500
 End Sub
 
+' Form megszünésekor bizonyos dolgok megsemisítésre kerülnek.
 Private Sub Form_Terminate()
+    ' Nullázás
     Set Timer_Sorrend = Nothing
 End Sub
 
 Private Sub Timer_Sorrend_Timer()
-    Dim tempkor As Byte, tempautok As Byte, ciklus As Integer, ciklus2 As Integer, i As Byte
+    ' Ideiglenes köröket tárol.
+    Dim tempkor As Byte
+    ' Ideiglenes autók számát tárolja.
+    Dim tempautok As Byte
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Integer
+    ' "ciklus2" segédváltozó a ciklushoz.
+    Dim ciklus2 As Integer
+    ' "i" segédváltozó a ciklushoz.
+    Dim i As Byte
+    ' Tárolja a szektor idõt.
     Dim NowTime As Date
 
+    ' Ha a Palya.GetKorokSzama nagyobb mint a maximális körök száma akkor fut le.
     If Palya.GetKorokSzama > Config.Globalis_KorokSzama Then
+        ' Érték beállítása. Azért -1 mert a változó a játék végén +1-el nagyobbra lett megnövelve.
         tempkor = Palya.GetKorokSzama - 1
     Else
+        ' Érték beállítása.
         tempkor = Palya.GetKorokSzama
     End If
 
+    ' Nullázás.
     tempautok = 0
+    ' TextBox takarítása.
     CleanSText
+    ' TextBox takarítása.
     CleanOIText
+    ' TextBox takarítása.
     CleanOUText
+    ' TextBox takarítása.
     CleanLJText
+    ' TextBox takarítása.
     CleanKText
 
+    ' Végtelenségig futó ciklus
     Do While True
         For ciklus = 3 To 1 Step -1
             For i = LBound(PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok) + tempautok To PalyaInfo.AutokSzama
+                ' Akkor fut le ha nincs szin beállítva (nincs autó) és a van adat is.
                 If PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin = "" And PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat Then
                     ' Kilépés a ciklusból.
                     Exit For
+                ' Akkor fut le ha van adat és az ideiglenes autók száma kisebb vagy engyenlõ az AutokSzama-val.
                 ElseIf PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).VanAdat And tempautok <= PalyaInfo.AutokSzama Then
+                    ' Szöveg kiírása.
                     AddSText i & ". Autó: " & PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin
 
                     For ciklus2 = LBound(PalyaInfo.Autok) To PalyaInfo.AutokSzama
+                        ' Akkor fut le ha a kocsi szine egyenlõ a szektorhoz tartózó kocsi szinével.
                         If PalyaInfo.Autok(ciklus2).GetColor = PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Szin Then
+                            ' Szöveg kiírása.
                             AddLJText PalyaInfo.Autok(ciklus2).GetLegjobbKorido & " másodperc"
+                            ' Szöveg kiírása.
                             AddOIText PalyaInfo.Autok(ciklus2).GetOsszKorido & " másodperc"
+                            ' Szöveg kiírása.
                             AddOUText PalyaInfo.Autok(ciklus2).GetOsszesUt & " m"
 
+                            ' Akkor fut le ha az ideiglenes autók száma nem nulla.
                             If tempautok = 0 Then
+                                ' Menti a szektor idejét.
                                 NowTime = PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Ido
+                                ' Szöveg kiírása.
                                 AddKText 0
                             Else
+                                ' Szöveg kiírása.
                                 AddKText "+" & Abs(DateDiff("s", PalyaInfo.SorrendTomb(tempkor).Szektor(ciklus).Autok(i).Ido, NowTime)) & " másodperc"
                             End If
                         End If
                     Next ciklus2
 
+                    ' Megnöveljük 1-el az ideiglenes autók számát.
                     tempautok = tempautok + 1
                 End If
 
+                ' Akkor fut le ha az ideiglenes autók száma egyenlõ az AutokSzama-val.
                 If tempautok = PalyaInfo.AutokSzama Then
                     ' Kilépés a ciklusból.
                     Exit For
                 End If
             Next i
 
+            ' Akkor fut le ha az ideiglenes autók száma egyenlõ az AutokSzama-val.
             If tempautok = PalyaInfo.AutokSzama Then
                 ' Kilépés a ciklusból.
                 Exit For
             End If
         Next ciklus
 
+        ' Akkor fut le ha az ideiglenes autók száma egyenlõ az AutokSzama-val.
         If tempautok = PalyaInfo.AutokSzama Then
             ' Kilépés a ciklusból.
             Exit Do
         End If
 
+        ' Akkor fut le ha az ideiglenes körök száma nagyobb mind a kezdõkör értéke.
         If tempkor > Palya.GetKezdokorErteke Then
+            ' Az ideiglenes körök számát csökkentjük eggyel.
             tempkor = tempkor - 1
         Else
             ' Kilépés a ciklusból.
@@ -357,42 +401,67 @@ Private Sub Timer_Sorrend_Timer()
     Loop
 End Sub
 
+' Sorrend TextBox adatainak törlése.
 Private Sub CleanSText()
+    ' Érték beállítása.
     SorrendText.Text = ""
 End Sub
 
+' Sorrend TextBox-hoz szöveg hozzáadása (Új sorba).
+' A "Szoveg" tárolja azon szöveget amely kiírása fog kerülni.
 Private Sub AddSText(ByVal Szoveg As String)
+    ' Érték beállítása.
     SorrendText.Text = SorrendText.Text & Szoveg & vbCrLf
 End Sub
 
+' OsszUt TextBox adatainak törlése.
 Private Sub CleanOUText()
+    ' Érték beállítása.
     OsszUtText.Text = ""
 End Sub
 
+' OsszUt TextBox-hoz szöveg hozzáadása (Új sorba).
+' A "Szoveg" tárolja azon szöveget amely kiírása fog kerülni.
 Private Sub AddOUText(ByVal Szoveg As String)
+    ' Érték beállítása.
     OsszUtText.Text = OsszUtText.Text & Szoveg & vbCrLf
 End Sub
 
+' OsszIdo TextBox adatainak törlése.
 Private Sub CleanOIText()
+    ' Érték beállítása.
     OsszIdoText.Text = ""
 End Sub
 
+' OsszIdo TextBox-hoz szöveg hozzáadása (Új sorba).
+' A "Szoveg" tárolja azon szöveget amely kiírása fog kerülni.
 Private Sub AddOIText(ByVal Szoveg As String)
+    ' Érték beállítása.
     OsszIdoText.Text = OsszIdoText.Text & Szoveg & vbCrLf
 End Sub
 
+' LegjobbIdo TextBox adatainak törlése.
 Private Sub CleanLJText()
+    ' Érték beállítása.
     LegjobbIdoText.Text = ""
 End Sub
 
+' LegjobbIdo TextBox-hoz szöveg hozzáadása (Új sorba).
+' A "Szoveg" tárolja azon szöveget amely kiírása fog kerülni.
 Private Sub AddLJText(ByVal Szoveg As String)
+    ' Érték beállítása.
     LegjobbIdoText.Text = LegjobbIdoText.Text & Szoveg & vbCrLf
 End Sub
 
+' Kulonbseg TextBox adatainak törlése.
 Private Sub CleanKText()
+    ' Érték beállítása.
     KulonbsegText.Text = ""
 End Sub
 
+' Kulonbseg TextBox-hoz szöveg hozzáadása (Új sorba).
+' A "Szoveg" tárolja azon szöveget amely kiírása fog kerülni.
 Private Sub AddKText(ByVal Szoveg As String)
+    ' Érték beállítása.
     KulonbsegText.Text = KulonbsegText.Text & Szoveg & vbCrLf
 End Sub

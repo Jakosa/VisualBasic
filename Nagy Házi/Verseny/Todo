@@ -5,6 +5,7 @@
 			- Palya
 			- SettingsForm
 			- Splash
+			- VForm
 			- WarningForm
 			- WarningNewGame
 		- Modules:
@@ -18,14 +19,14 @@
 		- Class:
 			- Config
 			- Map
+			- VegeredmenyMentese
 	- Hátra van:
 		- Forms:
-			- VForm
+			-
 		- Modules:
 			-
 		- Class:
 			- Auto
-			- VegeredmenyMentese
 		- Fejlesztõi dokumentáció
 		- Felhasználói dokumentáció
 
