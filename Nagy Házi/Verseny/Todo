@@ -1,11 +1,36 @@
-- Ha van rá idõ akkor egy pehelysúlyú logrendszert lehetne írni (config részhez kéne fõleg.)
 - Dokumentációk elkészítése.
 	Kész:
-		- AboutForm
-		- Palya
-		- Splash
-		- WarningForm
-		- WarningNewGame
-- Kocsik egymás elõzésének/egymásramenetelének megoldása.
-- "Tökéletes körözés"-re való váltáskor elõfordulhat hogy ha túl meredek a kanyar ezért a dokumentációbea kell majd figyelmeztetés erre az esetre hogy ne kapcsolgassák ki be. (Legalább is ész nélkül ne)
-- "Tökéletes körözés"-re 2. Úgyan az a hiba mint az elözõ részen de itt lehetne egy pályaelhagyást vizsgálni így ha elhagyja akkor kieshetne a játékból a kocsi.
+		- Forms:
+			- AboutForm
+			- Palya
+			- SettingsForm
+			- Splash
+			- WarningForm
+			- WarningNewGame
+		- Modules:
+			- DefaultConfig
+			- EnumGetWindowLong
+			- EnumSetWindowPos
+			- EnumWindowStyles
+			- IO
+			- PalyaData
+			- Utils
+		- Class:
+			- Config
+			- Map
+	- Hátra van:
+		- Forms:
+			- VForm
+		- Modules:
+			-
+		- Class:
+			- Auto
+			- VegeredmenyMentese
+		- Fejlesztõi dokumentáció
+		- Felhasználói dokumentáció
+
+Nem lesznek elkészítve:
+	- Ha van rá idõ akkor egy pehelysúlyú logrendszert lehetne írni (config részhez kéne fõleg.)
+	- Kocsik egymás elõzésének/egymásramenetelének megoldása.
+	- "Tökéletes körözés"-re való váltáskor elõfordulhat hogy ha túl meredek a kanyar ezért a dokumentációbea kell majd figyelmeztetés erre az esetre hogy ne kapcsolgassák ki be. (Legalább is ész nélkül ne)
+	- "Tökéletes körözés"-re 2. Úgyan az a hiba mint az elözõ részen de itt lehetne egy pályaelhagyást vizsgálni így ha elhagyja akkor kieshetne a játékból a kocsi.

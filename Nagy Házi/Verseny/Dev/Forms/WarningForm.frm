@@ -81,6 +81,7 @@ Public Leallitas As String
 Private Sub Form_Load()
     ' Megvizsgálja hogy a változó igaz-e. Ha igen akkor átírja a hibaüzenetet.
     If Leallitas Then
+        ' Leállítás üzenet hozzáadása a hibaüzenethez.
         HibaUzenet = HibaUzenet & " A program az ok gombra kattintás után le fog állni!"
     End If
 

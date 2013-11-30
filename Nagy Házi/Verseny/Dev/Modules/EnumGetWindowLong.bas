@@ -1,7 +1,6 @@
 Attribute VB_Name = "EnumGetWindowLong"
 Option Explicit
 
-' Get Window Long Indexes...
 Public Enum EnGetWindowLong
     GWL_EXSTYLE = (-20)
     GWL_HINSTANCE = (-6)

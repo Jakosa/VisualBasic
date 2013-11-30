@@ -165,6 +165,7 @@ Begin VB.Form Palya
       Begin VB.Menu Tokeletes_Korozes 
          Caption         =   "Tökéletes körözés"
          Shortcut        =   ^T
+         Visible         =   0   'False
       End
       Begin VB.Menu settingbar 
          Caption         =   "-"
@@ -196,14 +197,14 @@ Attribute Timer_AutoLista.VB_VarHelpID = -1
 ' Frissíti a körök számát. (Ha új kör van megváltoztatja a számlálót is.)
 Private WithEvents Timer_Korok As VB.Timer
 Attribute Timer_Korok.VB_VarHelpID = -1
-' Tárolja éppen hányadik körnél tartunk.
-Private Korok As Byte
-' Jelzi hogy elindult-e már a játék vagy sem.
-Private Started As Boolean
 ' Hány autó van kiválasztva. (terheléscsökkentés)
 Private TempAutoLista As String
 ' Ha használva van a Stop gomb akkor lesz "true" az értéke.
 Private Felfuggesztes As Boolean
+' Jelzi hogy elindult-e már a játék vagy sem.
+Private Started As Boolean
+' Tárolja éppen hányadik körnél tartunk.
+Private Korok As Byte
 ' Tárolja hogy hányas számtól induljon az elsõ kör.
 Private Const KezdokorErteke = 1
 ' Autók vonalának szélessége.
@@ -251,7 +252,7 @@ Private Sub Form_Load()
     Nyomvonal.Checked = Config.Globalis_Nyomvonal
 
     ' Tökéletes körözés beállítása
-    Tokeletes_Korozes.Checked = Config.Globalis_TokeletesKorozes
+    'Tokeletes_Korozes.Checked = Config.Globalis_TokeletesKorozes ' Kikapcsolva!!!
 
     ' Alapértékek beállítása/takarítás.
     Clean
@@ -303,8 +304,8 @@ Public Sub NewGame_Click()
     ' Akkor fut le ha minden autó befejezte a játékot.
     If i = PalyaInfo.AutokSzama + 1 Then
         ' Megnyítja a figyelmeztetés ablakot jelezve hogy egy játék teljesen befejezödött.
-        ' Így ha kivánja a felhasználó elmentheti a végeredményt.
-        WarningNewGame.Show
+        ' Így ha kivánja a felhasználó elmentheti a végeredményt. Közben meggátolja hogy a mögötte lévõ ablakra rá lehessen kattintani (1 a tiltás).
+        WarningNewGame.Show 1
     Else
         ' Játék törlése.
         Dispose_Game
@@ -449,18 +450,18 @@ Private Sub GlobalSettings_Click()
         Exit Sub
     End If
 
-    ' Beállítások megjelenítése.
-    SettingsForm.Show
+    ' Beállítások megjelenítése. Közben meggátolja hogy a mögötte lévõ ablakra rá lehessen kattintani (1 a tiltás).
+    SettingsForm.Show 1
 End Sub
 
 ' Nyomvonal menü gomb eseménye kattintás hatására.
 Private Sub Nyomvonal_Click()
     ' Ha igaz az érték akkor fut le.
     If Nyomvonal.Checked Then
-        ' Mivel eddig igaz volt ezért hamisra állítjuk. Így kikapcsoljuk a pipát.
+        ' Mivel eddig igaz volt ezért hamisra állítja. Így kikapcsolja a pipát.
         Nyomvonal.Checked = False
     Else
-        ' Mivel eddig hamis volt ezért igazra állítjuk. Így bekapcsoljuk a pipát.
+        ' Mivel eddig hamis volt ezért igazra állítja. Így bekapcsolja a pipát.
         Nyomvonal.Checked = True
     End If
 
@@ -654,8 +655,8 @@ End Sub
 
 ' About menü gomb eseménye kattintás hatására.
 Private Sub About_Click()
-    ' Névjegy ablak megnyítása.
-    AboutForm.Show
+    ' Névjegy ablak megnyítása. Közben meggátolja hogy a mögötte lévõ ablakra rá lehessen kattintani (1 a tiltás).
+    AboutForm.Show 1
 End Sub
 
 ' Exit menü gomb eseménye kattintás hatására.
@@ -689,8 +690,8 @@ Private Sub Timer_Korok_Timer()
 
             ' Akkor fut le ha a Korok nagyobb mint a beállított maximális kör száma.
             If Korok > Config.Globalis_KorokSzama Then
-                ' Végeredmény megjelenítése.
-                VForm.Show
+                ' Végeredmény megjelenítése. Közben meggátolja hogy a mögötte lévõ ablakra rá lehessen kattintani (1 a tiltás).
+                VForm.Show 1
                 ' Korok idõzitõ kikapcsolása.
                 Timer_Korok.Enabled = False
                 ' Kilépés az eljárásból.
@@ -799,10 +800,13 @@ Private Sub Timer_VersenyAdatok_Timer()
             ' Szöveg kiírása.
             AddVAText "A sorrend mindig a következõ szektornál frissül!"
         Case "Legjobb 1. szektor"
+            ' Legjobb elsõ szektoridõ kiírása.
             SzektoridoKiiras 1
         Case "Legjobb 2. szektor"
+            ' Legjobb második szektoridõ kiírása.
             SzektoridoKiiras 2
         Case "Legjobb 3. szektor"
+            ' Legjobb harmadik szektoridõ kiírása.
             SzektoridoKiiras 3
         Case "Legjobb köridõ"
             ' Tárolja a legjobb köridõt.
@@ -949,12 +953,16 @@ Private Sub Timer_VersenyAdatok_Timer()
             ' Szöveg kiírása.
             AddVAText PalyaHosszanakLepteke & " egység (egy lépés) felel meg " & PalyaHosszanakLepteke & " méternek."
         Case "1. Autó"
+            ' Elsõ autó adatainak kiírása.
             EgyeniAutoKiirasok 1
         Case "2. Autó"
+            ' Második autó adatainak kiírása.
             EgyeniAutoKiirasok 2
         Case "3. Autó"
+            ' Harmadik autó adatainak kiírása.
             EgyeniAutoKiirasok 3
         Case "4. Autó"
+            ' Negyedik autó adatainak kiírása.
             EgyeniAutoKiirasok 4
         Case Else
             ' TextBox takarítása.

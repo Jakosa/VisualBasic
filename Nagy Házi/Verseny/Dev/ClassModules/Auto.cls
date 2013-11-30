@@ -53,7 +53,6 @@ Private LegjobbSzektorido(1 To 3) As Single
 Private LegjobbKorido As Single
 Private LegjobbKoridoSzama As Byte
 Private AutoSzama As Byte
-Private nyvp As Long
 ' Tárolja vége van-e a játéknak vagy sem.
 Private GameEnd As Boolean
 Private UtolsoMeterek As Integer
@@ -61,12 +60,6 @@ Private EgyKorHossza As Integer
 Private OsszesUt As Integer
 ' Segití a startvonal elõli indulást.
 Private IndulasStartVonalElol As Boolean
-
-Private Type NyomvonalPontok
-    Circle As VB.Shape
-    x0 As Double
-    y0 As Double
-End Type
 
 Private Type Korok
     Korido As Single
@@ -152,6 +145,14 @@ Public Property Get GetColor() As String
     End Select
 
     GetColor = Szin
+End Property
+
+Public Property Get GetX0() As Double
+    GetX0 = x0
+End Property
+
+Public Property Get GetY0() As Double
+    GetY0 = y0
 End Property
 
 Public Sub SetX0(ByVal X As Double)
@@ -268,7 +269,6 @@ Private Sub Class_Initialize()
     ey = -1
     x0 = KorrigacioX(1100)
     y0 = KorrigacioY(5000)
-    nyvp = 0
     BKorido = True
     GameEnd = False
     BStopKorido = False
@@ -334,20 +334,20 @@ Private Sub Szektorok()
 
     Dim NextKor As Boolean, ii As Byte
     For ii = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido)
-        Dim Dist As Single, ciklus As Byte, Szam As Byte
-        Dist = 1000000
+        Dim dist As Single, ciklus As Byte, Szam As Byte
+        dist = 1000000
 
         For ciklus = LBound(PalyaInfo.SzektorVonalTomb) To PalyaInfo.SzektorVonalakSzama - 1
             Dim d As Single
             d = Distance(x0, y0, KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X1), KorrigacioX(PalyaInfo.SzektorVonalTomb(ciklus).X2), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y1), KorrigacioY(PalyaInfo.SzektorVonalTomb(ciklus).Y2))
 
-            If Dist > d Then
-                Dist = d
+            If dist > d Then
+                dist = d
                 Szam = ciklus + 1 ' Mert egyel magasabbon vannak
             End If
         Next ciklus
 
-        If Dist < 100 And Not ASzektorvonal Then
+        If dist < 100 And Not ASzektorvonal Then
             Dim NowTime As Date
             NowTime = Now
             ASzektorvonal = True
@@ -401,7 +401,7 @@ Private Sub Szektorok()
             End If
 
             EgySzektorido = NowTime
-        ElseIf Dist > 100 And ASzektorvonal Then
+        ElseIf dist > 100 And ASzektorvonal Then
             ASzektorvonal = False
         End If
     Next ii
@@ -498,7 +498,7 @@ Private Sub Timer0_Timer()
             y0 = y0 - 55 * ey
         End If
     End If
-    
+
     NextMove
 
     x0 = x0 + 50 * ex

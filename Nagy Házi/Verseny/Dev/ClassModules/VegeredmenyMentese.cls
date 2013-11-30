@@ -13,12 +13,10 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+' Végeredmény mappájának neve.
 Private Const SaveDir = "Végeredmények"
 
-Private Sub Class_Initialize()
-    '
-End Sub
-
+' A végeredmény elmentésére szolgál.
 Public Sub Save()
     ' "i" segédváltozó a ciklushoz.
     Dim i As Byte
@@ -106,5 +104,6 @@ Public Sub Save()
         End If
     Loop
 
+    ' Fájl lezására.
     Close #1
 End Sub
