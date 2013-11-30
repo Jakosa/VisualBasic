@@ -171,8 +171,8 @@ UjBetoltese:
                             PalyaInfo.KorokSzama = AGlobalis_KorokSzama
                         End If
 
-                        ' Ha nagyobb a körök száma mint a maximális akkor az alapértelmezetett tölti be.
-                        If PalyaInfo.KorokSzama > 20 Then
+                        ' Ha nagyobb a körök száma mint a maximális vagy a minimálisnál kisebb akkor az alapértelmezetett tölti be.
+                        If PalyaInfo.KorokSzama > 20 Or PalyaInfo.KorokSzama < 2 Then
                             ' Alapértelmezett beállítás betöltése.
                             PalyaInfo.KorokSzama = AGlobalis_KorokSzama
                         End If
@@ -232,7 +232,7 @@ Private Sub CreateMap()
     ' Adatok kiírása a fájlba.
     Print #1, "# Alapértelmezett map."
     Print #1, ""
-    Print #1, "# Pályához tartozó körök száma."
+    Print #1, "# Pályához tartozó körök száma. Maximum: 20, Minimum: 2"
     Print #1, "KorokSzama: 5"
     Print #1, ""
     Print #1, "# Start és célvonal neve."

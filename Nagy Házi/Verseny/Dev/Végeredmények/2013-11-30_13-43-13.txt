@@ -1,0 +1,13 @@
+# Mentett végeredmény.
+
+Sorrend: 1. Autó: kék
+Legjobb idõ: 26 másodperc
+Összes idõ: 141 másodperc
+Összes út: 10145 m
+Autók közötti különbség: 0
+
+Sorrend: 2. Autó: piros
+Legjobb idõ: 27 másodperc
+Összes idõ: 142 másodperc
+Összes út: 10145 m
+Autók közötti különbség: +1 másodperc

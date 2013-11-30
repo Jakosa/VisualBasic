@@ -15,15 +15,8 @@ Option Explicit
 
 Private WithEvents Timer0 As VB.Timer
 Attribute Timer0.VB_VarHelpID = -1
-Private WithEvents KVonal1 As VB.Line
-Attribute KVonal1.VB_VarHelpID = -1
-Private WithEvents KVonal2 As VB.Line
-Attribute KVonal2.VB_VarHelpID = -1
-Private WithEvents KVonal3 As VB.Line
-Attribute KVonal3.VB_VarHelpID = -1
-Private WithEvents KVonal4 As VB.Line
-Attribute KVonal4.VB_VarHelpID = -1
-Private VSzogTomb(1 To 30) As Double
+Private KVonalTomb(1 To 4) As VB.Line
+Private VSzogTomb(1 To 30) As Single
 Private Color As ColorConstants
 Private Nyomvonal As Boolean
 Private Started As Boolean
@@ -84,7 +77,7 @@ Public Property Get GetKorokSzama() As Byte
     GetKorokSzama = KorokSzama
 End Property
 
-Public Property Get GetKorSzektoridok(ii As Integer) As Single
+Public Property Get GetKorSzektoridok(ByVal si As Integer) As Single
     GetKorSzektoridok = KorokTomb(KorokSzama).Szektorido(ii)
 End Property
 
@@ -106,24 +99,8 @@ Public Property Get GetLegjobbKoridoSzama() As Byte
     GetLegjobbKoridoSzama = LegjobbKoridoSzama
 End Property
 
-Public Property Get GetLegjobbSzektoridok(ii As Integer) As Single
-    GetLegjobbSzektoridok = LegjobbSzektorido(ii)
-End Property
-
-Public Property Get GetKVonal1() As VB.Line
-    Set GetKVonal1 = KVonal1
-End Property
-
-Public Property Get GetKVonal2() As VB.Line
-    Set GetKVonal2 = KVonal2
-End Property
-
-Public Property Get GetKVonal3() As VB.Line
-    Set GetKVonal3 = KVonal3
-End Property
-
-Public Property Get GetKVonal4() As VB.Line
-    Set GetKVonal4 = KVonal4
+Public Property Get GetLegjobbSzektoridok(ByVal si As Integer) As Single
+    GetLegjobbSzektoridok = LegjobbSzektorido(si)
 End Property
 
 Public Property Get GetColor() As String
@@ -187,24 +164,27 @@ Public Sub SetColor(ByVal Szin As String)
             Color = ColorConstants.vbBlack
     End Select
 
-    KVonal1.BorderColor = Color
-    KVonal2.BorderColor = Color
-    KVonal3.BorderColor = Color
-    KVonal4.BorderColor = Color
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        KVonalTomb(ciklus).BorderColor = Color
+    Next ciklus
 End Sub
 
 Public Sub SetVisible(ByVal Visible As Boolean)
-    KVonal1.Visible = Visible
-    KVonal2.Visible = Visible
-    KVonal3.Visible = Visible
-    KVonal4.Visible = Visible
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        KVonalTomb(ciklus).Visible = Visible
+    Next ciklus
 End Sub
 
 Public Sub SetBorderWidth(ByVal Nagysag As Byte)
-    KVonal1.BorderWidth = Nagysag
-    KVonal2.BorderWidth = Nagysag
-    KVonal3.BorderWidth = Nagysag
-    KVonal4.BorderWidth = Nagysag
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        KVonalTomb(ciklus).BorderWidth = Nagysag
+    Next ciklus
 End Sub
 
 Public Sub SetNyomvonal(ByVal Nyom As Boolean)
@@ -217,20 +197,24 @@ End Sub
 
 Public Sub Load(ByVal Szam As Byte)
     AutoSzama = Szam
-    Set KVonal1 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "1", Palya.VirtualisPalya)
-    Set KVonal2 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "2", Palya.VirtualisPalya)
-    Set KVonal3 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "3", Palya.VirtualisPalya)
-    Set KVonal4 = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & "4", Palya.VirtualisPalya)
+
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        Set KVonalTomb(ciklus) = Palya.Controls.Add("VB.Line", "KocsiVonal" & Szam & CStr(ciklus), Palya.VirtualisPalya)
+    Next ciklus
 
     SetVisible True
 
     Set Timer0 = Palya.Controls.Add("VB.Timer", "Timer" & Szam & "1", Palya)
     Timer0.Enabled = False
-    Timer0.Interval = 50 + Rnd * 21
 
-    Dim ciklus As Long
-    For ciklus = 1 To 30
-        VSzogTomb(ciklus) = Rnd * 0.1
+    Randomize
+    Timer0.Interval = Int(50 + Rnd * 21)
+
+    For ciklus = LBound(VSzogTomb) To UBound(VSzogTomb)
+        Randomize
+        VSzogTomb(ciklus) = CSng(Rnd * 0.1)
     Next ciklus
 End Sub
 
@@ -263,8 +247,6 @@ Public Sub Stop_Kocsi()
 End Sub
 
 Private Sub Class_Initialize()
-    Dim ciklus As Integer
-
     ex = 0.6
     ey = -1
     x0 = KorrigacioX(1100)
@@ -281,31 +263,33 @@ Private Sub Class_Initialize()
 
     LegjobbKorido = KezdoSzektorido   ' Kezdõérték
 
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Integer
     For ciklus = LBound(LegjobbSzektorido) To UBound(LegjobbSzektorido)
         LegjobbSzektorido(ciklus) = KezdoSzektorido  ' Kezdõérték
     Next ciklus
 End Sub
 
 Private Sub Class_Terminate()
-    ' Nullázás.
-    Set KVonal1 = Nothing
-    ' Nullázás.
-    Set KVonal2 = Nothing
-    ' Nullázás.
-    Set KVonal3 = Nothing
-    ' Nullázás.
-    Set KVonal4 = Nothing
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        ' Nullázás.
+        Set KVonalTomb(ciklus) = Nothing
+    Next ciklus
+
     ' Nullázás.
     Set Timer0 = Nothing
 End Sub
 
 Public Sub Dispose()
-    Dim i As Long
-    For i = 1 To 4
-        Palya.Controls.Remove "KocsiVonal" & AutoSzama & i
-    Next i
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Byte
+    For ciklus = LBound(KVonalTomb) To UBound(KVonalTomb)
+        Palya.Controls.Remove KVonalTomb(ciklus)
+    Next ciklus
 
-    Palya.Controls.Remove "Timer" & AutoSzama & "1"
+    Palya.Controls.Remove Timer0
 End Sub
 
 Public Sub Show()
@@ -334,7 +318,10 @@ Private Sub Szektorok()
 
     Dim NextKor As Boolean, ii As Byte
     For ii = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido)
-        Dim dist As Single, ciklus As Byte, Szam As Byte
+        Dim dist As Single
+        ' "ciklus" segédváltozó a ciklushoz.
+        Dim ciklus As Byte
+        Dim Szam As Byte
         dist = 1000000
 
         For ciklus = LBound(PalyaInfo.SzektorVonalTomb) To PalyaInfo.SzektorVonalakSzama - 1
@@ -382,6 +369,7 @@ Private Sub Szektorok()
 
                 KorokTomb(KorokSzama).Szektorido(Szam) = KorokTomb(KorokSzama).Korido
 
+                ' "j" segédváltozó a ciklushoz.
                 Dim j As Byte
                 For j = LBound(KorokTomb(KorokSzama).Szektorido) To UBound(KorokTomb(KorokSzama).Szektorido) - 1 ' Mert utolsót nem akarjuk kivonni
                     KorokTomb(KorokSzama).Szektorido(Szam) = KorokTomb(KorokSzama).Szektorido(Szam) - KorokTomb(KorokSzama).Szektorido(j)
@@ -418,11 +406,11 @@ End Sub
 Private Sub Timer0_Timer()
     i = i + 1
 
-    If i > 30 Then
+    If i > UBound(VSzogTomb) - LBound(VSzogTomb) + 1 Then
         i = 1
 
         Randomize
-        Timer0.Interval = 50 + Rnd * 21
+        Timer0.Interval = Int(50 + Rnd * 21)
     End If
 
     If BStopKorido Then
@@ -449,7 +437,9 @@ Private Sub Timer0_Timer()
         yj = y0 + 400 * ey - 300 * ex
     End If
 
-    Dim distb As Single, distj As Single, ciklus As Integer
+    Dim distb As Single, distj As Single
+    ' "ciklus" segédváltozó a ciklushoz.
+    Dim ciklus As Integer
     distb = 1000000
     distj = 1000000
 
@@ -470,19 +460,9 @@ Private Sub Timer0_Timer()
     ' Ideálisan középen van így a jármû.
     If PontosabbKor Then
         If distb - distj > 0 And distb - distj < 200 Then
-            'If distb - distj > 0 And distb - distj < 50 Then
-            '    NextCoordinate False, False
-            '    NextMove
-            'End If
-
             NextCoordinate False, False
             NextMove
         ElseIf distj - distb > 0 And distj - distb < 200 Then
-            'If distj - distb > 0 And distj - distb < 50 Then
-            '    NextCoordinate True, False
-            '    NextMove
-            'End If
-
             NextCoordinate True, False
             NextMove
         End If
@@ -549,39 +529,39 @@ End Sub
 
 ' Mozgatás a következõ pontokba.
 Private Sub NextMove()
-    ' Vonal elsõ X pontjának legenerálása.
-    KVonal1.X1 = x0 + xhossz * ex - yhossz * ey
-    ' Vonal elsõ Y pontjának legenerálása.
-    KVonal1.Y1 = y0 + xhossz * ey + yhossz * ex
-    ' Vonal második X pontjának legenerálása.
-    KVonal1.X2 = x0 - xhossz * ex - yhossz * ey
-    ' Vonal második Y pontjának legenerálása.
-    KVonal1.Y2 = y0 - xhossz * ey + yhossz * ex
+    ' Vonal X1 pontjának legenerálása.
+    KVonalTomb(1).X1 = x0 + xhossz * ex - yhossz * ey
+    ' Vonal Y1 pontjának legenerálása.
+    KVonalTomb(1).Y1 = y0 + xhossz * ey + yhossz * ex
+    ' Vonal X2 pontjának legenerálása.
+    KVonalTomb(1).X2 = x0 - xhossz * ex - yhossz * ey
+    ' Vonal Y2 pontjának legenerálása.
+    KVonalTomb(1).Y2 = y0 - xhossz * ey + yhossz * ex
 
-    ' Vonal elsõ X pontjának legenerálása.
-    KVonal2.X1 = x0 + xhossz * ex + yhossz * ey
-    ' Vonal elsõ Y pontjának legenerálása.
-    KVonal2.Y1 = y0 + xhossz * ey - yhossz * ex
-    ' Vonal második X pontjának legenerálása.
-    KVonal2.X2 = x0 - xhossz * ex + yhossz * ey
-    ' Vonal második Y pontjának legenerálása.
-    KVonal2.Y2 = y0 - xhossz * ey - yhossz * ex
+    ' Vonal X1 pontjának legenerálása.
+    KVonalTomb(2).X1 = x0 + xhossz * ex + yhossz * ey
+    ' Vonal Y1 pontjának legenerálása.
+    KVonalTomb(2).Y1 = y0 + xhossz * ey - yhossz * ex
+    ' Vonal X2 pontjának legenerálása.
+    KVonalTomb(2).X2 = x0 - xhossz * ex + yhossz * ey
+    ' Vonal Y2 pontjának legenerálása.
+    KVonalTomb(2).Y2 = y0 - xhossz * ey - yhossz * ex
 
-    ' Vonal elsõ X pontjának átadása.
-    KVonal3.X1 = KVonal1.X1
-    ' Vonal második X pontjának átadása.
-    KVonal3.X2 = KVonal2.X1
-    ' Vonal elsõ Y pontjának átadása.
-    KVonal3.Y1 = KVonal1.Y1
-    ' Vonal második Y pontjának átadása.
-    KVonal3.Y2 = KVonal2.Y1
+    ' Vonal X1 pontjának legenerálása.
+    KVonalTomb(3).X1 = KVonalTomb(1).X1
+    ' Vonal X2 pontjának legenerálása.
+    KVonalTomb(3).X2 = KVonalTomb(2).X1
+    ' Vonal Y1 pontjának legenerálása.
+    KVonalTomb(3).Y1 = KVonalTomb(1).Y1
+    ' Vonal Y2 pontjának legenerálása.
+    KVonalTomb(3).Y2 = KVonalTomb(2).Y1
 
-    ' Vonal elsõ X pontjának átadása.
-    KVonal4.X1 = KVonal1.X2
-    ' Vonal második X pontjának átadása.
-    KVonal4.X2 = KVonal2.X2
-    ' Vonal elsõ Y pontjának átadása.
-    KVonal4.Y1 = KVonal1.Y2
-    ' Vonal második Y pontjának átadása.
-    KVonal4.Y2 = KVonal2.Y2
+    ' Vonal X1 pontjának legenerálása.
+    KVonalTomb(4).X1 = KVonalTomb(1).X2
+    ' Vonal X2 pontjának legenerálása.
+    KVonalTomb(4).X2 = KVonalTomb(2).X2
+    ' Vonal Y1 pontjának legenerálása.
+    KVonalTomb(4).Y1 = KVonalTomb(1).Y2
+    ' Vonal Y2 pontjának legenerálása.
+    KVonalTomb(4).Y2 = KVonalTomb(2).Y2
 End Sub

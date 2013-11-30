@@ -288,6 +288,8 @@ Public Sub NewGame_Click()
         Dispose_Game
         ' Alapértékek beállítása/takarítás.
         Clean
+        ' Kilépés az eljárásból.
+        Exit Sub
     End If
 
     ' "i" segédváltozó a ciklushoz.

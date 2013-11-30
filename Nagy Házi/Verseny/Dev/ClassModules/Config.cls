@@ -134,8 +134,8 @@ UjKonfigBetoltese:
                             Globalis_KorokSzama = AGlobalis_KorokSzama
                         End If
 
-                        ' Ha nagyobb a körök száma mint a maximális akkor az alapértelmezetett tölti be.
-                        If Globalis_KorokSzama > 20 Then
+                        ' Ha nagyobb a körök száma mint a maximális vagy a minimálisnál kisebb akkor az alapértelmezetett tölti be.
+                        If Globalis_KorokSzama > 20 Or Globalis_KorokSzama < 2 Then
                             ' Alapértelmezett beállítás betöltése.
                             Globalis_KorokSzama = AGlobalis_KorokSzama
                         End If
@@ -409,7 +409,7 @@ Private Sub CreateConfig(ByVal IsDefault As Boolean)
     Print #1, "Globalis_SzektorNevek = " & CStr(TempGlobalis_SzektorNevek)
     Print #1, "# Globálisan itt kapcsolható be vagy ki a start és célvonal neve."
     Print #1, "Globalis_StartCelVonalNeve = " & CStr(TempGlobalis_StartCelVonalNeve)
-    Print #1, "# Itt állítható be hány körös legyen az adott verseny. Maximum 20."
+    Print #1, "# Itt állítható be hány körös legyen az adott verseny. Maximum: 20, Minimum: 2"
     Print #1, "Globalis_KorokSzama = " & TempGlobalis_KorokSzama
     Print #1, "# Itt állítható be a pálya neve."
     Print #1, "Globalis_PalyaNeve = " & TempGlobalis_PalyaNeve
