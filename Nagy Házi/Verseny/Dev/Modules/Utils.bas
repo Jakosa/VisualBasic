@@ -1,4 +1,8 @@
 Attribute VB_Name = "Utils"
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 Public Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal X As Long, ByVal Y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As EnSetWindowPos) As Long

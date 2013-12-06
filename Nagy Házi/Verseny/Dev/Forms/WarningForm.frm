@@ -70,6 +70,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' Fejléc
+' Készítette: Belsõ Vazul István
+' Fejléc vége
+
 Option Explicit
 
 ' Tárolja a hibaüzenetet.

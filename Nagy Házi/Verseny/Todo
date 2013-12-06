@@ -1,5 +1,5 @@
-- Dokumentációk elkészítése.
-	Kész:
+- Dokumentálás:
+	- Kész:
 		- Forms:
 			- AboutForm
 			- Palya
@@ -17,18 +17,19 @@
 			- PalyaData
 			- Utils
 		- Class:
+			- Auto
 			- Config
 			- Map
 			- VegeredmenyMentese
+		- Fejlesztõi dokumentáció
+		- Felhasználói dokumentáció
 	- Hátra van:
 		- Forms:
 			-
 		- Modules:
 			-
 		- Class:
-			- Auto
-		- Fejlesztõi dokumentáció
-		- Felhasználói dokumentáció
+			-
 
 Nem lesznek elkészítve:
 	- Ha van rá idõ akkor egy pehelysúlyú logrendszert lehetne írni (config részhez kéne fõleg.)

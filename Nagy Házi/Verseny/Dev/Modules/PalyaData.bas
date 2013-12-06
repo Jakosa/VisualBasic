@@ -1,4 +1,8 @@
 Attribute VB_Name = "PalyaData"
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 ' Pályák könyvtárának neve.
@@ -91,6 +95,8 @@ End Type
 Public PalyaInfo As PInfo
 ' Alapértelmezésben ennyirõl indul el.
 Public Const KezdoSzektorido = 100000
+' Alapértelmezésben ennyirõl indul a pontok közötti távolság számítás.
+Public Const KezdoTavolsagPontok = 1000000
 ' 5 m-t jelent. Ez azt jelenti hogy egy elmozdulással az autó 10 métert tesz meg.
 Public Const PalyaHosszanakLepteke = 5
 

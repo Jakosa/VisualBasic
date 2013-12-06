@@ -11,6 +11,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+' Fejléc
+' Készítette: Molnár Péter
+' Fejléc vége
+
 Option Explicit
 
 ' Konfig mappa nevét tárolja.

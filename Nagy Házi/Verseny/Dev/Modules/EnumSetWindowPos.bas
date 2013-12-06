@@ -1,4 +1,8 @@
 Attribute VB_Name = "EnumSetWindowPos"
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 Public Enum EnSetWindowPos

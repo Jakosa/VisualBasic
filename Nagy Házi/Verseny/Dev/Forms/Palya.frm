@@ -186,6 +186,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 ' VersenyAdatok elnevezésõ listát frissíti.

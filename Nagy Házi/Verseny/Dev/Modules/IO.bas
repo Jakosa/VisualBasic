@@ -1,4 +1,8 @@
 Attribute VB_Name = "IO"
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 ' Megnézi hogy könyvtár-e vagy sem.

@@ -271,6 +271,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' Fejléc
+' Készítette: Salamon Valter
+' Fejléc vége
+
 Option Explicit
 
 ' Sorrendet frissíti.

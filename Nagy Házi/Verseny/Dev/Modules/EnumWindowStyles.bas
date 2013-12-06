@@ -1,4 +1,8 @@
 Attribute VB_Name = "EnumWindowStyles"
+' Fejléc
+' Készítette: Jakosa Csaba Árpád
+' Fejléc vége
+
 Option Explicit
 
 ' Window Style

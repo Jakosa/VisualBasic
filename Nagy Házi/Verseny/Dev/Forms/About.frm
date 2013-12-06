@@ -25,7 +25,7 @@ Begin VB.Form AboutForm
       Width           =   7935
       Begin VB.Label Fejlesztok 
          AutoSize        =   -1  'True
-         Caption         =   "Fejlesztõk: Csaba, Valter, Vazul"
+         Caption         =   "Fejlesztõk: Csaba, Péter, Valter, Vazul"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -37,10 +37,10 @@ Begin VB.Form AboutForm
          EndProperty
          ForeColor       =   &H80000015&
          Height          =   195
-         Left            =   2640
+         Left            =   2520
          TabIndex        =   5
          Top             =   240
-         Width           =   2715
+         Width           =   3285
       End
    End
    Begin VB.PictureBox Lo 
@@ -112,6 +112,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' Fejléc
+' Készítette: Belsõ Vazul István
+' Fejléc vége
+
 Option Explicit
 
 ' Form betöltése.

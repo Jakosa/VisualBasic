@@ -1,4 +1,8 @@
 Attribute VB_Name = "DefaultConfig"
+' Fejléc
+' Készítette: Molnár Péter
+' Fejléc vége
+
 Option Explicit
 
 ' Alapértelmezett beállítás.
