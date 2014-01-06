@@ -1,4 +1,4 @@
-# VisualBasic [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/megax/visualbasic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+# VisualBasic [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Jakosa/visualbasic/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Visual Basic 6.0 programozási feladatok.
 
